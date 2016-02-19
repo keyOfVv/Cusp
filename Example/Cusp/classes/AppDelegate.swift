@@ -55,16 +55,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-internal func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: String = __FILE__, line: Int	= __LINE__) {
-	#if DEBUG
-		let dateFormat		  = NSDateFormatter()
-		dateFormat.dateFormat = "HH:mm:ss.SSS"
-
-		let date = NSDate()
-		let time = dateFormat.stringFromDate(date)
-
-		print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
-	#endif
-}
-
 

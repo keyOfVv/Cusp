@@ -8,20 +8,21 @@
 
 import Foundation
 
-// MARK: - 通用函数
+// MARK: - Useful functions
 
 /**
-打印控制台日志, 仅在debug模式时有效, release模式时此方法不执行任务操作;
+a useful NSLOG substitute works under DEBUG mode only (please add "-D DEBUG" in Other Swift Flags manually)
+控制台打印函数, 用以取代NSLog函数
 
-- parameter anyObject: 任意对象(不包括Int, Double, Bool)
-- parameter function:  函数(方法)名称
-- parameter file:      文件名称
-- parameter line:      代码行号
+- parameter anyObject: any object other than Int/Double/Bool (任意对象除Int/Double/Bool之外, 使用"\(Int/Double/Bool)"转换为String后再打印)
+- parameter function:  name of method/function (方法/函数名称)
+- parameter file:      name of file (文件名称)
+- parameter line:      line no. (代码行号)
 */
-public func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: String = __FILE__, line: Int	= __LINE__) {
+internal func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: String = __FILE__, line: Int = __LINE__) {
 	#if DEBUG
-		let dateFormat		  = NSDateFormatter()
-		dateFormat.dateFormat = "HH:mm:ss.SSS"
+        let formatter        = NSDateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
 
 		let date = NSDate()
 		let time = dateFormat.stringFromDate(date)
@@ -37,7 +38,7 @@ public func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: St
 
 - returns: 去除重复元素后的新数组
 */
-func uniq<S: SequenceType, T: Hashable where S.Generator.Element == T>(source: S) -> [T] {
+internal func uniq<S: SequenceType, T: Hashable where S.Generator.Element == T>(source: S) -> [T] {
 	var buffer = [T]()
 	var added = Set<T>()
 	for elem in source {
