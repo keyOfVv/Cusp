@@ -7,15 +7,26 @@
 //
 
 import UIKit
+import Cusp
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+
+		let window  = UIWindow(frame: UIScreen.mainScreen().bounds)
+		self.window = window
+
+		let deviceTableViewController = DeviceTableViewController(style: UITableViewStyle.Grouped)
+		let navigationController      = UINavigationController(rootViewController: deviceTableViewController)
+		window.rootViewController     = navigationController
+
+		window.makeKeyAndVisible()
+
+		Cusp.central.prepare()
+
         return true
     }
 
@@ -43,4 +54,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+
+internal func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: String = __FILE__, line: Int	= __LINE__) {
+	#if DEBUG
+		let dateFormat		  = NSDateFormatter()
+		dateFormat.dateFormat = "HH:mm:ss.SSS"
+
+		let date = NSDate()
+		let time = dateFormat.stringFromDate(date)
+
+		print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
+	#endif
+}
+
 

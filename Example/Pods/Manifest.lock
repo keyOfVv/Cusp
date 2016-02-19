@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Cusp: e31910817c6050fdde41bbe9f1b0035d4eb9a4c2
+  Cusp: 9848dde1b0fa7f75b965374d1ef4ed15d19eb1b5
   FBSnapshotTestCase: 7e85180d0d141a0cf472352edda7e80d7eaeb547
   Nimble: 4c353d43735b38b545cbb4cb91504588eb5de926
   Nimble-Snapshots: ab41dd737dcd33a0b0cb005a30465fef70b7207a
