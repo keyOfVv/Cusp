@@ -1,0 +1,6 @@
+framework module Cusp {
+  umbrella header "Cusp-umbrella.h"
+
+  export *
+  module * { export * }
+}
