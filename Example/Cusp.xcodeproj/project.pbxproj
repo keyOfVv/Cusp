@@ -15,11 +15,11 @@
 		7064C55E1C7765C2000B84BD /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7064C55D1C7765C2000B84BD /* Nimble.framework */; };
 		7064C57F1C777AEC000B84BD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C5721C777AEC000B84BD /* AppDelegate.swift */; };
 		7064C5801C777AEC000B84BD /* DeviceInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C5751C777AEC000B84BD /* DeviceInfoTableViewController.swift */; };
-		7064C5811C777AEC000B84BD /* DeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C57A1C777AEC000B84BD /* DeviceTableViewController.swift */; };
-		7064C5821C777AEC000B84BD /* DeviceBriefTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C57D1C777AEC000B84BD /* DeviceBriefTableViewCell.swift */; };
-		7064C5831C777AEC000B84BD /* DeviceBriefTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7064C57E1C777AEC000B84BD /* DeviceBriefTableViewCell.xib */; };
 		7064C5871C777C6C000B84BD /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C5851C777C6C000B84BD /* Functions.swift */; };
 		7064C5881C777C6C000B84BD /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C5861C777C6C000B84BD /* UIViewExtension.swift */; };
+		7064C5901C778286000B84BD /* DeviceTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C58B1C778286000B84BD /* DeviceTableViewController.swift */; };
+		7064C5911C778286000B84BD /* DeviceBriefTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7064C58E1C778286000B84BD /* DeviceBriefTableViewCell.swift */; };
+		7064C5921C778286000B84BD /* DeviceBriefTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7064C58F1C778286000B84BD /* DeviceBriefTableViewCell.xib */; };
 		FC10B1E4E849CFFC2EC18613 /* Pods_Cusp_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30FAA3F4809BCE7A2E078700 /* Pods_Cusp_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,11 +52,11 @@
 		7064C55D1C7765C2000B84BD /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = "Pods/../build/Debug-iphoneos/Nimble.framework"; sourceTree = "<group>"; };
 		7064C5721C777AEC000B84BD /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7064C5751C777AEC000B84BD /* DeviceInfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInfoTableViewController.swift; sourceTree = "<group>"; };
-		7064C57A1C777AEC000B84BD /* DeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewController.swift; sourceTree = "<group>"; };
-		7064C57D1C777AEC000B84BD /* DeviceBriefTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceBriefTableViewCell.swift; sourceTree = "<group>"; };
-		7064C57E1C777AEC000B84BD /* DeviceBriefTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceBriefTableViewCell.xib; sourceTree = "<group>"; };
 		7064C5851C777C6C000B84BD /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		7064C5861C777C6C000B84BD /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		7064C58B1C778286000B84BD /* DeviceTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceTableViewController.swift; sourceTree = "<group>"; };
+		7064C58E1C778286000B84BD /* DeviceBriefTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceBriefTableViewCell.swift; sourceTree = "<group>"; };
+		7064C58F1C778286000B84BD /* DeviceBriefTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DeviceBriefTableViewCell.xib; sourceTree = "<group>"; };
 		A40DE1703BD3EF326537F650 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		DC46B44EB3DAE18BF3ACC879 /* Pods-Cusp_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cusp_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cusp_Tests/Pods-Cusp_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		F66B1C6170883AA7EF5511B2 /* Pods-Cusp_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cusp_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Cusp_Example/Pods-Cusp_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -167,9 +167,9 @@
 		7064C5711C777AEC000B84BD /* classes */ = {
 			isa = PBXGroup;
 			children = (
+				7064C5891C778286000B84BD /* DeviceList */,
 				7064C5721C777AEC000B84BD /* AppDelegate.swift */,
 				7064C5731C777AEC000B84BD /* DeviceInfo */,
-				7064C5781C777AEC000B84BD /* DevicesList */,
 				7064C5841C777C6C000B84BD /* Others */,
 			);
 			path = classes;
@@ -207,40 +207,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		7064C5781C777AEC000B84BD /* DevicesList */ = {
-			isa = PBXGroup;
-			children = (
-				7064C5791C777AEC000B84BD /* Controller */,
-				7064C57B1C777AEC000B84BD /* Model */,
-				7064C57C1C777AEC000B84BD /* View */,
-			);
-			path = DevicesList;
-			sourceTree = "<group>";
-		};
-		7064C5791C777AEC000B84BD /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				7064C57A1C777AEC000B84BD /* DeviceTableViewController.swift */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		7064C57B1C777AEC000B84BD /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		7064C57C1C777AEC000B84BD /* View */ = {
-			isa = PBXGroup;
-			children = (
-				7064C57D1C777AEC000B84BD /* DeviceBriefTableViewCell.swift */,
-				7064C57E1C777AEC000B84BD /* DeviceBriefTableViewCell.xib */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		7064C5841C777C6C000B84BD /* Others */ = {
 			isa = PBXGroup;
 			children = (
@@ -248,6 +214,40 @@
 				7064C5861C777C6C000B84BD /* UIViewExtension.swift */,
 			);
 			path = Others;
+			sourceTree = "<group>";
+		};
+		7064C5891C778286000B84BD /* DeviceList */ = {
+			isa = PBXGroup;
+			children = (
+				7064C58A1C778286000B84BD /* Controller */,
+				7064C58C1C778286000B84BD /* Model */,
+				7064C58D1C778286000B84BD /* View */,
+			);
+			path = DeviceList;
+			sourceTree = "<group>";
+		};
+		7064C58A1C778286000B84BD /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7064C58B1C778286000B84BD /* DeviceTableViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7064C58C1C778286000B84BD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7064C58D1C778286000B84BD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7064C58E1C778286000B84BD /* DeviceBriefTableViewCell.swift */,
+				7064C58F1C778286000B84BD /* DeviceBriefTableViewCell.xib */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		A0F5F3AAFF77B7F362C8CA7D /* Pods */ = {
@@ -348,7 +348,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7064C5831C777AEC000B84BD /* DeviceBriefTableViewCell.xib in Resources */,
+				7064C5921C778286000B84BD /* DeviceBriefTableViewCell.xib in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -462,9 +462,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7064C5881C777C6C000B84BD /* UIViewExtension.swift in Sources */,
-				7064C5821C777AEC000B84BD /* DeviceBriefTableViewCell.swift in Sources */,
+				7064C5901C778286000B84BD /* DeviceTableViewController.swift in Sources */,
+				7064C5911C778286000B84BD /* DeviceBriefTableViewCell.swift in Sources */,
 				7064C57F1C777AEC000B84BD /* AppDelegate.swift in Sources */,
-				7064C5811C777AEC000B84BD /* DeviceTableViewController.swift in Sources */,
 				7064C5871C777C6C000B84BD /* Functions.swift in Sources */,
 				7064C5801C777AEC000B84BD /* DeviceInfoTableViewController.swift in Sources */,
 			);
