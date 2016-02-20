@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import CoreBluetooth
 
 // MARK: ServiceDiscoveringRequest
 
-/// 扫描服务请求模型
+/// request of discovering services of specific peripheral
 internal class ServiceDiscoveringRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	/// 待扫描的服务UUID数组
-	var serviceUUIDs: [CBUUID]?
+	/// UUID array of service to be discovered
+	internal var serviceUUIDs: [UUID]?
 
 	// MARK: Initializer
 
@@ -26,108 +25,101 @@ internal class ServiceDiscoveringRequest: OperationRequest {
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter serviceUUIDs: 待发现的服务UUID数组
-	- parameter peripheral:   从设备对象
-	- parameter success:      成功发现服务的回调
-	- parameter failure:      发现服务失败的回调
-	- parameter timedOut:     发现服务超时的回调
+	- parameter serviceUUIDs: UUID array of service to be discovered, all services will be discovered if passed nil
+	- parameter peripheral:   a CBPeripheral instance of which the services to be discovered
+	- parameter success:      a closure called when discovering succeed
+	- parameter failure:      a closure called when discovering failed
 
-	- returns: 返回一个ServiceDiscoveringRequest对象
+	- returns: a ServiceDiscoveringRequest instance
 	*/
-	convenience init(serviceUUIDs: [CBUUID]?, peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	internal convenience init(serviceUUIDs: [UUID]?, peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		self.init()
-		self.serviceUUIDs = serviceUUIDs
-		self.peripheral = peripheral
-		self.success = success
-		self.failure = failure
+        self.serviceUUIDs = serviceUUIDs
+        self.peripheral   = peripheral
+        self.success      = success
+        self.failure      = failure
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		return self.peripheral.hash
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ServiceDiscoveringRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
-
 }
 
 // MARK: CharacteristicDiscoveringRequest
 
-/// 扫描服务请求模型
+/// request of discovering characteristics of specific service
 internal class CharacteristicDiscoveringRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	/// 待扫描的服务UUID数组
-	var characteristicUUIDs: [CBUUID]?
+	/// UUID array of characteristic to be discovered
+	internal var characteristicUUIDs: [UUID]?
 
-	/// 待扫描的服务
-	var service: CBService?
+	/// a CBService object of which the characteristics to be discovered
+	internal var service: Service!
 
 	// MARK: Initializer
 
-	/// 初始化
-
-	/**
-	构造方法
-
-	- returns: 返回一个CharacteristicDiscoveringRequest对象
-	*/
 	private override init() {
 		super.init()
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter characteristicUUIDs: 带发现的特征UUID数组
-	- parameter service:             特征所属的服务
-	- parameter peripheral:          从设备对象
-	- parameter success:             成功发现特征的回调
-	- parameter failure:			 发现特征失败的回调
-	- parameter timedOut:			 发现特征超时的回调
+	- parameter characteristicUUIDs: UUID array of characteristic to be discovered
+	- parameter service:             a CBService object of which the characteristics to be discovered
+	- parameter peripheral:          a CBPeripheral instance of which the characteristics to be discovered
+	- parameter success:             a closure called when discovering succeed
+	- parameter failure:             a closure called when discovering failed
 
-	- returns: 返回一个CharacteristicDiscoveringRequest对象
+	- returns: a CharacteristicDiscoveringRequest instance
 	*/
-	convenience init(characteristicUUIDs: [CBUUID]?, service: CBService, peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	internal convenience init(characteristicUUIDs: [UUID]?, service: Service, peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		self.init()
-		self.characteristicUUIDs = characteristicUUIDs
-		self.service = service
-		self.peripheral = peripheral
-		self.success = success
-		self.failure = failure
+        self.characteristicUUIDs = characteristicUUIDs
+        self.service             = service
+        self.peripheral          = peripheral
+        self.success             = success
+        self.failure             = failure
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		let string = self.peripheral.identifier.UUIDString + self.service.UUID.UUIDString
+		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CharacteristicDiscoveringRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
 }
 
 // MARK: Discover
+
 extension Cusp {
 
 	/**
-	发现服务
+	Discover specific or all services of a peripheral.
+	发现从设备的部分或全部服务.
 
-	- parameter serviceUUIDs: 服务UUID数组, 传nil则扫描所有服务;
-	- parameter peripheral:   从设备;
-	- parameter success:      发现服务成功的回调;
-	- parameter failure:      发现服务失败的回调;
+	- parameter serviceUUIDs: an UUID array of services to be discovered, all services will be discovered if passed nil. 服务UUID数组, 传nil则扫描所有服务.
+	- parameter peripheral:   a CBPeripheral object of which the services to be discovered. 待发现服务的从设备对象.
+	- parameter success:      a closure called when discovering succeed. 发现服务成功的闭包.
+	- parameter failure:      a closure called when discovering failed. 发现服务失败的闭包.
 	*/
-	public func discover(serviceUUIDs: [CBUUID]?, inPeripheral peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func discover(serviceUUIDs: [UUID]?, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, peripheral: peripheral, success: success, failure: failure)
 			self.serviceDiscoveringRequests.insert(req)
@@ -141,15 +133,16 @@ extension Cusp {
 	}
 
 	/**
-	发现特征
+	Discover specific or all characteristics of a peripheral's specific service.
+	发现从设备某项服务的部分或全部特征.
 
-	- parameter characteristicUUIDs: 特征UUID数组, 传nil则扫描所有特征;
-	- parameter service:             服务;
-	- parameter peripheral:          从设备;
-	- parameter success:             发现特征成功的回调;
-	- parameter failure:             发现特征连接失败的回调;
+	- parameter characteristicUUIDs: an UUID array of characteristics to be discovered, all characteristics will be discovered if passed nil. 特征UUID数组, 传nil则扫描所有特征;
+	- parameter service:             a CBService object of which the characteristics to be discovered. 待发现特征的服务.
+	- parameter peripheral:          a CBPeripheral object of which the characteristics to be discovered. 待发现特征的从设备.
+	- parameter success:             a closure called when discovering succeed. 发现特征成功的闭包.
+	- parameter failure:             a closure called when discovering failed. 发现特征失败的闭包.
 	*/
-	public func discover(characteristicUUIDs: [CBUUID]?, ofService service: CBService, inPeripheral peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func discover(characteristicUUIDs: [UUID]?, ofService service: Service, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, peripheral: peripheral, success: success, failure: failure)
 			self.characteristicDiscoveringRequests.insert(req)
