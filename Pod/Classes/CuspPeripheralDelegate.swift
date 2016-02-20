@@ -246,7 +246,7 @@ extension Cusp: CBPeripheralDelegate {
 		}
 	}
 
-	internal func sessionFor(peripheral: Peripheral?) -> CommunicatingSession? {
+	internal func sessionFor(peripheral: CBPeripheral?) -> CommunicatingSession? {
 		if peripheral == nil { return nil }
 
 		for session in self.sessions {

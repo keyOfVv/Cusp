@@ -29,7 +29,7 @@ internal class ScanRequest: NSObject {
 	var abruption: ((NSError) -> Void)?
 
 	///
-	var available = Set<Peripheral>()
+	var available = Set<CBPeripheral>()
 
 	// MARK: Initializer
 

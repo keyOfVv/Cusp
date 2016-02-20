@@ -15,7 +15,7 @@ internal class DisconnectRequest: NSObject {
 	// MARK: Stored Properties
 
 	/// 待连接的从设备
-	var peripheral: Peripheral!
+	var peripheral: CBPeripheral!
 
 	/// a closure called after disconnect
 	var completion: (() -> Void)?
@@ -36,7 +36,7 @@ internal class DisconnectRequest: NSObject {
 
 	- returns: 返回一个ConnectRequest对象
 	*/
-	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
+	internal convenience init(peripheral: CBPeripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion

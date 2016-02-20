@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 /// 取消连接请求模型
 internal class CancelConnectRequest: NSObject {
@@ -14,7 +15,7 @@ internal class CancelConnectRequest: NSObject {
 	// MARK: Stored Properties
 
 	/// 待连接的从设备
-	var peripheral: Peripheral!
+	var peripheral: CBPeripheral!
 
 	/// a closure called after disconnect
 	var completion: (() -> Void)?
@@ -35,7 +36,7 @@ internal class CancelConnectRequest: NSObject {
 
 	- returns: 返回一个ConnectRequest对象
 	*/
-	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
+	internal convenience init(peripheral: CBPeripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion
@@ -62,7 +63,7 @@ public extension Cusp {
 
 	- parameter peripheral: a peripheral instance to which the connection attempt is about to be canceled
 	*/
-	public func cancelConnection(peripheral: Peripheral, completion: (() -> Void)?) {
+	public func cancelConnection(peripheral: CBPeripheral, completion: (() -> Void)?) {
 		// create a cancel-connect request ...
 		let req = CancelConnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into cancelConnectRequests set

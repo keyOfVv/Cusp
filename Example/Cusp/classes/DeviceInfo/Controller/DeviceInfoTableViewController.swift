@@ -8,6 +8,7 @@
 
 import UIKit
 import Cusp
+import CoreBluetooth
 
 // MARK: - 私有常量
 
@@ -20,7 +21,7 @@ public class DeviceInfoTableViewController: UITableViewController {
 
 	// MARK: 储值属性
 
-	var peripheral: Peripheral?
+	var peripheral: CBPeripheral?
 
 	// MARK: 计算属性
 

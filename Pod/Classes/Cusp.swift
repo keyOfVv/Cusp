@@ -78,7 +78,7 @@ public class Cusp: NSObject {
 	// MARK: Peripheral Sets
 
 	/// ever discovered peripherals after scanning (扫描后获取的蓝牙设备集合)
-    internal var discoveredPeripherals             = Set<Peripheral>()
+    internal var discoveredPeripherals             = Set<CBPeripheral>()
 
 	/// communicating session with connected peripheral (已建立的连接集合)
     internal var sessions                          = Set<CommunicatingSession>()

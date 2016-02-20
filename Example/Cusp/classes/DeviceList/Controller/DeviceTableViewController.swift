@@ -21,7 +21,7 @@ public class DeviceTableViewController: UITableViewController {
 
 	// MARK: Stored Properties
 
-	var peripherals: [Peripheral]? {
+	var peripherals: [CBPeripheral]? {
 		didSet {
 			self.tableView.reloadData()
 		}
