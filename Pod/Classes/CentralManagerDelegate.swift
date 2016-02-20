@@ -185,7 +185,20 @@ extension Cusp: CBCentralManagerDelegate {
 	}
 }
 
+// MARK: - Privates
 
+extension Cusp {
+
+	private func advServiceUUID(data: [String: AnyObject]) -> UUID? {
+		if let array = data["kCBAdvDataServiceUUIDs"] as? NSMutableArray {
+			if let uuid = array.firstObject as? UUID {
+				return uuid
+			}
+		}
+		return nil
+	}
+
+}
 
 
 
