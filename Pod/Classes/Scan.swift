@@ -193,7 +193,7 @@ extension Cusp {
 	}
 
 	/**
-	Extract target UUIDs from existed scan requests and union them.
+	Extract target UUIDs from existed scan requests and union them. Nil array would be returned if any request's target UUID array were nil.
 
 	- returns: a new UUID array after union
 	*/
