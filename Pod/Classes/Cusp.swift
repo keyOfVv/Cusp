@@ -89,12 +89,60 @@ public class Cusp: NSObject {
 public extension Cusp {
 
 	/**
-	prepare BLE module, this method shall be called once before any BLE operation (执行任何蓝牙功能前必须执行一次本方法)
+	Prepare BLE module, this method shall be called once before any BLE operation.
+	执行任何蓝牙功能前必须执行一次本方法
 	*/
 	public func prepare() {
 		self.centralManager.state.rawValue
 	}
 
+}
+
+// MARK: - Availability Check
+
+extension Cusp {
+
+	/**
+	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
+	检查蓝牙是否可用, 如不可用则返回NSError对象, 反之则返回nil.
+
+	- returns: A NSError object or nil. 返回NSError对象或nil.
+	*/
+	internal func assertAvailability() -> NSError? {
+
+		var errorCode: Int?
+		var domain = ""
+		switch self.state {
+		case .PoweredOff:
+			errorCode = Error.PoweredOff.rawValue
+			domain    = "BLE is powered off."
+			break
+		case .Resetting:
+			errorCode = Error.Resetting.rawValue
+			domain    = "BLE is resetting, please try again later."
+			break
+		case .Unauthorized:
+			errorCode = Error.Unauthorized.rawValue
+			domain    = "BLE is unauthorized."
+			break
+		case .Unsupported:
+			errorCode = Error.Unsupported.rawValue
+			domain    = "BLE is unsupported."
+			break
+		case .Unknown:
+			errorCode = Error.Unknown.rawValue
+			domain    = "BLE is in unknown state."
+			break
+		default:
+			break
+		}
+
+		if let code = errorCode {
+			return NSError(domain: domain, code: code, userInfo: nil)
+		}
+
+		return nil
+	}
 }
 
 
