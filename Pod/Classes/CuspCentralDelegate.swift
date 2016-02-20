@@ -46,7 +46,9 @@ extension Cusp: CBCentralManagerDelegate {
 
 		if let uuid = self.advServiceUUID(advertisementData) {
 			for req in self.scanRequests {
-				if req.advertisingUUIDs?.contains(uuid) == true {
+				if req.advertisingUUIDs == nil {
+					req.available.insert(peripheral)
+				} else if req.advertisingUUIDs?.contains(uuid) == true {
 					req.available.insert(peripheral)
 					break
 				}

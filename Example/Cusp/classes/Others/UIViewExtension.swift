@@ -6,7 +6,7 @@
 //  Copyright © 2015 com.sangebaba. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 // MARK: - 快速访问UIView尺寸位置的各项属性
 

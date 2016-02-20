@@ -144,6 +144,7 @@ public extension Cusp {
 		self.scanRequests.insert(request)
 
 		let targets = self.restructureTarget()
+		log("\(targets)")
 		self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
 	}
 

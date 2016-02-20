@@ -23,11 +23,6 @@ public class Cusp: NSObject {
 		return Static.instance
 	}
 
-	/**
-	initializer
-
-	- returns: a Cusp instance
-	*/
 	private override init() {
 		super.init()
 	}
@@ -49,14 +44,6 @@ public class Cusp: NSObject {
 
 	/// scan request set
 	internal var scanRequests: Set<ScanRequest> = Set<ScanRequest>()
-
-	/// current scan request, shall be nil if no scan in performing(当前扫描请求, 如当前无扫描操作则为空)
-//	internal var scanRequest: ScanRequest?
-
-	/// indicates if scanning is in performing(是否正在扫描)
-//	internal var isScanning: Bool {
-//		return (self.scanRequest != nil)
-//	}
 
 	/// a set contains all the connect requests currently in performing(连接请求的集合, 包含所有正在连接的请求)
 	internal var connectRequests: Set<ConnectRequest> = Set<ConnectRequest>()
@@ -92,11 +79,6 @@ public class Cusp: NSObject {
 
 	/// discovered peripherals after scanning(扫描后获取的蓝牙设备集合)
 	internal var discoveredPeripherals: Set<Peripheral> = Set<Peripheral>()
-
-//	internal var availablePeripherals: Set<Peripheral> = Set<Peripheral>()
-
-	/// interested peripherals(目标蓝牙设备集合, 注意目标设备并不一定是已经连接的设备, 处于连接中的设备也是目标设备)
-//	internal var interestedPeripherals: Set<Peripheral> = Set<Peripheral>()
 
 	/// communicating session with connected peripheral
 	internal var sessions: Set<CommunicatingSession> = Set<CommunicatingSession>()

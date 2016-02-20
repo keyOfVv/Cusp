@@ -8,10 +8,9 @@
 
 import UIKit
 import Cusp
+import CoreBluetooth
 
 // MARK: - Constants
-
-private let DeviceBriefTableViewCellReuseID = "DeviceBriefTableViewCell"
 
 // MARK: - [Controller] BLE Device Table View Controller
 
@@ -40,9 +39,6 @@ public class DeviceTableViewController: UITableViewController {
 
 		self.title = "BLE devices list"
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "scan", style: UIBarButtonItemStyle.Plain, target: self, action: "scan")
-
-		let nib = UINib(nibName: "DeviceBriefTableViewCell", bundle: NSBundle.mainBundle())
-		self.tableView.registerNib(nib, forCellReuseIdentifier: "DeviceBriefTableViewCell")
     }
 
 	@available(*, unavailable, message="don't call this method directly")
@@ -64,18 +60,20 @@ public class DeviceTableViewController: UITableViewController {
 
 	@available(*, unavailable, message="don't call this method directly")
     override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCellWithIdentifier(DeviceBriefTableViewCellReuseID, forIndexPath: indexPath) as! DeviceBriefTableViewCell
-
+		var cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier")
+		if cell == nil {
+			cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "reuseIdentifier")
+		}
 		if let peripheral = self.peripherals?[indexPath.row] {
-			cell.peripheral = peripheral
-			cell.delegate = self
+			cell?.textLabel?.text = peripheral.name
+			cell?.detailTextLabel?.text = String(peripheral.RSSI?.integerValue)
 		}
 
-        return cell
+        return cell!
     }
 
 	public override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		if let peripheral = self.peripherals?[indexPath.row] {
+//		if let peripheral = self.peripherals?[indexPath.row] {
 //			Cusp.central.connect(peripheral, success: { (response) -> Void in
 //				let deviceInfoTableViewController = DeviceInfoTableViewController(style: UITableViewStyle.Grouped)
 //				deviceInfoTableViewController.peripheral = peripheral
@@ -83,14 +81,14 @@ public class DeviceTableViewController: UITableViewController {
 //				}, failure: { (error) -> Void in
 //					log(error)
 //			})
-		}
+//		}
 	}
 
 
 	// MARK: TableView代理方法
 
 	public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-		return 88.0
+		return 44.0
 	}
 
 	override public func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -117,11 +115,12 @@ public extension DeviceTableViewController {
 public extension DeviceTableViewController {
 
 	internal func scan() {
+//		let uuid = CBUUID(string: "1803")
 		Cusp.central.scan(nil, completion: { (peripherals) -> Void in
-
-//			self.peripherals = peripherals?.sort({ (peripheralA, peripheralB) -> Bool in
-//				return peripheralA.name <= peripheralB.name
-//			})
+			log("\(peripherals)")
+			self.peripherals = peripherals.sort({ (peripheralA, peripheralB) -> Bool in
+				return peripheralA.name <= peripheralB.name
+			})
 
 			}, abruption: { (error) -> Void in
 				log(error)
@@ -137,24 +136,24 @@ private extension DeviceTableViewController {
 
 // MARK: - DeviceBriefTableViewCellDelegate
 
-extension DeviceTableViewController: DeviceBriefTableViewCellDelegate {
-	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsConnectTo peripheral: Peripheral) {
-//		Cusp.central.connect(peripheral, success: { (response) -> Void in
-//			Cusp.central.discover(nil, inPeripheral: peripheral, success: { (response) -> Void in
+//extension DeviceTableViewController: DeviceBriefTableViewCellDelegate {
+//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsConnectTo peripheral: Peripheral) {
+////		Cusp.central.connect(peripheral, success: { (response) -> Void in
+////			Cusp.central.discover(nil, inPeripheral: peripheral, success: { (response) -> Void in
+////
+////				}, failure: { (error) -> Void in
+////
+////			})
+////			}, failure: { (error) -> Void in
+////
+////		})
+//	}
 //
-//				}, failure: { (error) -> Void in
+//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsDisconnectFrom peripheral: Peripheral) {
 //
-//			})
-//			}, failure: { (error) -> Void in
+//	}
 //
-//		})
-	}
-
-	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsDisconnectFrom peripheral: Peripheral) {
-
-	}
-
-	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsCancelConnectTo peripheral: Peripheral) {
-
-	}
-}
+//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsCancelConnectTo peripheral: Peripheral) {
+//
+//	}
+//}

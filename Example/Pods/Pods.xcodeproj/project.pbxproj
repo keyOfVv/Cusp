@@ -636,10 +636,11 @@
 		9CF5AAB2983BC8CD0285B78C3B802004 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8580CED0C7F7353617D238073B0FF0D6 /* CancelConnect.swift */,
-				6BE6EB376147429E70C3C9B5A4E6D66B /* Connect.swift */,
 				B8D20C8759225BEA96B67608B7B32F9C /* Cusp.h */,
 				2EE6759FE1A324D6B70EEEF82C373984 /* Cusp.swift */,
+				AE6B6CE4B0DCD4EF9508AC5B9437D378 /* Scan.swift */,
+				8580CED0C7F7353617D238073B0FF0D6 /* CancelConnect.swift */,
+				6BE6EB376147429E70C3C9B5A4E6D66B /* Connect.swift */,
 				965F70496F07EACF217287FB4FC51561 /* CuspCentralDelegate.swift */,
 				1481AEA2CEA5B77FFCF8A343EE1E59FC /* CuspPeripheral.swift */,
 				5F0CE4036FEFC1EB06C642A22CE4D58D /* CuspPeripheralDelegate.swift */,
@@ -652,7 +653,6 @@
 				3B44306771C06C9876DF6A5A2E866F6A /* Request.swift */,
 				7769C508C24DC9A339355075A8F9A1F0 /* Response.swift */,
 				A97556833ACBF22327ED320FF24CFB22 /* RSSI.swift */,
-				AE6B6CE4B0DCD4EF9508AC5B9437D378 /* Scan.swift */,
 				EE1F9AC30E9C5830AC7F267E1A41E8FB /* State.swift */,
 				80ADBACF96495568300F00EC43A8C44E /* Subscribe.swift */,
 				6CEB2C6BD4987465B26A723FCB3AB9EE /* Unsubscribe.swift */,
@@ -1648,6 +1648,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/Cusp/Cusp.modulemap";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = Cusp;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1707,6 +1708,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/Cusp/Cusp.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = Cusp;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

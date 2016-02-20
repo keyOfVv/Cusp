@@ -25,7 +25,7 @@ internal func log(anyObject: AnyObject?, function: String = __FUNCTION__, file: 
         formatter.dateFormat = "HH:mm:ss.SSS"
 
 		let date = NSDate()
-		let time = dateFormat.stringFromDate(date)
+		let time = formatter.stringFromDate(date)
 
 		print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
 	#endif
