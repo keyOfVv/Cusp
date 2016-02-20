@@ -103,12 +103,13 @@ internal class ScanRequest: NSObject {
 public extension Cusp {
 
 	/**
-	scan for BLE peripherals(扫描从设备)
+	Scan for BLE peripherals of specific advertising service UUIDs. If pass nil, all kinds of peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
+	根据UUID数组扫描指定从设备, 如不指定UUID, 则扫描任意从设备. 扫描成功会执行completion闭包, 反之则执行abruption闭包;
 
-	- parameter advertisingServiceUUIDs: an array containing specific UUIDs, set nil to scan for all available peripherals(目标从设备的广播服务UUID数组, 如传nil则扫描所有从设备)
-	- parameter duration:                scan duration, default is 3.0(扫描时长, 默认3.0秒)
-	- parameter completion:              a closure called right after scan timed out(扫描完成后的回调, 返回从设备数组)
-	- parameter abruption:               a closure called when scan is abrupted(扫描中断的回调, 返回错误原因)
+	- parameter advertisingServiceUUIDs: a specific UUID array or nil. 指定的广播服务UUID数组或nil
+	- parameter duration:                scan duration in second, 3.0s by default. 扫描时长, 默认3.0秒
+	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
+	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
 	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
@@ -130,14 +131,32 @@ public extension Cusp {
 				})
 				completion?(peripherals)
 			})
+			// scan completed, check request out
 			self?.checkOut(req)
 			})
 	}
 
-//	public func scan(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
-//
-//
-//	}
+	/**
+	Scan for BLE peripherals of specific advertising service UUID Strings. If pass nil, all kinds of peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
+	根据UUID字符串数组扫描指定从设备, 如不指定UUID, 则扫描任意从设备. 扫描成功会执行completion闭包, 反之则执行abruption闭包;
+
+	- parameter advertisingServiceUUIDs: a specific UUID string array or nil. 指定的广播服务UUID字符串数组或nil
+	- parameter duration:                scan duration in second, 3.0s by default. 扫描时长, 默认3.0秒
+	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
+	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
+	*/
+	public func scanForUUIDString(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+		if let uuidStrings = advertisingServiceUUIDStrings {
+			var uuids = [UUID]()
+			for uuidString in uuidStrings {
+				let uuid = UUID(string: uuidString)
+				uuids.append(uuid)
+			}
+			self.scanForUUID(uuids, duration: duration, completion: completion, abruption: abruption)
+		} else {
+			self.scanForUUID(nil, duration: duration, completion: completion, abruption: abruption)
+		}
+	}
 
 }
 
@@ -145,6 +164,11 @@ public extension Cusp {
 
 extension Cusp {
 
+	/**
+	Check in a ScanRequest object. If no scanning is underway, start it immediately; otherwise, union the target UUID and apply a new scan.
+
+	- parameter request: an instance of ScanRequest
+	*/
 	private func checkIn(request: ScanRequest) -> Void {
 		self.scanRequests.insert(request)
 
@@ -152,6 +176,11 @@ extension Cusp {
 		self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
 	}
 
+	/**
+	Check out a ScanRequest object. The scanning operation would stopped if no scan request exists after checking out, or else abstract the target UUID and apply a new scan.
+
+	- parameter request: an instance of ScanRequest
+	*/
 	private func checkOut(request: ScanRequest) -> Void {
 		self.scanRequests.remove(request)
 
@@ -163,6 +192,11 @@ extension Cusp {
 		}
 	}
 
+	/**
+	Extract target UUIDs from existed scan requests and union them.
+
+	- returns: a new UUID array after union
+	*/
 	private func restructureTarget() -> [UUID]? {
 		var targets = Set<UUID>()
 		for req in self.scanRequests {
