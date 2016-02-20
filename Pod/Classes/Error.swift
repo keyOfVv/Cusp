@@ -16,7 +16,7 @@ extension Cusp {
 		case Unsupported
 		case Unauthorized
 		case PoweredOff
-		case BusyScanning
+//		case BusyScanning
 		case TimedOut
 
 		static var count: Int = {
