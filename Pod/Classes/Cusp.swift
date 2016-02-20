@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreBluetooth
 
 /// main operation queue identifier (主并发队列ID)
 private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
@@ -31,8 +30,8 @@ public class Cusp: NSObject {
     internal let mainQ: dispatch_queue_t = dispatch_queue_create(QIDMain, DISPATCH_QUEUE_CONCURRENT)
 
 	/// central avator, read only(蓝牙主设备对象, 只读)
-	private(set) lazy var centralManager: CBCentralManager = {
-		return CBCentralManager(delegate: self, queue: self.mainQ, options: nil)
+	private(set) lazy var centralManager: CentralManager = {
+		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
 	/// BLE state (蓝牙状态)
@@ -78,7 +77,7 @@ public class Cusp: NSObject {
 	// MARK: Peripheral Sets
 
 	/// ever discovered peripherals after scanning (扫描后获取的蓝牙设备集合)
-    internal var discoveredPeripherals             = Set<CBPeripheral>()
+    internal var discoveredPeripherals             = Set<Peripheral>()
 
 	/// communicating session with connected peripheral (已建立的连接集合)
     internal var sessions                          = Set<CommunicatingSession>()

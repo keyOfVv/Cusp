@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreBluetooth
 
 private let defaultDuration: NSTimeInterval = 3.0
 
@@ -17,19 +16,19 @@ internal class ScanRequest: NSObject {
 	// MARK: Stored Properties
 
 	/// 扫描的目标UUID数组
-	var advertisingUUIDs: [CBUUID]?
+	var advertisingUUIDs: [UUID]?
 
 	/// 扫描时长
 	var duration: Double = 0.0
 
 	/// 扫描完成的回调
-	var completion: (([CBPeripheral]) -> Void)?
+	var completion: (([Peripheral]) -> Void)?
 
 	/// 扫描中断的回调
 	var abruption: ((NSError) -> Void)?
 
 	///
-	var available = Set<CBPeripheral>()
+	var available = Set<Peripheral>()
 
 	// MARK: Initializer
 
@@ -47,7 +46,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: 返回一个ScanRequest对象
 	*/
-	internal convenience init(advertisingUUIDs: [CBUUID]?, duration: Double = 0.0, completion: (([CBPeripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDs: [UUID]?, duration: Double = 0.0, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		self.init()
         self.advertisingUUIDs = advertisingUUIDs
         self.duration         = duration
@@ -87,7 +86,7 @@ public extension Cusp {
 	- parameter completion:              a closure called right after scan timed out(扫描完成后的回调, 返回从设备数组)
 	- parameter abruption:               a closure called when scan is abrupted(扫描中断的回调, 返回错误原因)
 	*/
-	public func scan(advertisingServiceUUIDs: [CBUUID]?, duration: NSTimeInterval = defaultDuration, completion: (([CBPeripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	public func scan(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
 		// 0. 检查当前蓝牙状态
 		var errorCode: Int?
@@ -142,7 +141,6 @@ public extension Cusp {
 		self.scanRequests.insert(request)
 
 		let targets = self.restructureTarget()
-		log("\(targets)")
 		self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
 	}
 
@@ -157,8 +155,8 @@ public extension Cusp {
 		}
 	}
 
-	private func restructureTarget() -> [CBUUID]? {
-		var targets = Set<CBUUID>()
+	private func restructureTarget() -> [UUID]? {
+		var targets = Set<UUID>()
 		for req in self.scanRequests {
 			// if any request targets at overall scan...
 			if req.advertisingUUIDs == nil {
@@ -173,9 +171,9 @@ public extension Cusp {
 		})
 	}
 
-	internal func advServiceUUID(data: [String: AnyObject]) -> CBUUID? {
+	internal func advServiceUUID(data: [String: AnyObject]) -> UUID? {
 		if let array = data["kCBAdvDataServiceUUIDs"] as? NSMutableArray {
-			if let uuid = array.firstObject as? CBUUID {
+			if let uuid = array.firstObject as? UUID {
 				return uuid
 			}
 		}
