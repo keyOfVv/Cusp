@@ -88,40 +88,13 @@ public extension Cusp {
 	*/
 	public func scan(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
-		// 0. 检查当前蓝牙状态
-		var errorCode: Int?
-		var domain = ""
-		switch self.state {
-		case .PoweredOff:
-            errorCode = Error.PoweredOff.rawValue
-            domain    = "BLE is powered off."
-			break
-		case .Resetting:
-            errorCode = Error.Resetting.rawValue
-            domain    = "BLE is resetting, please try again later."
-			break
-		case .Unauthorized:
-            errorCode = Error.Unauthorized.rawValue
-            domain    = "BLE is unauthorized."
-			break
-		case .Unsupported:
-            errorCode = Error.Unsupported.rawValue
-            domain    = "BLE is unsupported."
-			break
-		case .Unknown:
-            errorCode = Error.Unknown.rawValue
-            domain    = "BLE is in unknown state."
-			break
-		default:
-			break
-		}
-		if let code = errorCode {
-			let error = NSError(domain: domain, code: code, userInfo: nil)
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
 			abruption?(error)
 			return
 		}
 
-		// 2. 蓝牙状态正常, 且当前未处于扫描状态, 则创建扫描请求
+		// 1. create a ScanRequest object and check it in
 		let req = ScanRequest(advertisingUUIDs: advertisingServiceUUIDs, duration: duration, completion: completion, abruption: abruption)
 		self.checkIn(req)
 
