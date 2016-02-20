@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		00B5C60A34D0AEA997855570A1C0E171 /* ExampleGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E873F992797EF8E974EAF641CB4FD72 /* ExampleGroup.swift */; };
-		01BC2925A99B80027F2B737365732191 /* CuspPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1481AEA2CEA5B77FFCF8A343EE1E59FC /* CuspPeripheral.swift */; };
 		02BF9988CC94A01E7CB6049694390020 /* NMBExceptionCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 3583D7D5C6884B5811739712676819ED /* NMBExceptionCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		02DF5BD2281BA10105A447F95FCF8CF3 /* BeLogical.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD51F90687F1FD2CD6E2CDF0E3F62C27 /* BeLogical.swift */; };
 		0492354DA7EF0C9068F7B4E8F74001B0 /* FailureMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14E97EFA39EE5B8E0791218121044BD /* FailureMessage.swift */; };
@@ -229,7 +228,6 @@
 		130A59DDB32BBDCFB4ABB11FA368C7F8 /* AsyncMatcherWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AsyncMatcherWrapper.swift; path = Nimble/Wrappers/AsyncMatcherWrapper.swift; sourceTree = "<group>"; };
 		140409434E07DEBDEFD742F4520D07ED /* Nimble-Snapshots.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Nimble-Snapshots.modulemap"; sourceTree = "<group>"; };
 		1438417AFCBD3D478075A35156E748D9 /* PrettySyntax.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrettySyntax.swift; sourceTree = "<group>"; };
-		1481AEA2CEA5B77FFCF8A343EE1E59FC /* CuspPeripheral.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CuspPeripheral.swift; sourceTree = "<group>"; };
 		160CBE7729A142944B5FB1512025954D /* BeCloseTo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BeCloseTo.swift; path = Nimble/Matchers/BeCloseTo.swift; sourceTree = "<group>"; };
 		18C4030C33005C7A4BF69E989BB2F4A8 /* Closures.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Closures.swift; path = Quick/Hooks/Closures.swift; sourceTree = "<group>"; };
 		18CDFD38206302BDD75F4CF1998D5DD4 /* HaveValidSnapshot.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HaveValidSnapshot.swift; sourceTree = "<group>"; };
@@ -644,7 +642,6 @@
 				6BE6EB376147429E70C3C9B5A4E6D66B /* Connect.swift */,
 				8580CED0C7F7353617D238073B0FF0D6 /* CancelConnect.swift */,
 				965F70496F07EACF217287FB4FC51561 /* CentralManagerDelegate.swift */,
-				1481AEA2CEA5B77FFCF8A343EE1E59FC /* CuspPeripheral.swift */,
 				5F0CE4036FEFC1EB06C642A22CE4D58D /* PeripheralDelegate.swift */,
 				597A1875D667D5D6BB8ED3E643211BC7 /* CuspSession.swift */,
 				E7F56A82959E4FAD0840E85D36AC6160 /* Disconnect.swift */,
@@ -1122,7 +1119,6 @@
 				BA96F23FDB82796B1AF31D910A3BC6FF /* Cusp-dummy.m in Sources */,
 				DB31C358E74C45E0681F091C7BCAB17D /* Cusp.swift in Sources */,
 				D668B797489ED81E4F3EEE93EF1DCEC4 /* CentralManagerDelegate.swift in Sources */,
-				01BC2925A99B80027F2B737365732191 /* CuspPeripheral.swift in Sources */,
 				9B628BA49965A825F3E20FC61CEF0D54 /* PeripheralDelegate.swift in Sources */,
 				9C332267C0901DB5AF676022CD6FAE80 /* CuspSession.swift in Sources */,
 				7B9FB1BF5D85A2AA0A1B94AFD008F6C9 /* Disconnect.swift in Sources */,
