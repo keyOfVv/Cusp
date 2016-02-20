@@ -8,26 +8,27 @@
 
 import Foundation
 
+/// default scan duration
 private let defaultDuration: NSTimeInterval = 3.0
 
-/// 扫描请求模型
+/// scan request
 internal class ScanRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	/// 扫描的目标UUID数组
+	/// advertising uuids to be scanned
 	var advertisingUUIDs: [UUID]?
 
-	/// 扫描时长
-	var duration: Double = 0.0
+	/// scan duration in second, 3.0s by default
+	var duration: NSTimeInterval = defaultDuration
 
-	/// 扫描完成的回调
+	/// closure to be called when scan completed
 	var completion: (([Peripheral]) -> Void)?
 
-	/// 扫描中断的回调
+	/// closure to be called when scan abrupted
 	var abruption: ((NSError) -> Void)?
 
-	///
+	/// peripherals scanned
 	var available = Set<Peripheral>()
 
 	// MARK: Initializer
@@ -37,21 +38,44 @@ internal class ScanRequest: NSObject {
 	}
 
 	/**
-	快速构造方法
+	convenient initializer
 
-	- parameter advertisingUUIDs: 广播服务UUID数组
-	- parameter duration:         扫描时长, 默认0.0秒
-	- parameter completion:       扫描结束的回调
-	- parameter abruption:        扫描中断的回调
+	- parameter advertisingUUIDs: advertising uuids to be scanned
+	- parameter duration:         scan duration in second, 3.0s by default
+	- parameter completion:       closure to be called when scan completed
+	- parameter abruption:        closure to be called when scan abrupted
 
-	- returns: 返回一个ScanRequest对象
+	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDs: [UUID]?, duration: Double = 0.0, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		self.init()
         self.advertisingUUIDs = advertisingUUIDs
         self.duration         = duration
         self.completion       = completion
         self.abruption        = abruption
+	}
+
+	/**
+	convenient initializer
+
+	- parameter advertisingUUIDs: advertising uuid strings to be scanned
+	- parameter duration:         scan duration in second, 3.0s by default
+	- parameter completion:       closure to be called when scan completed
+	- parameter abruption:        closure to be called when scan abrupted
+
+	- returns: a ScanRequest instance
+	*/
+	internal convenience init(advertisingUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+		if let uuidStrings = advertisingUUIDStrings {
+			var uuids = [UUID]()
+			for uuidString in uuidStrings {
+				let uuid = UUID(string: uuidString)
+				uuids.append(uuid)
+			}
+			self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
+		} else {
+			self.init(advertisingUUIDs: nil, duration: duration, completion: completion, abruption: abruption)
+		}
 	}
 
 	internal override var hash: Int {
@@ -86,7 +110,7 @@ public extension Cusp {
 	- parameter completion:              a closure called right after scan timed out(扫描完成后的回调, 返回从设备数组)
 	- parameter abruption:               a closure called when scan is abrupted(扫描中断的回调, 返回错误原因)
 	*/
-	public func scan(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
@@ -98,7 +122,7 @@ public extension Cusp {
 		let req = ScanRequest(advertisingUUIDs: advertisingServiceUUIDs, duration: duration, completion: completion, abruption: abruption)
 		self.checkIn(req)
 
-		// 4. 结束扫描
+		// 2. dispatch completion closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.duration * Double(NSEC_PER_SEC))), self.mainQ, {[weak self] () -> Void in
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				let peripherals = req.available.sort({ (a, b) -> Bool in
@@ -109,6 +133,17 @@ public extension Cusp {
 			self?.checkOut(req)
 			})
 	}
+
+//	public func scan(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+//
+//
+//	}
+
+}
+
+// MARK: - Privates
+
+extension Cusp {
 
 	private func checkIn(request: ScanRequest) -> Void {
 		self.scanRequests.insert(request)
@@ -152,6 +187,7 @@ public extension Cusp {
 		}
 		return nil
 	}
+
 }
 
 

@@ -115,7 +115,7 @@ public extension DeviceTableViewController {
 public extension DeviceTableViewController {
 
 	internal func scan() {
-		Cusp.central.scan(nil, completion: { (peripherals) -> Void in
+		Cusp.central.scanForUUID(nil, completion: { (peripherals) -> Void in
 			log("\(peripherals)")
 			self.peripherals = peripherals.sort({ (peripheralA, peripheralB) -> Bool in
 				return peripheralA.name <= peripheralB.name
