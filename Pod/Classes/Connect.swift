@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreBluetooth
 
 // MARK: ConnectRequest
 
@@ -40,7 +39,7 @@ internal class ConnectRequest: OperationRequest {
 
 	- returns: 返回一个ConnectRequest对象
 	*/
-	internal convenience init(peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
+	internal convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
 		self.init()
         self.peripheral = peripheral
         self.success    = success
@@ -71,7 +70,7 @@ public extension Cusp {
 	- parameter success:    a closure that will be called right after peripheral connected
 	- parameter failure:    a closure that will be called right after peripheral failed to be connected or timed out
 	*/
-	public func connect(peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
+	public func connect(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
 		// create a connect request ...
 		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set
