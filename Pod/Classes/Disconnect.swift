@@ -7,18 +7,17 @@
 //
 
 import Foundation
-import CoreBluetooth
 
-/// 连接请求模型
+/// request of disconnecting a connected peripheral
 internal class DisconnectRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	/// 待连接的从设备
-	var peripheral: CBPeripheral!
+	/// a connected CBPeripheral instance to be disconnected
+	internal var peripheral: Peripheral!
 
-	/// a closure called after disconnect
-	var completion: (() -> Void)?
+	/// a closure called when disconnected
+	internal var completion: (() -> Void)?
 
 	// MARK: Initializer
 
@@ -27,28 +26,26 @@ internal class DisconnectRequest: NSObject {
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter peripheral: 待断开连接的从设备
-	- parameter success:    成功的回调
-	- parameter failure:    失败的回调
-	- parameter timedOut:   超时的回调
+	- parameter peripheral: a connected CBPeripheral instance to be disconnected
+	- parameter completion: a closure called when disconnected
 
-	- returns: 返回一个ConnectRequest对象
+	- returns: a DisconnectRequest instance
 	*/
-	internal convenience init(peripheral: CBPeripheral, completion: (() -> Void)?) {
+	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		return self.peripheral.hash
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? DisconnectRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
@@ -59,12 +56,12 @@ internal class DisconnectRequest: NSObject {
 extension Cusp {
 
 	/**
-	disconnect from a peripheral currently in connection
+	Disconnect a peripheral currently in connection
 
-	- parameter peripheral: a connected peripheral about to be disconnected
-	- parameter completion: a closure called right after disconnection or after connection is torn down abnormally
+	- parameter peripheral: a connected CBPeripheral instance to be disconnected
+	- parameter completion: a closure called when disconnected
 	*/
-	public func disconnect(peripheral: CBPeripheral, completion: (() -> Void)?) {
+	public func disconnect(peripheral: Peripheral, completion: (() -> Void)?) {
 		// create a disconnect request ...
 		let req = DisconnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into disconnectRequests set
