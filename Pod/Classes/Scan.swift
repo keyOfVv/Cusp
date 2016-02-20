@@ -172,7 +172,7 @@ extension Cusp {
 	private func checkIn(request: ScanRequest) -> Void {
 		self.scanRequests.insert(request)
 
-		let targets = self.restructureTarget()
+		let targets = self.unionTarget()
 		self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
 	}
 
@@ -187,7 +187,7 @@ extension Cusp {
 		if self.scanRequests.isEmpty {
 			self.centralManager.stopScan()
 		} else {
-			let targets = self.restructureTarget()
+			let targets = self.unionTarget()
 			self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
 		}
 	}
@@ -197,7 +197,7 @@ extension Cusp {
 
 	- returns: a new UUID array after union
 	*/
-	private func restructureTarget() -> [UUID]? {
+	private func unionTarget() -> [UUID]? {
 		var targets = Set<UUID>()
 		for req in self.scanRequests {
 			// if any request targets at overall scan...
