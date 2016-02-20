@@ -10,18 +10,19 @@ import Foundation
 
 // MARK: ConnectRequest
 
-/// 连接请求模型
+/// device connect request
 internal class ConnectRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	/// 超时时长
-	internal var timeoutPeriod: NSTimeInterval = 10.0
+	/// timeout period
+	private var timeoutPeriod: NSTimeInterval = 10.0
 
-	/// time out flag
+	/// timed out or not
 	internal var timedOut = true
 
-	var abruption: ((NSError?) -> Void)?
+	/// closure called when connection broken-down
+	internal var abruption: ((NSError?) -> Void)?
 
 	// MARK: Initializer
 
@@ -30,14 +31,14 @@ internal class ConnectRequest: OperationRequest {
 	}
 
 	/**
-	快速构造方法
+	convenient initializer
 
-	- parameter peripheral: 待连接的从设备
-	- parameter success:    成功的回调
-	- parameter failure:    失败的回调
-	- parameter timedOut:   超时的回调
+	- parameter peripheral: a CBPeripheral instance to be connected
+	- parameter success:    a closure called when connection established
+	- parameter failure:    a closure called when connecting attempt failed or timed-out
+	- parameter abruption:  a closure called when connection broken-down
 
-	- returns: 返回一个ConnectRequest对象
+	- returns: a ConnectRequest instance
 	*/
 	internal convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
 		self.init()
@@ -48,12 +49,12 @@ internal class ConnectRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		return self.peripheral.hash
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ConnectRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
@@ -61,14 +62,17 @@ internal class ConnectRequest: OperationRequest {
 
 
 // MARK: Connect
+
 public extension Cusp {
 
 	/**
-	connect a peripheral(连接从设备)
+	connect a peripheral
+	连接从设备
 
-	- parameter peripheral: a peripheral instance to be connected(待连接的从设备)
-	- parameter success:    a closure that will be called right after peripheral connected
-	- parameter failure:    a closure that will be called right after peripheral failed to be connected or timed out
+	- parameter peripheral: a CBPeripheral instance to be connected. 待连接的从设备
+	- parameter success:    a closure called when connection established. 连接成功时执行的闭包
+	- parameter failure:    a closure called when connecting attempt failed or timed-out. 连接失败或超时时执行的闭包
+	- parameter abruption:  a closure called when connection broken-down. 连接中断时执行的闭包
 	*/
 	public func connect(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
 		// create a connect request ...
