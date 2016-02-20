@@ -7,18 +7,17 @@
 //
 
 import Foundation
-import CoreBluetooth
 
-/// 取消连接请求模型
+/// request of cancelling an in-progress connecting attempt
 internal class CancelConnectRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	/// 待连接的从设备
-	var peripheral: CBPeripheral!
+	/// a CBPeripheral instance to which the in-progress connecting attempt is to be cancelled
+	internal var peripheral: Peripheral!
 
-	/// a closure called after disconnect
-	var completion: (() -> Void)?
+	/// a closure called when connecting attempt cancelled
+	internal var completion: (() -> Void)?
 
 	// MARK: Initializer
 
@@ -27,43 +26,41 @@ internal class CancelConnectRequest: NSObject {
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter peripheral: 待取消连接的从设备
-	- parameter success:    成功的回调
-	- parameter failure:    失败的回调
-	- parameter timedOut:   超时的回调
+	- parameter peripheral: a CBPeripheral instance to which the in-progress connecting attempt is to be cancelled
+	- parameter completion: a closure called when connecting attempt cancelled
 
-	- returns: 返回一个ConnectRequest对象
+	- returns: a CancelConnectRequest instance
 	*/
-	internal convenience init(peripheral: CBPeripheral, completion: (() -> Void)?) {
+	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		return self.peripheral.hash
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CancelConnectRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
-
 }
 
 // MARK: cancel connect
+
 public extension Cusp {
 
 	/**
-	cancel a connecting attempt
+	Cancel an in-progress connecting attempt
 
 	- parameter peripheral: a peripheral instance to which the connection attempt is about to be canceled
 	*/
-	public func cancelConnection(peripheral: CBPeripheral, completion: (() -> Void)?) {
+	public func cancelConnection(peripheral: Peripheral, completion: (() -> Void)?) {
 		// create a cancel-connect request ...
 		let req = CancelConnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into cancelConnectRequests set
