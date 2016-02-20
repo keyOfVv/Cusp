@@ -177,7 +177,7 @@ extension Cusp {
 	}
 
 	/**
-	Check out a ScanRequest object. The scanning operation would stopped if no scan request exists after checking out, or else abstract the target UUID and apply a new scan.
+	Check out a ScanRequest object. The scanning operation would stopped if no scan request left after checking out, or else abstract the target UUID and apply a new scan.
 
 	- parameter request: an instance of ScanRequest
 	*/
