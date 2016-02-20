@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '2F0B055D67294FC7450F3446'
+               BlueprintIdentifier = '5026528704D022CED1C364CF'
                BlueprintName = 'Cusp'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Cusp.framework'>
