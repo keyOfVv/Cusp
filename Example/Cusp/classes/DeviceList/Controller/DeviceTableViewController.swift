@@ -17,9 +17,9 @@ import CoreBluetooth
 /// BLE Device Table View Controller
 public class DeviceTableViewController: UITableViewController {
 
-	// MARK: 控件属性
+	// MARK: Interface Properties
 
-	// MARK: 储值属性
+	// MARK: Stored Properties
 
 	var peripherals: [Peripheral]? {
 		didSet {
@@ -27,17 +27,17 @@ public class DeviceTableViewController: UITableViewController {
 		}
 	}
 
-	// MARK: 计算属性
+	// MARK: Computed Properties
 
-	// MARK: 构造方法
+	// MARK: Initializer
 
-	// MARK: View生命周期方法
+	// MARK: View Life Circle
 
 	@available(*, unavailable, message="don't call this method directly")
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-		self.title = "BLE devices list"
+		self.title = "Devices"
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "scan", style: UIBarButtonItemStyle.Plain, target: self, action: "scan")
     }
 
@@ -46,7 +46,7 @@ public class DeviceTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    // MARK: TableView数据源方法
+    // MARK: TableView Data Source
 
 	@available(*, unavailable, message="don't call this method directly")
     override public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -85,7 +85,7 @@ public class DeviceTableViewController: UITableViewController {
 	}
 
 
-	// MARK: TableView代理方法
+	// MARK: TableView Delegate
 
 	public override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 		return 44.0
@@ -115,7 +115,6 @@ public extension DeviceTableViewController {
 public extension DeviceTableViewController {
 
 	internal func scan() {
-//		let uuid = CBUUID(string: "1803")
 		Cusp.central.scan(nil, completion: { (peripherals) -> Void in
 			log("\(peripherals)")
 			self.peripherals = peripherals.sort({ (peripheralA, peripheralB) -> Bool in
@@ -133,27 +132,3 @@ public extension DeviceTableViewController {
 private extension DeviceTableViewController {
 
 }
-
-// MARK: - DeviceBriefTableViewCellDelegate
-
-//extension DeviceTableViewController: DeviceBriefTableViewCellDelegate {
-//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsConnectTo peripheral: Peripheral) {
-////		Cusp.central.connect(peripheral, success: { (response) -> Void in
-////			Cusp.central.discover(nil, inPeripheral: peripheral, success: { (response) -> Void in
-////
-////				}, failure: { (error) -> Void in
-////
-////			})
-////			}, failure: { (error) -> Void in
-////
-////		})
-//	}
-//
-//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsDisconnectFrom peripheral: Peripheral) {
-//
-//	}
-//
-//	func deviceBriefTableViewCell(deviceBriefTableViewCell: DeviceBriefTableViewCell, wantsCancelConnectTo peripheral: Peripheral) {
-//
-//	}
-//}

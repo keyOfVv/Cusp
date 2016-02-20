@@ -9,13 +9,13 @@
 import Foundation
 import CoreBluetooth
 
-/// main operation queue identifier(主并发队列ID)
+/// main operation queue identifier (主并发队列ID)
 private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
 
-/// A framework for BLE-device communication(用于BLE通讯的框架)
+/// Bluetooth Low Energy library in swift (使用swift编写的BLE通讯框架)
 public class Cusp: NSObject {
 
-	/// Singleton Instance(单例)
+	/// Singleton (单例)
 	public class var central: Cusp {
 		struct Static {
 			static let instance: Cusp = Cusp()
@@ -27,7 +27,7 @@ public class Cusp: NSObject {
 		super.init()
 	}
 
-	/// main operation concurrent queue for cusp(主并发队列)
+	/// main operation concurrent queue (主并发队列)
     internal let mainQ: dispatch_queue_t = dispatch_queue_create(QIDMain, DISPATCH_QUEUE_CONCURRENT)
 
 	/// central avator, read only(蓝牙主设备对象, 只读)
@@ -35,62 +35,62 @@ public class Cusp: NSObject {
 		return CBCentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
-	/// BLE central state(蓝牙主设备状态)
+	/// BLE state (蓝牙状态)
 	public var state: State {
 		return State(rawValue: self.centralManager.state.rawValue)!
 	}
 
 	// MARK: Requests
 
-	/// scan request set
-	internal var scanRequests: Set<ScanRequest> = Set<ScanRequest>()
+	/// scan request set (扫描请求的集合)
+    internal var scanRequests                      = Set<ScanRequest>()
 
-	/// a set contains all the connect requests currently in performing(连接请求的集合, 包含所有正在连接的请求)
-	internal var connectRequests: Set<ConnectRequest> = Set<ConnectRequest>()
+	/// connect requests set (连接请求的集合)
+    internal var connectRequests                   = Set<ConnectRequest>()
 
-	/// a set contains all the cancel-connect requests currently in performing(取消连接请求的集合, 包含所有正在取消连接的请求)
-	internal var cancelConnectRequests: Set<CancelConnectRequest> = Set<CancelConnectRequest>()
+	/// cancel-connects set (取消连接请求的集合)
+    internal var cancelConnectRequests             = Set<CancelConnectRequest>()
 
-	/// a set contains all the disconnect requests currently in performing(断开连接请求的集合, 包含所有正在断开连接的请求)
-	internal var disconnectRequests: Set<DisconnectRequest> = Set<DisconnectRequest>()
+	/// disconnect requests set (断开连接请求的集合)
+    internal var disconnectRequests                = Set<DisconnectRequest>()
 
-	/// a set contains requests of service discovering
-	internal var serviceDiscoveringRequests: Set<ServiceDiscoveringRequest> = Set<ServiceDiscoveringRequest>()
+	/// requests of service discovering (发现服务请求的集合)
+    internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
 
-	/// a set contains requests of characteristic discovering
-	internal var characteristicDiscoveringRequests: Set<CharacteristicDiscoveringRequest> = Set<CharacteristicDiscoveringRequest>()
+	/// requests of characteristic discovering (发现特征请求的集合)
+    internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
 
-	/// a set contains requests of write characteristic value
-	internal var writeRequests: Set<WriteRequest> = Set<WriteRequest>()
+	/// requests of write characteristic value (写值请求的集合)
+    internal var writeRequests                     = Set<WriteRequest>()
 
-	/// a set contains requests of read characteristic value
-	internal var readRequests: Set<ReadRequest> = Set<ReadRequest>()
+	/// requests of read characteristic value (读值请求的集合)
+    internal var readRequests                      = Set<ReadRequest>()
 
-	/// a set contains requests of subscribe characteristic value update
-	internal var subscribeRequests: Set<SubscribeRequest> = Set<SubscribeRequest>()
+	/// requests of subscribe characteristic value (订阅请求的集合)
+    internal var subscribeRequests                 = Set<SubscribeRequest>()
 
-	/// a set contains requests of unsubscribe characteristic value update
-	internal var unsubscribeRequests: Set<UnsubscribeRequest> = Set<UnsubscribeRequest>()
+	/// requests of unsubscribe characteristic value (退订请求的集合)
+    internal var unsubscribeRequests               = Set<UnsubscribeRequest>()
 
-	/// a set contains requests of RSSI reading
-	internal var RSSIRequests: Set<RSSIRequest> = Set<RSSIRequest>()
+	/// requests of RSSI reading (信号强度查询请求的集合)
+    internal var RSSIRequests                      = Set<RSSIRequest>()
 
 	// MARK: Peripheral Sets
 
-	/// discovered peripherals after scanning(扫描后获取的蓝牙设备集合)
-	internal var discoveredPeripherals: Set<Peripheral> = Set<Peripheral>()
+	/// ever discovered peripherals after scanning (扫描后获取的蓝牙设备集合)
+    internal var discoveredPeripherals             = Set<Peripheral>()
 
-	/// communicating session with connected peripheral
-	internal var sessions: Set<CommunicatingSession> = Set<CommunicatingSession>()
+	/// communicating session with connected peripheral (已建立的连接集合)
+    internal var sessions                          = Set<CommunicatingSession>()
 }
 
 // MARK: - Interface
 
 // MARK: - Preparation
-extension Cusp {
+public extension Cusp {
 
 	/**
-	prepare BLE module, this method shall be called once before any BLE operation(执行任何蓝牙功能前必须执行一次本方法)
+	prepare BLE module, this method shall be called once before any BLE operation (执行任何蓝牙功能前必须执行一次本方法)
 	*/
 	public func prepare() {
 		self.centralManager.state.rawValue

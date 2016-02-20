@@ -89,8 +89,6 @@ public extension Cusp {
 	*/
 	public func scan(advertisingServiceUUIDs: [CBUUID]?, duration: NSTimeInterval = defaultDuration, completion: (([CBPeripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
-		log("?????????")
-
 		// 0. 检查当前蓝牙状态
 		var errorCode: Int?
 		var domain = ""
