@@ -32,24 +32,20 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter RSSI:              an NSNumber object representing the signal strength of discovered peripheral
 	*/
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-//		log("DISCOVERED: \(peripheral)")
-		// retained as discovered
 		self.discoveredPeripherals.insert(peripheral)
-//		self.availablePeripherals.insert(peripheral)
-//		log("\(peripheral.services)")
-//		log("\(advertisementData)")
-		log("\(advertisementData["kCBAdvDataServiceUUIDs"])")  // <10,1,0x1390e5c90>,[0x1390e6300---2095579008]
+//		let array = advertisementData["kCBAdvDataServiceUUIDs"] as! NSMutableArray
+//		let object = array.firstObject as! CBUUID
+//		log("\(object.UUIDString)") // 1803
 
-		let array = advertisementData["kCBAdvDataServiceUUIDs"] as! NSMutableArray
-		let object = array.firstObject as! CBUUID
-		log("\(object.UUIDString)") // 1803
+		let advInfo = AdvertisementInfo(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
 
 		if let uuid = self.advServiceUUID(advertisementData) {
 			for req in self.scanRequests {
 				if req.advertisingUUIDs == nil {
-					req.available.insert(peripheral)
+					req.available.insert(advInfo)
+					break
 				} else if req.advertisingUUIDs?.contains(uuid) == true {
-					req.available.insert(peripheral)
+					req.available.insert(advInfo)
 					break
 				}
 			}
