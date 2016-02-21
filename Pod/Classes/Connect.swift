@@ -45,7 +45,7 @@ internal class ConnectRequest: OperationRequest {
         self.peripheral = peripheral
         self.success    = success
         self.failure    = failure
-		self.abruption = abruption
+        self.abruption  = abruption
 	}
 
 	override internal var hash: Int {

@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import CoreBluetooth
 
-/// 读值请求模型
+/// request of read value from specific characteristic
 internal class ReadRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	var characteristic: CBCharacteristic?
+	/// a CBCharacteristic object of which the value to be read
+	internal var characteristic: Characteristic!
 
 	// MARK: Initializer
 
@@ -23,17 +23,16 @@ internal class ReadRequest: OperationRequest {
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter data:           待写入的数据
-	- parameter characteristic: 待写值的特征
-	- parameter peripheral:     从设备对象
-	- parameter success:        写值成功的回调
-	- parameter failure:        写值失败的回调
+	- parameter characteristic: a CBCharacteristic object of which the value to be read
+	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs
+	- parameter success:        a closure called when value read successfully
+	- parameter failure:        a closure called when value read failed
 
-	- returns: 返回一个WriteRequest对象
+	- returns: a ReadRequest instance
 	*/
-	convenience init(characteristic: CBCharacteristic?, peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(characteristic: Characteristic, peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		self.init()
 		self.characteristic = characteristic
 		self.peripheral     = peripheral
@@ -42,30 +41,31 @@ internal class ReadRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		let string = self.peripheral.identifier.UUIDString + self.characteristic.UUID.UUIDString
+		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
-		if let other = object as? ServiceDiscoveringRequest {
-			return self.peripheral == other.peripheral
+		if let other = object as? ReadRequest {
+			return self.hash == other.hash
 		}
 		return false
 	}
-
 }
 
 // MARK: Communicate
 extension Cusp {
 
 	/**
-	读值
+	Read value from a characteristic
+	读取某个特征的值
 
-	- parameter characteristic: 特征;
-	- parameter peripheral:     从设备;
-	- parameter success:        读值成功的回调;
-	- parameter failure:        读值失败的回调;
+	- parameter characteristic: a CBCharacteristic object of which the value to be read. 待读值的特征对象.
+	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs. 待读值的从设备.
+	- parameter success:        a closure called when value read successfully. 读值成功时执行的闭包.
+	- parameter failure:        a closure called when value read failed. 读值失败时执行的闭包.
 	*/
-	public func read(characteristic: CBCharacteristic, inPeripheral peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func read(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = ReadRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
 			self.readRequests.insert(req)
