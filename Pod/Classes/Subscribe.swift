@@ -7,58 +7,54 @@
 //
 
 import Foundation
-import CoreBluetooth
 
 // MARK: SubscribeRequest
 
-/// 订阅通知请求模型
+/// request of subscribe value update of specific characteristic
 internal class SubscribeRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	/// 待订阅的特征
-	var characteristic: CBCharacteristic?
+	/// a CBCharacteristic object of which the value update to be subscribed
+	internal var characteristic: Characteristic!
 
-	var update: ((NSData?) -> Void)?
+	/// a closure called when characteristic's value updated
+	internal var update: ((NSData?) -> Void)?
 
 	// MARK: Initializer
 
-	/**
-	构造方法
-
-	- returns: 返回一个SubscribeRequest对象
-	*/
 	private override init() {
 		super.init()
 	}
 
 	/**
-	快速构造方法
+	Convenient initializer
 
-	- parameter characteristic: 待订阅的特征
-	- parameter peripheral:     从设备对象
-	- parameter success:        成功订阅的回调
-	- parameter failure:        订阅失败的回调
-	- parameter timedOut:       订阅超时的回调
+	- parameter characteristic: a CBCharacteristic object of which the value update to be subscribed
+	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs
+	- parameter success:        a closure called when subscription succeed
+	- parameter failure:        a closure called when subscription failed
+	- parameter update:         a closure called when characteristic's value updated
 
-	- returns: 返回一个SubscribeRequest对象
+	- returns: a SubscribeRequest instance
 	*/
-	convenience init(characteristic: CBCharacteristic, peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
+	internal convenience init(characteristic: Characteristic, peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
 		self.init()
-		self.characteristic = characteristic
-		self.peripheral = peripheral
-		self.success = success
-		self.failure = failure
-		self.update = update
+        self.characteristic = characteristic
+        self.peripheral     = peripheral
+        self.success        = success
+        self.failure        = failure
+        self.update         = update
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		let string = self.peripheral.identifier.UUIDString + self.characteristic.UUID.UUIDString
+		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? SubscribeRequest {
-			return self.peripheral == other.peripheral
+			return self.hash == other.hash
 		}
 		return false
 	}
@@ -69,14 +65,16 @@ internal class SubscribeRequest: OperationRequest {
 extension Cusp {
 
 	/**
-	订阅
+	Subscribe value update of specific characteristic on specific peripheral
+	订阅指定从设备的指定特征的数值变化
 
-	- parameter characteristic: 特征;
-	- parameter peripheral:     从设备;
-	- parameter success:        订阅成功的回调;
-	- parameter failure:        订阅失败的回调;
+	- parameter characteristic: a CBCharacteristic object of which the value update to be subscribed. 待订阅数值更新的特征.
+	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs. 特征所属的从设备.
+	- parameter success:        a closure called when subscription succeed. 订阅成功时执行的闭包.
+	- parameter failure:        a closure called when subscription failed. 订阅失败时执行的闭包.
+	- parameter update:         a closure called when characteristic's value updated. 数值更新时执行的闭包.
 	*/
-	public func subscribe(characteristic: CBCharacteristic, inPeripheral peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
+	public func subscribe(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = SubscribeRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure, update: update)
 			self.subscribeRequests.insert(req)
