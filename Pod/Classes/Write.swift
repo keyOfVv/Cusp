@@ -72,6 +72,12 @@ extension Cusp {
 	- parameter failure:        a closure called when value written failed. 写值失败时执行的闭包.
 	*/
 	public func write(data: NSData, forCharacteristic characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+		
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = WriteRequest(data: data, characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
 			self.writeRequests.insert(req)

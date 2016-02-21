@@ -75,6 +75,12 @@ extension Cusp {
 	- parameter update:         a closure called when characteristic's value updated. 数值更新时执行的闭包.
 	*/
 	public func subscribe(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+		
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = SubscribeRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure, update: update)
 			self.subscribeRequests.insert(req)
