@@ -21,7 +21,7 @@ public class DeviceTableViewController: UITableViewController {
 
 	// MARK: Stored Properties
 
-	var peripherals: [CBPeripheral]? {
+	var available: [AdvertisementInfo]? {
 		didSet {
 			self.tableView.reloadData()
 		}
@@ -55,7 +55,7 @@ public class DeviceTableViewController: UITableViewController {
 
 	@available(*, unavailable, message="don't call this method directly")
     override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return (self.peripherals == nil ? 0 : self.peripherals!.count)
+		return (self.available == nil ? 0 : self.available!.count)
     }
 
 	@available(*, unavailable, message="don't call this method directly")
@@ -64,9 +64,9 @@ public class DeviceTableViewController: UITableViewController {
 		if cell == nil {
 			cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "reuseIdentifier")
 		}
-		if let peripheral = self.peripherals?[indexPath.row] {
-			cell?.textLabel?.text = peripheral.name
-			cell?.detailTextLabel?.text = String(peripheral.RSSI?.integerValue)
+		if let advInfo = self.available?[indexPath.row] {
+			cell?.textLabel?.text = advInfo.peripheral.name
+			cell?.detailTextLabel?.text = String(advInfo.RSSI.integerValue)
 		}
 
         return cell!
@@ -115,12 +115,12 @@ public extension DeviceTableViewController {
 public extension DeviceTableViewController {
 
 	internal func scan() {
-		Cusp.central.scanForUUID(nil, completion: { (peripherals) -> Void in
-			log("\(peripherals)")
-			self.peripherals = peripherals.sort({ (peripheralA, peripheralB) -> Bool in
-				return peripheralA.name <= peripheralB.name
-			})
 
+		Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
+			log("\(advertisementInfoArray)")
+			self.available = advertisementInfoArray.sort({ (a, b) -> Bool in
+				return a.peripheral.name <= b.peripheral.name
+			})
 			}, abruption: { (error) -> Void in
 				log(error)
 		})
