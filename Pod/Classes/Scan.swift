@@ -109,12 +109,32 @@ public class AdvertisementInfo: NSObject {
 	public private(set) var peripheral: Peripheral!
 
 	/// advertisement data dictionary 广播信息
-	public private(set) var advertisementData: Dictionary<String, AnyObject>!
+	private private(set) var advertisementData: Dictionary<String, AnyObject>!
+
+	/// is peripheral connectable or not
+	public var isConnectable: Bool {
+		return advertisementData["kCBAdvDataIsConnectable"] as! Bool
+	}
+
+	/// a UUID array contains advertising UUID of peripheral
+	public var advertisingUUIDs: [UUID] {
+		return advertisementData["kCBAdvDataServiceUUIDs"] as! [UUID]
+	}
+
+	/// a UUIDString array contains advertising UUIDStrig of peripheral
+	public var advertisingUUIDStrings: [String] {
+		var UUIDStrings = [String]()
+		for uuid in advertisementData["kCBAdvDataServiceUUIDs"] as! [UUID] {
+			let UUIDString = uuid.UUIDString
+			UUIDStrings.append(UUIDString)
+		}
+		return UUIDStrings
+	}
 
 	/// signal strength 信号强度
 	public private(set) var RSSI: NSNumber!
 
-	override public var description: String {
+	public override var description: String {
 		return "\n{\n\t\(peripheral),\n\tRSSI = \(RSSI)\n}"
 	}
 
@@ -200,7 +220,6 @@ public extension Cusp {
 			self.scanForUUID(nil, duration: duration, completion: completion, abruption: abruption)
 		}
 	}
-
 }
 
 // MARK: - Privates
