@@ -62,7 +62,7 @@ public class DeviceTableViewController: UITableViewController {
     override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		var cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier")
 		if cell == nil {
-			cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "reuseIdentifier")
+			cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "reuseIdentifier")
 		}
 		if let advInfo = self.available?[indexPath.row] {
 			cell?.textLabel?.text = advInfo.peripheral.name
