@@ -3,7 +3,7 @@
 //  Aura
 //
 //  Created by keyang on 10/21/15.
-//  Copyright © 2015 com.sangebaba. All rights reserved.
+//  Copyright © 2015 com.keyang. All rights reserved.
 //
 
 import Foundation
@@ -104,9 +104,8 @@ extension Cusp {
 
 	/**
 	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
-	检查蓝牙是否可用, 如不可用则返回NSError对象, 反之则返回nil.
 
-	- returns: A NSError object or nil. 返回NSError对象或nil.
+	- returns: A NSError object or nil.
 	*/
 	internal func assertAvailability() -> NSError? {
 
