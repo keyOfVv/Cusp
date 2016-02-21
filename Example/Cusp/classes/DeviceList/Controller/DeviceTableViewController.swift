@@ -21,7 +21,7 @@ public class DeviceTableViewController: UITableViewController {
 
 	// MARK: Stored Properties
 
-	var available: [AdvertisementInfo]? {
+	var available: [Advertisement]? {
 		didSet {
 			self.tableView.reloadData()
 		}

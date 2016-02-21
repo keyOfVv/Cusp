@@ -34,7 +34,7 @@ extension Cusp: CBCentralManagerDelegate {
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		self.discoveredPeripherals.insert(peripheral)
 
-		let advInfo = AdvertisementInfo(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
+		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
 		let uuids = advInfo.advertisingUUIDs
 
 		for req in self.scanRequests {
