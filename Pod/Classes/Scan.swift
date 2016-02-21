@@ -23,13 +23,13 @@ internal class ScanRequest: NSObject {
 	internal var duration: NSTimeInterval = defaultDuration
 
 	/// closure to be called when scan completed
-	internal var completion: (([Peripheral]) -> Void)?
+	internal var completion: (([Advertisement]) -> Void)?
 
 	/// closure to be called when scan abrupted
 	internal var abruption: ((NSError) -> Void)?
 
 	/// peripherals scanned
-	internal var available = Set<Peripheral>()
+	internal var available = Set<Advertisement>()
 
 	// MARK: Initializer
 
@@ -47,7 +47,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		self.init()
         self.advertisingUUIDs = advertisingUUIDs
         self.duration         = duration
@@ -65,7 +65,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		if let uuidStrings = advertisingUUIDStrings {
 			var uuids = [UUID]()
 			for uuidString in uuidStrings {
@@ -98,6 +98,69 @@ internal class ScanRequest: NSObject {
 
 }
 
+// MARK: - AdvertisementInfo
+
+/// advertisement info after scan. 扫描结果
+public class Advertisement: NSObject {
+
+	// MARK: Stored Properties
+
+	/// peripheral 从设备
+	public private(set) var peripheral: Peripheral!
+
+	/// advertisement data dictionary 广播信息
+	private private(set) var advertisementData: Dictionary<String, AnyObject>!
+
+	/// is peripheral connectable or not
+	public var isConnectable: Bool {
+		return advertisementData["kCBAdvDataIsConnectable"] as! Bool
+	}
+
+	/// a UUID array contains advertising UUID of peripheral
+	public var advertisingUUIDs: [UUID] {
+		return advertisementData["kCBAdvDataServiceUUIDs"] as! [UUID]
+	}
+
+	/// a UUIDString array contains advertising UUIDStrig of peripheral
+	public var advertisingUUIDStrings: [String] {
+		var UUIDStrings = [String]()
+		for uuid in advertisementData["kCBAdvDataServiceUUIDs"] as! [UUID] {
+			let UUIDString = uuid.UUIDString
+			UUIDStrings.append(UUIDString)
+		}
+		return UUIDStrings
+	}
+
+	/// signal strength 信号强度
+	public private(set) var RSSI: NSNumber!
+
+	public override var description: String {
+		return "\n{\n\t\(peripheral),\n\tadvertisingUUIDs = \(advertisingUUIDStrings),\n\tRSSI = \(RSSI)\n}"
+	}
+
+	private override init() {
+		super.init()
+	}
+
+	internal convenience init(peripheral: Peripheral, advertisementData: Dictionary<String, AnyObject>, RSSI: NSNumber) {
+		self.init()
+        self.peripheral        = peripheral
+        self.advertisementData = advertisementData
+        self.RSSI              = RSSI
+	}
+
+	public override var hash: Int {
+		return self.peripheral.hash
+	}
+
+	public override func isEqual(object: AnyObject?) -> Bool {
+		if let other = object as? Advertisement {
+			return self.hash == other.hash
+		}
+		return false
+	}
+}
+
 // MARK: - scan methods
 
 public extension Cusp {
@@ -111,7 +174,7 @@ public extension Cusp {
 	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
-	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
@@ -126,10 +189,10 @@ public extension Cusp {
 		// 2. dispatch completion closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.duration * Double(NSEC_PER_SEC))), self.mainQ, {[weak self] () -> Void in
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				let peripherals = req.available.sort({ (a, b) -> Bool in
-					return a.identifier.UUIDString <= b.identifier.UUIDString
+				let infoSet = req.available.sort({ (a, b) -> Bool in
+					return a.peripheral.identifier.UUIDString <= b.peripheral.identifier.UUIDString
 				})
-				completion?(peripherals)
+				completion?(infoSet)
 			})
 			// scan completed, check request out
 			self?.checkOut(req)
@@ -145,7 +208,7 @@ public extension Cusp {
 	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
-	public func scanForUUIDString(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Peripheral]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	public func scanForUUIDString(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		if let uuidStrings = advertisingServiceUUIDStrings {
 			var uuids = [UUID]()
 			for uuidString in uuidStrings {
@@ -157,7 +220,6 @@ public extension Cusp {
 			self.scanForUUID(nil, duration: duration, completion: completion, abruption: abruption)
 		}
 	}
-
 }
 
 // MARK: - Privates

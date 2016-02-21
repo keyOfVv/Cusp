@@ -32,26 +32,18 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter RSSI:              an NSNumber object representing the signal strength of discovered peripheral
 	*/
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-//		log("DISCOVERED: \(peripheral)")
-		// retained as discovered
 		self.discoveredPeripherals.insert(peripheral)
-//		self.availablePeripherals.insert(peripheral)
-//		log("\(peripheral.services)")
-//		log("\(advertisementData)")
-		log("\(advertisementData["kCBAdvDataServiceUUIDs"])")  // <10,1,0x1390e5c90>,[0x1390e6300---2095579008]
 
-		let array = advertisementData["kCBAdvDataServiceUUIDs"] as! NSMutableArray
-		let object = array.firstObject as! CBUUID
-		log("\(object.UUIDString)") // 1803
+		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
+		let uuids = advInfo.advertisingUUIDs
 
-		if let uuid = self.advServiceUUID(advertisementData) {
-			for req in self.scanRequests {
-				if req.advertisingUUIDs == nil {
-					req.available.insert(peripheral)
-				} else if req.advertisingUUIDs?.contains(uuid) == true {
-					req.available.insert(peripheral)
-					break
-				}
+		for req in self.scanRequests {
+			if req.advertisingUUIDs == nil {
+				req.available.insert(advInfo)
+				break
+			} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {
+				req.available.insert(advInfo)
+				break
 			}
 		}
 	}
@@ -100,8 +92,6 @@ extension Cusp: CBCentralManagerDelegate {
 	public func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
 		log("FAILED: \(peripheral)")
 		dispatch_async(self.mainQ) { () -> Void in
-			// released from interested
-//			self.interestedPeripherals.remove(peripheral)
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
 			for req in self.connectRequests {
@@ -133,10 +123,9 @@ extension Cusp: CBCentralManagerDelegate {
 		log("\(error)")
 		dispatch_async(self.mainQ) { () -> Void in
 			if let errorInfo = error {
-				// abnormal disconnection, found out specific session
+				// abnormal disconnection, find out specific session
 				if let session = self.sessionFor(peripheral) {
 					dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
-						log("%%%%%%%%%%%")
 						session?.abruption?(errorInfo)
 					})
 				}
@@ -154,8 +143,6 @@ extension Cusp: CBCentralManagerDelegate {
 					}
 				}
 				if let req = tgtDisReq {
-					// released from connected
-//					self.interestedPeripherals.remove(peripheral)
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
@@ -172,8 +159,6 @@ extension Cusp: CBCentralManagerDelegate {
 					}
 				}
 				if let req = tgtKclReq {
-					// released from connecting
-//					self.interestedPeripherals.remove(peripheral)
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
@@ -185,19 +170,26 @@ extension Cusp: CBCentralManagerDelegate {
 	}
 }
 
-// MARK: - Privates
+// MARK: -
+extension SequenceType where Generator.Element : Equatable {
 
-extension Cusp {
-
-	private func advServiceUUID(data: [String: AnyObject]) -> UUID? {
-		if let array = data["kCBAdvDataServiceUUIDs"] as? NSMutableArray {
-			if let uuid = array.firstObject as? UUID {
-				return uuid
+	private func includes(S: [Self.Generator.Element]) -> Bool {
+		for element in S {
+			if !self.contains(element) {
+				return false
 			}
 		}
-		return nil
+		return true
 	}
 
+	private func overlapsWith(S: [Self.Generator.Element]) -> Bool {
+		for element in S {
+			if self.contains(element) {
+				return true
+			}
+		}
+		return false
+	}
 }
 
 
