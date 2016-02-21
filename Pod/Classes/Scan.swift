@@ -135,7 +135,7 @@ public class AdvertisementInfo: NSObject {
 	public private(set) var RSSI: NSNumber!
 
 	public override var description: String {
-		return "\n{\n\t\(peripheral),\n\tRSSI = \(RSSI)\n}"
+		return "\n{\n\t\(peripheral),\n\tadvertisingUUIDs = \(advertisingUUIDStrings),\n\tRSSI = \(RSSI)\n}"
 	}
 
 	private override init() {
