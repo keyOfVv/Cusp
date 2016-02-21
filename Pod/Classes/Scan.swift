@@ -114,6 +114,10 @@ public class AdvertisementInfo: NSObject {
 	/// signal strength 信号强度
 	public private(set) var RSSI: NSNumber!
 
+	override public var description: String {
+		return "\n{\n\t\(peripheral),\n\tRSSI = \(RSSI)\n}"
+	}
+
 	private override init() {
 		super.init()
 	}
