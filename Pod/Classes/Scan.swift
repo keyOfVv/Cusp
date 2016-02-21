@@ -17,19 +17,19 @@ internal class ScanRequest: NSObject {
 	// MARK: Stored Properties
 
 	/// advertising uuids to be scanned
-	var advertisingUUIDs: [UUID]?
+	internal var advertisingUUIDs: [UUID]?
 
 	/// scan duration in second, 3.0s by default
-	var duration: NSTimeInterval = defaultDuration
+	internal var duration: NSTimeInterval = defaultDuration
 
 	/// closure to be called when scan completed
-	var completion: (([Peripheral]) -> Void)?
+	internal var completion: (([Peripheral]) -> Void)?
 
 	/// closure to be called when scan abrupted
-	var abruption: ((NSError) -> Void)?
+	internal var abruption: ((NSError) -> Void)?
 
 	/// peripherals scanned
-	var available = Set<Peripheral>()
+	internal var available = Set<Peripheral>()
 
 	// MARK: Initializer
 
