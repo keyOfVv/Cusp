@@ -75,6 +75,12 @@ public extension Cusp {
 	- parameter abruption:  a closure called when connection broken-down. 连接中断时执行的闭包
 	*/
 	public func connect(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, abruption: ((NSError?) -> Void)?) {
+
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
 		// create a connect request ...
 		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set

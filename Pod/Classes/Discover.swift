@@ -120,6 +120,12 @@ extension Cusp {
 	- parameter failure:      a closure called when discovering failed. 发现服务失败的闭包.
 	*/
 	public func discover(serviceUUIDs: [UUID]?, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+		
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, peripheral: peripheral, success: success, failure: failure)
 			self.serviceDiscoveringRequests.insert(req)
@@ -143,6 +149,12 @@ extension Cusp {
 	- parameter failure:             a closure called when discovering failed. 发现特征失败的闭包.
 	*/
 	public func discover(characteristicUUIDs: [UUID]?, ofService service: Service, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, peripheral: peripheral, success: success, failure: failure)
 			self.characteristicDiscoveringRequests.insert(req)

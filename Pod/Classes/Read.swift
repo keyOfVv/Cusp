@@ -66,6 +66,12 @@ extension Cusp {
 	- parameter failure:        a closure called when value read failed. 读值失败时执行的闭包.
 	*/
 	public func read(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = ReadRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
 			self.readRequests.insert(req)

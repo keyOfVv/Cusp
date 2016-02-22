@@ -68,6 +68,12 @@ extension Cusp {
 	- parameter failure:        a closure called when unsubscription failed. 取消订阅失败时执行的闭包.
 	*/
 	public func unsubscribe(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+		
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = UnsubscribeRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
 			self.unsubscribeRequests.insert(req)

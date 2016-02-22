@@ -209,6 +209,13 @@ public extension Cusp {
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
 	public func scanForUUIDString(advertisingServiceUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
+
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			abruption?(error)
+			return
+		}
+
 		if let uuidStrings = advertisingServiceUUIDStrings {
 			var uuids = [UUID]()
 			for uuidString in uuidStrings {

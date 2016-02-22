@@ -32,18 +32,20 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter RSSI:              an NSNumber object representing the signal strength of discovered peripheral
 	*/
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-		self.discoveredPeripherals.insert(peripheral)
+		dispatch_async(self.mainQ) { () -> Void in
+			self.discoveredPeripherals.insert(peripheral)
 
-		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
-		let uuids = advInfo.advertisingUUIDs
+			let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
+			let uuids = advInfo.advertisingUUIDs
 
-		for req in self.scanRequests {
-			if req.advertisingUUIDs == nil {
-				req.available.insert(advInfo)
-				break
-			} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {
-				req.available.insert(advInfo)
-				break
+			for req in self.scanRequests {
+				if req.advertisingUUIDs == nil {
+					req.available.insert(advInfo)
+					break
+				} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {
+					req.available.insert(advInfo)
+					break
+				}
 			}
 		}
 	}
