@@ -8,6 +8,9 @@
 
 import Foundation
 
+/// Notification
+public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
+
 /// main operation queue identifier (主并发队列ID)
 private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
 
