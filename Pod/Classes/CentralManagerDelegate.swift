@@ -130,6 +130,7 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
 						session?.abruption?(errorInfo)
 					})
+					self.sessions.remove(session)	// remove the abrupted session
 				}
 
 			} else {
