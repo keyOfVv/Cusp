@@ -18,10 +18,13 @@ Cusp.central.prepare()
 ### Scan for BLE device
 ```swift
 Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
+
 	for advertisementInfo in advertisementInfoArray {
 		print(advertisementInfo.peripheral.name)
 		print(advertisementInfo.advertisingUUIDStrings)
 		print(advertisementInfo.RSSI)
+	}
+
 	}, abruption: { (error) -> Void in
 
 })
