@@ -16,13 +16,19 @@ internal class OperationRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	var peripheral: CBPeripheral!
+	internal var peripheral: CBPeripheral!
 
 	/// 连接成功的回调
-	var success: ((Response?) -> Void)?
+	internal var success: ((Response?) -> Void)?
 
 	/// 连接失败的回调
-	var failure: ((NSError?) -> Void)?
+	internal var failure: ((NSError?) -> Void)?
+
+	/// timeout period
+	internal var timeoutPeriod: NSTimeInterval = 10.0
+
+	/// timed out or not
+	internal var timedOut = true
 
 	internal override init() {
 		super.init()
