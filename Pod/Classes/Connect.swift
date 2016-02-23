@@ -15,12 +15,6 @@ internal class ConnectRequest: OperationRequest {
 
 	// MARK: Stored Properties
 
-	/// timeout period
-	private var timeoutPeriod: NSTimeInterval = 10.0
-
-	/// timed out or not
-	internal var timedOut = true
-
 	/// closure called when connection broken-down
 	internal var abruption: ((NSError?) -> Void)?
 
