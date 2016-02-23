@@ -34,6 +34,7 @@ extension Cusp: CBPeripheralDelegate {
 					}
 				}
 				if let req = tgtReq {
+					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
 							// discovering failed
@@ -70,6 +71,7 @@ extension Cusp: CBPeripheralDelegate {
 					}
 				}
 				if let req = tgtReq {
+					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
 							// discovering failed
@@ -107,6 +109,7 @@ extension Cusp: CBPeripheralDelegate {
 				}
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					if let req = tgtReq {
+						req.timedOut = false
 						// read
 						if let errorInfo = error {
 							// failed
@@ -146,6 +149,7 @@ extension Cusp: CBPeripheralDelegate {
 					}
 				}
 				if let req = tgtReq {
+					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
 							// write failed
@@ -181,6 +185,7 @@ extension Cusp: CBPeripheralDelegate {
 					}
 				}
 				if let req = tgtReq {
+					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
 							// subscribe failed
@@ -201,6 +206,7 @@ extension Cusp: CBPeripheralDelegate {
 						}
 					}
 					if let req = tgtReq {
+						req.timedOut = false
 						dispatch_async(dispatch_get_main_queue(), { () -> Void in
 							if let errorInfo = error {
 								// unsubscribe failed
@@ -229,6 +235,7 @@ extension Cusp: CBPeripheralDelegate {
 					}
 				}
 				if let req = tgtReq {
+					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
 							// write failed

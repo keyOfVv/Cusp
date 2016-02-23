@@ -80,6 +80,16 @@ extension Cusp {
 				dispatch_async(session.sessionQ, { () -> Void in
 					peripheral.readValueForCharacteristic(characteristic)
 				})
+
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
+					if req.timedOut {
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
+							failure?(error)
+						})
+						self.readRequests.remove(req)
+					}
+				}
 			}
 		}
 	}
