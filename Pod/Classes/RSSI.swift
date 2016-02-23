@@ -18,11 +18,6 @@ internal class RSSIRequest: OperationRequest {
 
 	// MARK: Initializer
 
-	/**
-	构造方法
-
-	- returns: 返回一个RSSIRequest对象
-	*/
 	override init() {
 		super.init()
 	}
@@ -67,6 +62,12 @@ extension Cusp {
 	/// - parameter failure: 获取失败的回调;
 	/// - parameter timedOut: 获取超时的回调;
 	public func readRSSI(peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = self.assertAvailability() {
+			failure?(error)
+			return
+		}
+
 		dispatch_async(self.mainQ) { () -> Void in
 			let req = RSSIRequest(peripheral: peripheral, success: success, failure: failure)
 			self.RSSIRequests.insert(req)
@@ -75,6 +76,16 @@ extension Cusp {
 				dispatch_async(session.sessionQ, { () -> Void in
 					peripheral.readRSSI()
 				})
+
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
+					if req.timedOut {
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
+							failure?(error)
+						})
+						self.RSSIRequests.remove(req)
+					}
+				}
 			}
 		}
 	}
