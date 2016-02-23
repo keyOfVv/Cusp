@@ -30,6 +30,53 @@ Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Vo
 })
 ```
 
+### Connect a BLE device
+```swift
+Cusp.central.connect(peripheral, success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+	}, abruption: { (error) -> Void in
+
+})
+```
+
+### Discover service or characteristic
+```swift
+Cusp.central.discover(serviceUUIDArray, inPeripheral: peripheral, success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+})
+
+Cusp.central.discover(characteristicUUIDArray, ofService: service, inPeripheral: peripheral, success: { (response) -> Void in
+
+}, failure: { (error) -> Void in
+
+})
+
+```
+
+### Read or Write
+```swift
+Cusp.central.write(data, forCharacteristic: characteristic, inPeripheral: peripheral, success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+})
+```
+
+### Subscribe or Unsubscribe
+```swift
+Cusp.central.subscribe(characteristcNotify, inPeripheral: peripheral, success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+	}, update: { (value) -> Void in
+
+})
+```
+
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
