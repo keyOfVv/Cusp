@@ -15,6 +15,18 @@ import Cusp
 Cusp.central.prepare()
 ```
 
+### Scan for BLE device
+```swift
+Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
+	for advertisementInfo in advertisementInfoArray {
+		print(advertisementInfo.peripheral.name)
+		print(advertisementInfo.advertisingUUIDStrings)
+		print(advertisementInfo.RSSI)
+	}, abruption: { (error) -> Void in
+
+})
+```
+
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
