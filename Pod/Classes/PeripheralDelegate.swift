@@ -260,7 +260,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(resp)
 						}
 					})
-					self.RSSIRequests.remove(req)
+					dispatch_barrier_async(session.sessionQ, { () -> Void in
+						self.RSSIRequests.remove(req)
+					})
 				}
 			})
 		}
