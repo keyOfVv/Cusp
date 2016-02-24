@@ -124,6 +124,9 @@ extension Cusp: CBPeripheralDelegate {
 							resp.value = characteristic.value
 							req.success?(resp)
 						}
+						dispatch_barrier_async(session.sessionQ, { () -> Void in
+							self.readRequests.remove(req)
+						})
 					} else {
 						// subscribed
 						session.update?(characteristic.value)
