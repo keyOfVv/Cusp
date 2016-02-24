@@ -64,7 +64,9 @@ public extension Cusp {
 		// create a cancel-connect request ...
 		let req = CancelConnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into cancelConnectRequests set
-		self.cancelConnectRequests.insert(req)
+		dispatch_barrier_async(self.mainQ) { () -> Void in
+			self.cancelConnectRequests.insert(req)
+		}
 		// start disconnecting
 		self.centralManager.cancelPeripheralConnection(peripheral)
 	}

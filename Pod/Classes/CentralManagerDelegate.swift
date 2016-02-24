@@ -171,7 +171,9 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
-					self.cancelConnectRequests.remove(req)
+					dispatch_barrier_async(self.mainQ, { () -> Void in
+						self.cancelConnectRequests.remove(req)
+					})
 					return
 				}
 			}
