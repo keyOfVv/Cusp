@@ -205,7 +205,9 @@ extension Cusp: CBPeripheralDelegate {
 							session.update = req.update
 						}
 					})
-					self.subscribeRequests.remove(req)
+					dispatch_barrier_async(session.sessionQ, { () -> Void in
+						self.subscribeRequests.remove(req)
+					})
 				} else {
 					var tgtReq: UnsubscribeRequest?
 					for req in self.unsubscribeRequests {
