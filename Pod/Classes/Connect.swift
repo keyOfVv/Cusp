@@ -78,7 +78,9 @@ public extension Cusp {
 		// create a connect request ...
 		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set
-		self.connectRequests.insert(req)
+		dispatch_barrier_async(self.mainQ) { () -> Void in
+			self.connectRequests.insert(req)
+		}
 		// start connecting
 		self.centralManager.connectPeripheral(peripheral, options: nil)
 

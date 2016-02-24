@@ -79,7 +79,9 @@ extension Cusp: CBCentralManagerDelegate {
 				peripheral.delegate = self
 				self.sessions.insert(session)
 
-				self.connectRequests.remove(req)
+				dispatch_barrier_async(self.mainQ, { () -> Void in
+					self.connectRequests.remove(req)
+				})
 			}
 		}
 	}
@@ -108,7 +110,9 @@ extension Cusp: CBCentralManagerDelegate {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					req.failure?(error)
 				})
-				self.connectRequests.remove(req)
+				dispatch_barrier_async(self.mainQ, { () -> Void in
+					self.connectRequests.remove(req)
+				})
 			}
 		}
 	}
