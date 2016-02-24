@@ -83,7 +83,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					self.characteristicDiscoveringRequests.remove(req)
+					dispatch_barrier_async(session.sessionQ, { () -> Void in
+						self.characteristicDiscoveringRequests.remove(req)
+					})
 				}
 			}
 		}
