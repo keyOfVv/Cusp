@@ -166,7 +166,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					self.writeRequests.remove(req)
+					dispatch_barrier_async(session.sessionQ, { () -> Void in
+						self.writeRequests.remove(req)
+					})
 				}
 			})
 		}
