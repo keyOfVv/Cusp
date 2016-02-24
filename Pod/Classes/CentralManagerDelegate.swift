@@ -74,10 +74,12 @@ extension Cusp: CBCentralManagerDelegate {
 					req.success?(nil)
 				})
 
-				let session = CommunicatingSession(peripheral: peripheral)
-				session.abruption = req.abruption
-				peripheral.delegate = self
-				self.sessions.insert(session)
+				dispatch_barrier_async(self.mainQ, { () -> Void in
+					let session = CommunicatingSession(peripheral: peripheral)
+					session.abruption = req.abruption
+					peripheral.delegate = self
+					self.sessions.insert(session)
+				})
 
 				dispatch_barrier_async(self.mainQ, { () -> Void in
 					self.connectRequests.remove(req)
@@ -134,7 +136,9 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
 						session?.abruption?(errorInfo)
 					})
-					self.sessions.remove(session)	// remove the abrupted session
+					dispatch_barrier_async(self.mainQ, { () -> Void in
+						self.sessions.remove(session)	// remove the abrupted session
+					})
 				}
 
 			} else {
