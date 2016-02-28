@@ -125,24 +125,27 @@ extension Cusp {
 			failure?(error)
 			return
 		}
-		
-		dispatch_async(self.mainQ) { () -> Void in
+
+		if let session = self.sessionFor(peripheral) {
+
 			let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, peripheral: peripheral, success: success, failure: failure)
-			self.serviceDiscoveringRequests.insert(req)
+			dispatch_async(session.reqOpQ, { () -> Void in
+				self.serviceDiscoveringRequests.insert(req)
+			})
 
-			if let session = self.sessionFor(peripheral) {
-				dispatch_async(session.sessionQ, { () -> Void in
-					peripheral.discoverServices(serviceUUIDs)
-				})
+			dispatch_async(session.sessionQ, { () -> Void in
+				peripheral.discoverServices(serviceUUIDs)
+			})
 
-				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
-					if req.timedOut {
-						dispatch_async(dispatch_get_main_queue(), { () -> Void in
-							let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
-							failure?(error)
-						})
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
+				if req.timedOut {
+					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+						let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
+						failure?(error)
+					})
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.serviceDiscoveringRequests.remove(req)
-					}
+					})
 				}
 			}
 		}
@@ -165,23 +168,26 @@ extension Cusp {
 			return
 		}
 
-		dispatch_async(self.mainQ) { () -> Void in
+		if let session = self.sessionFor(peripheral) {
+
 			let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, peripheral: peripheral, success: success, failure: failure)
-			self.characteristicDiscoveringRequests.insert(req)
+			dispatch_async(session.reqOpQ, { () -> Void in
+				self.characteristicDiscoveringRequests.insert(req)
+			})
 
-			if let session = self.sessionFor(peripheral) {
-				dispatch_async(session.sessionQ, { () -> Void in
-					peripheral.discoverCharacteristics(characteristicUUIDs, forService: service)
-				})
+			dispatch_async(session.sessionQ, { () -> Void in
+				peripheral.discoverCharacteristics(characteristicUUIDs, forService: service)
+			})
 
-				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
-					if req.timedOut {
-						dispatch_async(dispatch_get_main_queue(), { () -> Void in
-							let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
-							failure?(error)
-						})
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
+				if req.timedOut {
+					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+						let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
+						failure?(error)
+					})
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.characteristicDiscoveringRequests.remove(req)
-					}
+					})
 				}
 			}
 		}

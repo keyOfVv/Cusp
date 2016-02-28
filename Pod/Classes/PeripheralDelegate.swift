@@ -44,7 +44,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					self.serviceDiscoveringRequests.remove(req)
+					dispatch_async(session.reqOpQ, { () -> Void in
+						self.serviceDiscoveringRequests.remove(req)
+					})
 				}
 			}
 		}
@@ -81,7 +83,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					self.characteristicDiscoveringRequests.remove(req)
+					dispatch_async(session.reqOpQ, { () -> Void in
+						self.characteristicDiscoveringRequests.remove(req)
+					})
 				}
 			}
 		}
@@ -120,6 +124,9 @@ extension Cusp: CBPeripheralDelegate {
 							resp.value = characteristic.value
 							req.success?(resp)
 						}
+						dispatch_async(session.reqOpQ, { () -> Void in
+							self.readRequests.remove(req)
+						})
 					} else {
 						// subscribed
 						session.update?(characteristic.value)
@@ -159,7 +166,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					self.writeRequests.remove(req)
+					dispatch_async(session.reqOpQ, { () -> Void in
+						self.writeRequests.remove(req)
+					})
 				}
 			})
 		}
@@ -196,7 +205,9 @@ extension Cusp: CBPeripheralDelegate {
 							session.update = req.update
 						}
 					})
-					self.subscribeRequests.remove(req)
+					dispatch_async(session.reqOpQ, { () -> Void in
+						self.subscribeRequests.remove(req)
+					})
 				} else {
 					var tgtReq: UnsubscribeRequest?
 					for req in self.unsubscribeRequests {
@@ -216,7 +227,9 @@ extension Cusp: CBPeripheralDelegate {
 								req.success?(nil)
 							}
 						})
-						self.unsubscribeRequests.remove(req)
+						dispatch_async(session.reqOpQ, { () -> Void in
+							self.unsubscribeRequests.remove(req)
+						})
 					}
 				}
 			})
@@ -247,7 +260,9 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(resp)
 						}
 					})
-					self.RSSIRequests.remove(req)
+					dispatch_async(session.reqOpQ, { () -> Void in
+						self.RSSIRequests.remove(req)
+					})
 				}
 			})
 		}
@@ -256,12 +271,17 @@ extension Cusp: CBPeripheralDelegate {
 	internal func sessionFor(peripheral: CBPeripheral?) -> CommunicatingSession? {
 		if peripheral == nil { return nil }
 
-		for session in self.sessions {
-			if session.peripheral == peripheral {
-				return session
+		var tgtSession: CommunicatingSession?
+
+		dispatch_sync(self.sesOpQ) { () -> Void in
+			for session in self.sessions {
+				if session.peripheral == peripheral {
+					tgtSession = session
+					break
+				}
 			}
 		}
 
-		return nil
+		return tgtSession
 	}
 }

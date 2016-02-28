@@ -239,7 +239,9 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkIn(request: ScanRequest) -> Void {
-		self.scanRequests.insert(request)
+		dispatch_async(self.reqOpQ) { () -> Void in
+			self.scanRequests.insert(request)
+		}
 
 		let targets = self.unionTarget()
 		self.centralManager.scanForPeripheralsWithServices(targets, options: nil)
@@ -251,7 +253,9 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkOut(request: ScanRequest) -> Void {
-		self.scanRequests.remove(request)
+		dispatch_async(self.reqOpQ) { () -> Void in
+			self.scanRequests.remove(request)
+		}
 
 		if self.scanRequests.isEmpty {
 			self.centralManager.stopScan()

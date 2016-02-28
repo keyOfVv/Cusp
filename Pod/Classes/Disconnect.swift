@@ -65,7 +65,9 @@ extension Cusp {
 		// create a disconnect request ...
 		let req = DisconnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into disconnectRequests set
-		self.disconnectRequests.insert(req)
+		dispatch_async(self.reqOpQ) { () -> Void in
+			self.disconnectRequests.insert(req)
+		}
 		// start disconnecting
 		self.centralManager.cancelPeripheralConnection(peripheral)
 	}

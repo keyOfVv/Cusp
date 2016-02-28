@@ -27,6 +27,8 @@ class CommunicatingSession: NSObject {
 	/// 操作队列
 	internal var sessionQ: dispatch_queue_t!
 
+	internal var reqOpQ:dispatch_queue_t!
+
 	// MARK: Initializer
 
 	/// 初始化
@@ -40,6 +42,8 @@ class CommunicatingSession: NSObject {
 		self.peripheral = peripheral
 		let qLabel = "com.keyang.cusp.session." + peripheral.identifier.UUIDString
 		self.sessionQ = dispatch_queue_create(qLabel, DISPATCH_QUEUE_CONCURRENT)
+		let reqOpLabel = "com.keyang.cusp.sessionReqOp." + peripheral.identifier.UUIDString
+		self.reqOpQ = dispatch_queue_create(reqOpLabel, DISPATCH_QUEUE_SERIAL)
 	}
 
 	override internal var hash: Int {
