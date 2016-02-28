@@ -81,7 +81,7 @@ extension Cusp: CBCentralManagerDelegate {
 					self.sessions.insert(session)
 				})
 
-				dispatch_barrier_async(self.mainQ, { () -> Void in
+				dispatch_async(self.reqOpQ, { () -> Void in
 					self.connectRequests.remove(req)
 				})
 			}
@@ -112,7 +112,7 @@ extension Cusp: CBCentralManagerDelegate {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					req.failure?(error)
 				})
-				dispatch_barrier_async(self.mainQ, { () -> Void in
+				dispatch_async(self.reqOpQ, { () -> Void in
 					self.connectRequests.remove(req)
 				})
 			}
@@ -157,7 +157,7 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
-					dispatch_barrier_async(self.mainQ, { () -> Void in
+					dispatch_async(self.reqOpQ, { () -> Void in
 						self.disconnectRequests.remove(req)
 					})
 					return
@@ -175,7 +175,7 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
-					dispatch_barrier_async(self.mainQ, { () -> Void in
+					dispatch_async(self.reqOpQ, { () -> Void in
 						self.cancelConnectRequests.remove(req)
 					})
 					return

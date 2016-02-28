@@ -239,7 +239,7 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkIn(request: ScanRequest) -> Void {
-		dispatch_barrier_async(self.mainQ) { () -> Void in
+		dispatch_async(self.reqOpQ) { () -> Void in
 			self.scanRequests.insert(request)
 		}
 
@@ -253,7 +253,7 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkOut(request: ScanRequest) -> Void {
-		dispatch_barrier_async(self.mainQ) { () -> Void in
+		dispatch_async(self.reqOpQ) { () -> Void in
 			self.scanRequests.remove(request)
 		}
 

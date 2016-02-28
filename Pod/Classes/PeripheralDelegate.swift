@@ -44,7 +44,7 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.serviceDiscoveringRequests.remove(req)
 					})
 				}
@@ -83,7 +83,7 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.characteristicDiscoveringRequests.remove(req)
 					})
 				}
@@ -124,7 +124,7 @@ extension Cusp: CBPeripheralDelegate {
 							resp.value = characteristic.value
 							req.success?(resp)
 						}
-						dispatch_barrier_async(session.sessionQ, { () -> Void in
+						dispatch_async(session.reqOpQ, { () -> Void in
 							self.readRequests.remove(req)
 						})
 					} else {
@@ -166,7 +166,7 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.writeRequests.remove(req)
 					})
 				}
@@ -205,7 +205,7 @@ extension Cusp: CBPeripheralDelegate {
 							session.update = req.update
 						}
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.subscribeRequests.remove(req)
 					})
 				} else {
@@ -227,7 +227,7 @@ extension Cusp: CBPeripheralDelegate {
 								req.success?(nil)
 							}
 						})
-						dispatch_barrier_async(session.sessionQ, { () -> Void in
+						dispatch_async(session.reqOpQ, { () -> Void in
 							self.unsubscribeRequests.remove(req)
 						})
 					}
@@ -260,7 +260,7 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(resp)
 						}
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.RSSIRequests.remove(req)
 					})
 				}

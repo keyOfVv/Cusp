@@ -84,7 +84,7 @@ extension Cusp {
 		if let session = self.sessionFor(peripheral) {
 
 			let req = SubscribeRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure, update: update)
-			dispatch_barrier_async(session.sessionQ, { () -> Void in
+			dispatch_async(session.reqOpQ, { () -> Void in
 				self.subscribeRequests.insert(req)
 			})
 
@@ -98,7 +98,7 @@ extension Cusp {
 						let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
 						failure?(error)
 					})
-					dispatch_barrier_async(session.sessionQ, { () -> Void in
+					dispatch_async(session.reqOpQ, { () -> Void in
 						self.subscribeRequests.remove(req)
 					})
 				}
