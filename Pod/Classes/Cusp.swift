@@ -17,6 +17,9 @@ private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
 /// request operation serial queue identifier
 private let QIDReqOp = "com.keyang.cusp.requestOperationQ"
 
+/// session operation serial queue identifier
+private let QIDSesOp = "com.keyang.cusp.sessionOperationQ"
+
 /// Bluetooth Low Energy library in swift (使用swift编写的BLE通讯框架)
 public class Cusp: NSObject {
 
@@ -37,6 +40,9 @@ public class Cusp: NSObject {
 
 	/// request operation serial queue
 	internal let reqOpQ: dispatch_queue_t = dispatch_queue_create(QIDReqOp, DISPATCH_QUEUE_SERIAL)
+
+	/// session operation serial queue
+	internal let sesOpQ: dispatch_queue_t = dispatch_queue_create(QIDSesOp, DISPATCH_QUEUE_SERIAL)
 
 	/// central avator, read only(蓝牙主设备对象, 只读)
 	private(set) lazy var centralManager: CentralManager = {
