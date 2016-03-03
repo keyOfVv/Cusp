@@ -47,6 +47,37 @@ extension CBPeripheral {
 		}
 		return false
 	}
+
+	/// 根据UUID字符串获取对应的服务
+	func serviceWith(UUIDString UUIDString: String) -> CBService? {
+
+		if let services = self.services {
+			for aService in services {
+				if (aService.UUID.UUIDString == UUIDString) {
+					return aService
+				}
+			}
+		}
+		return nil
+	}
+
+	/// 根据UUID字符串获取对应的特征
+	func characteristicWith(UUIDString UUIDString: String) -> CBCharacteristic? {
+
+		if let services = self.services {
+			for aService in services {
+				if let characteristics = aService.characteristics {
+					for aCharacteristics in characteristics {
+						if (aCharacteristics.UUID.UUIDString == UUIDString) {
+							return aCharacteristics
+						}
+					}
+				}
+			}
+		}
+		return nil
+	}
+
 }
 
 // MARK: - CBService
@@ -80,3 +111,4 @@ extension CBCharacteristic {
 		return false
 	}
 }
+
