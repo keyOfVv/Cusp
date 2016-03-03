@@ -203,8 +203,11 @@ extension SequenceType where Generator.Element : Equatable {
 		return true
 	}
 
-	private func overlapsWith(S: [Self.Generator.Element]) -> Bool {
-		for element in S {
+	private func overlapsWith(S: [Self.Generator.Element]?) -> Bool {
+		if S == nil {
+			return false
+		}
+		for element in S! {
 			if self.contains(element) {
 				return true
 			}

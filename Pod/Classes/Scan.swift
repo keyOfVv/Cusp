@@ -117,8 +117,8 @@ public class Advertisement: NSObject {
 	}
 
 	/// a UUID array contains advertising UUID of peripheral
-	public var advertisingUUIDs: [UUID] {
-		return advertisementData["kCBAdvDataServiceUUIDs"] as! [UUID]
+	public var advertisingUUIDs: [UUID]? {
+		return advertisementData["kCBAdvDataServiceUUIDs"] as? [UUID]
 	}
 
 	/// a UUIDString array contains advertising UUIDStrig of peripheral
