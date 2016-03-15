@@ -13,17 +13,21 @@
 import Foundation
 import CoreBluetooth
 
-/// Notification
+// MARK: Notifications
+
+/// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
 public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
 
+// MARK: Constants
+
 /// main operation queue identifier
-private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
+private let CUSP_CENTRAL_Q_MAIN_CONCURRENT = "com.keyang.cusp.central_Q_main_concurrent"
 
 /// request operation serial queue identifier
-private let QIDReqOp = "com.keyang.cusp.requestOperationQ"
+private let CUSP_CENTRAL_Q_REQUEST_SERIAL  = "com.keyang.cusp.central_Q_request_serial"
 
 /// session operation serial queue identifier
-private let QIDSesOp = "com.keyang.cusp.sessionOperationQ"
+private let CUSP_CENTRAL_Q_SESSION_SERIAL  = "com.keyang.cusp.central_Q_session_serial"
 
 /// Bluetooth Low Energy library in swift
 public class Cusp: NSObject {
@@ -41,13 +45,13 @@ public class Cusp: NSObject {
 	}
 
 	/// main operation concurrent queue, operations (scan, connect, cancel-connect, disconnect) will be submitted to this Q
-    internal let mainQ: dispatch_queue_t = dispatch_queue_create(QIDMain, DISPATCH_QUEUE_CONCURRENT)
+    internal let mainQ: dispatch_queue_t = dispatch_queue_create(CUSP_CENTRAL_Q_MAIN_CONCURRENT, DISPATCH_QUEUE_CONCURRENT)
 
 	/// request operation serial queue, operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect) will be submitted to this Q;
-	internal let reqOpQ: dispatch_queue_t = dispatch_queue_create(QIDReqOp, DISPATCH_QUEUE_SERIAL)
+    internal let reqQ: dispatch_queue_t  = dispatch_queue_create(CUSP_CENTRAL_Q_REQUEST_SERIAL, DISPATCH_QUEUE_SERIAL)
 
 	/// session operation serial queue, operations (add/remove) on sessions (with peripheral) will be submitted to this Q;
-	internal let sesOpQ: dispatch_queue_t = dispatch_queue_create(QIDSesOp, DISPATCH_QUEUE_SERIAL)
+    internal let sesQ: dispatch_queue_t  = dispatch_queue_create(CUSP_CENTRAL_Q_SESSION_SERIAL, DISPATCH_QUEUE_SERIAL)
 
 	/// central avator, read only
 	private(set) lazy var centralManager: CentralManager = {
@@ -151,7 +155,7 @@ extension Cusp {
 
 		var tgtSession: CommunicatingSession?
 
-		dispatch_sync(self.sesOpQ) { () -> Void in
+		dispatch_sync(self.sesQ) { () -> Void in
 			for session in self.sessions {
 				if session.peripheral == peripheral {
 					tgtSession = session

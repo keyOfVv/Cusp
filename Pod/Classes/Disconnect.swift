@@ -65,7 +65,7 @@ extension Cusp {
 		// create a disconnect request ...
 		let req = DisconnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into disconnectRequests set
-		dispatch_async(self.reqOpQ) { () -> Void in
+		dispatch_async(self.reqQ) { () -> Void in
 			self.disconnectRequests.insert(req)
 		}
 		// start disconnecting

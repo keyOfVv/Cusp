@@ -76,7 +76,7 @@ extension Cusp: CBCentralManagerDelegate {
 					req.success?(nil)
 				})
 
-				dispatch_async(self.sesOpQ, { () -> Void in
+				dispatch_async(self.sesQ, { () -> Void in
 					if let p = self.peripheralFor(peripheral) {
 						let session = CommunicatingSession(peripheral: p)
 						session.abruption = req.abruption
@@ -84,7 +84,7 @@ extension Cusp: CBCentralManagerDelegate {
 					}
 				})
 
-				dispatch_async(self.reqOpQ, { () -> Void in
+				dispatch_async(self.reqQ, { () -> Void in
 					self.connectRequests.remove(req)
 				})
 			}
@@ -115,7 +115,7 @@ extension Cusp: CBCentralManagerDelegate {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					req.failure?(error)
 				})
-				dispatch_async(self.reqOpQ, { () -> Void in
+				dispatch_async(self.reqQ, { () -> Void in
 					self.connectRequests.remove(req)
 				})
 			}
@@ -140,7 +140,7 @@ extension Cusp: CBCentralManagerDelegate {
 						dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
 							session?.abruption?(errorInfo)
 							})
-						dispatch_async(self.sesOpQ, { () -> Void in
+						dispatch_async(self.sesQ, { () -> Void in
 							self.sessions.remove(session)	// remove the abrupted session
 						})
 					}
@@ -162,12 +162,12 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
-					dispatch_async(self.reqOpQ, { () -> Void in
+					dispatch_async(self.reqQ, { () -> Void in
 						self.disconnectRequests.remove(req)
 					})
 					if let p = self.peripheralFor(peripheral) {
 						if let session = self.sessionFor(p) {
-							dispatch_async(self.sesOpQ, { () -> Void in
+							dispatch_async(self.sesQ, { () -> Void in
 								self.sessions.remove(session)	// remove the disconnected session
 							})
 						}
@@ -187,7 +187,7 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
 						req?.completion?()
 					})
-					dispatch_async(self.reqOpQ, { () -> Void in
+					dispatch_async(self.reqQ, { () -> Void in
 						self.cancelConnectRequests.remove(req)
 					})
 					return
