@@ -68,6 +68,6 @@ public extension Cusp {
 			self.cancelConnectRequests.insert(req)
 		}
 		// start disconnecting
-		self.centralManager.cancelPeripheralConnection(peripheral)
+		self.centralManager.cancelPeripheralConnection(peripheral.core)
 	}
 }

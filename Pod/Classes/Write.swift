@@ -46,7 +46,7 @@ internal class WriteRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		let string = self.peripheral.identifier.UUIDString + self.characteristic.UUID.UUIDString
+		let string = self.peripheral.core.identifier.UUIDString + self.characteristic.UUID.UUIDString
 		return string.hashValue
 	}
 
@@ -78,7 +78,7 @@ extension Cusp {
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		if let session = self.sessionFor(peripheral.core) {
 
 			let req = WriteRequest(data: data, characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
 			dispatch_async(session.reqOpQ, { () -> Void in
@@ -86,7 +86,7 @@ extension Cusp {
 			})
 
 			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.writeValue(data, forCharacteristic: characteristic, type: CharacteristicWriteType.WithResponse)
+				peripheral.core.writeValue(data, forCharacteristic: characteristic, type: CharacteristicWriteType.WithResponse)
 			})
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in

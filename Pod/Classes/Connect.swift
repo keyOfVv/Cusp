@@ -82,7 +82,7 @@ public extension Cusp {
 			self.connectRequests.insert(req)
 		}
 		// start connecting
-		self.centralManager.connectPeripheral(peripheral, options: nil)
+		self.centralManager.connectPeripheral(peripheral.core, options: nil)
 
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.mainQ) { () -> Void in
 			if req.timedOut {

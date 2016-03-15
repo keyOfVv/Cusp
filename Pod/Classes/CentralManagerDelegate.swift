@@ -33,17 +33,19 @@ extension Cusp: CBCentralManagerDelegate {
 	*/
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		dispatch_async(self.mainQ) { () -> Void in
-			self.discoveredPeripherals.insert(peripheral)
-
-			let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
+			// 1. once discovered, wrap CBPeripheral into custom class...
+			let p = Peripheral(core: peripheral)
+			self.discoveredPeripherals.insert(p)
+			// 2. then forge an advertisement object...
+			let advInfo = Advertisement(peripheral: p, advertisementData: advertisementData, RSSI: RSSI)
 			let uuids = advInfo.advertisingUUIDs
-
+			// 3. final, put it into Set "available" of scan req
 			for req in self.scanRequests {
-				if req.advertisingUUIDs == nil {
-					req.available.insert(advInfo)
+				if req.advertisingUUIDs == nil {	// a scan req for all peripherals
+					req.available.insert(advInfo)	// put any peripheral into Set "available"
 					break
-				} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {
-					req.available.insert(advInfo)
+				} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {	// a scan req for specific peripheral(s)
+					req.available.insert(advInfo)	// put specific peripheral into Set "available"
 					break
 				}
 			}

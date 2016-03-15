@@ -94,7 +94,7 @@ internal class CharacteristicDiscoveringRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		let string = self.peripheral.identifier.UUIDString + self.service.UUID.UUIDString
+		let string = self.peripheral.core.identifier.UUIDString + self.service.UUID.UUIDString
 		return string.hashValue
 	}
 
@@ -126,7 +126,7 @@ extension Cusp {
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		if let session = self.sessionFor(peripheral.core) {
 
 			let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, peripheral: peripheral, success: success, failure: failure)
 			dispatch_async(session.reqOpQ, { () -> Void in
@@ -134,7 +134,7 @@ extension Cusp {
 			})
 
 			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.discoverServices(serviceUUIDs)
+				peripheral.core.discoverServices(serviceUUIDs)
 			})
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
@@ -168,7 +168,7 @@ extension Cusp {
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		if let session = self.sessionFor(peripheral.core) {
 
 			let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, peripheral: peripheral, success: success, failure: failure)
 			dispatch_async(session.reqOpQ, { () -> Void in
@@ -176,7 +176,7 @@ extension Cusp {
 			})
 
 			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.discoverCharacteristics(characteristicUUIDs, forService: service)
+				peripheral.core.discoverCharacteristics(characteristicUUIDs, forService: service)
 			})
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in

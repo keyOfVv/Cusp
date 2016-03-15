@@ -32,7 +32,7 @@ internal class RSSIRequest: OperationRequest {
 
 	- returns: 返回一个RSSIRequest对象
 	*/
-	convenience init(peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.success = success
@@ -61,14 +61,14 @@ extension Cusp {
 	/// - parameter success: 获取成功的回调;
 	/// - parameter failure: 获取失败的回调;
 	/// - parameter timedOut: 获取超时的回调;
-	public func readRSSI(peripheral: CBPeripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func readRSSI(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
 			failure?(error)
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		if let session = self.sessionFor(peripheral.core) {
 
 			let req = RSSIRequest(peripheral: peripheral, success: success, failure: failure)
 			dispatch_async(session.reqOpQ, { () -> Void in
@@ -76,7 +76,7 @@ extension Cusp {
 			})
 
 			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.readRSSI()
+				peripheral.core.readRSSI()
 			})
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in

@@ -127,7 +127,7 @@ public extension Cusp {
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.duration * Double(NSEC_PER_SEC))), self.mainQ, {[weak self] () -> Void in
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				let infoSet = req.available.sort({ (a, b) -> Bool in
-					return a.peripheral.identifier.UUIDString <= b.peripheral.identifier.UUIDString
+					return a.peripheral.core.identifier.UUIDString <= b.peripheral.core.identifier.UUIDString
 				})
 				completion?(infoSet)
 			})

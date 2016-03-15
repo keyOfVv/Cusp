@@ -21,7 +21,7 @@ public class DeviceInfoTableViewController: UITableViewController {
 
 	// MARK: 储值属性
 
-	var peripheral: CBPeripheral?
+	var peripheral: Peripheral?
 
 	// MARK: 计算属性
 

@@ -65,7 +65,7 @@ public class DeviceTableViewController: UITableViewController {
 			cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "reuseIdentifier")
 		}
 		if let advInfo = self.available?[indexPath.row] {
-			cell?.textLabel?.text = advInfo.peripheral.name
+			cell?.textLabel?.text = advInfo.peripheral.core.name
 			cell?.detailTextLabel?.text = String(advInfo.RSSI.integerValue)
 		}
 
@@ -119,7 +119,7 @@ public extension DeviceTableViewController {
 		Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
 			log("\(advertisementInfoArray)")
 			self.available = advertisementInfoArray.sort({ (a, b) -> Bool in
-				return a.peripheral.name <= b.peripheral.name
+				return a.peripheral.core.name <= b.peripheral.core.name
 			})
 			}, abruption: { (error) -> Void in
 				log(error)

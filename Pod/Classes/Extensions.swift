@@ -11,7 +11,7 @@ import CoreBluetooth
 
 public typealias UUID           = CBUUID
 public typealias CentralManager = CBCentralManager
-public typealias Peripheral     = CBPeripheral
+//public typealias Peripheral     = CBPeripheral
 public typealias Service        = CBService
 public typealias Characteristic = CBCharacteristic
 public typealias CharacteristicWriteType = CBCharacteristicWriteType

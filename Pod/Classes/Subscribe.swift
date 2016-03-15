@@ -48,7 +48,7 @@ internal class SubscribeRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		let string = self.peripheral.identifier.UUIDString + self.characteristic.UUID.UUIDString
+		let string = self.peripheral.core.identifier.UUIDString + self.characteristic.UUID.UUIDString
 		return string.hashValue
 	}
 
@@ -81,7 +81,7 @@ extension Cusp {
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		if let session = self.sessionFor(peripheral.core) {
 
 			let req = SubscribeRequest(characteristic: characteristic, peripheral: peripheral, success: success, failure: failure, update: update)
 			dispatch_async(session.reqOpQ, { () -> Void in
@@ -89,7 +89,7 @@ extension Cusp {
 			})
 
 			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.setNotifyValue(true, forCharacteristic: characteristic)
+				peripheral.core.setNotifyValue(true, forCharacteristic: characteristic)
 			})
 
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in

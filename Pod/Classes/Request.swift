@@ -16,7 +16,7 @@ internal class OperationRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	internal var peripheral: CBPeripheral!
+	internal var peripheral: Peripheral!
 
 	/// 连接成功的回调
 	internal var success: ((Response?) -> Void)?

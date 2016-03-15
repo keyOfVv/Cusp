@@ -159,6 +159,14 @@ extension Cusp {
 	}
 }
 
+// MARK: - Custom CBPeripheral subclass registeration
+extension Cusp {
+
+//	public func registerCustomPeripheral(ofClass: class, pattern: String) {
+//
+//	}
+}
+
 
 
 
