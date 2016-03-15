@@ -64,7 +64,7 @@ extension Cusp: CBCentralManagerDelegate {
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
 			for req in self.connectRequests {
-				if req.peripheral == peripheral {
+				if req.peripheral.core == peripheral {
 					tgtReq = req
 					break
 				}
@@ -77,10 +77,11 @@ extension Cusp: CBCentralManagerDelegate {
 				})
 
 				dispatch_async(self.sesOpQ, { () -> Void in
-					let session = CommunicatingSession(peripheral: peripheral)
-					session.abruption = req.abruption
-					peripheral.delegate = self
-					self.sessions.insert(session)
+					if let p = self.peripheralFor(peripheral) {
+						let session = CommunicatingSession(peripheral: p)
+						session.abruption = req.abruption
+						self.sessions.insert(session)
+					}
 				})
 
 				dispatch_async(self.reqOpQ, { () -> Void in
@@ -134,13 +135,15 @@ extension Cusp: CBCentralManagerDelegate {
 		dispatch_async(self.mainQ) { () -> Void in
 			if let errorInfo = error {
 				// abnormal disconnection, find out specific session
-				if let session = self.sessionFor(peripheral) {
-					dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
-						session?.abruption?(errorInfo)
-					})
-					dispatch_async(self.sesOpQ, { () -> Void in
-						self.sessions.remove(session)	// remove the abrupted session
-					})
+				if let p = self.peripheralFor(peripheral) {
+					if let session = self.sessionFor(p) {
+						dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
+							session?.abruption?(errorInfo)
+							})
+						dispatch_async(self.sesOpQ, { () -> Void in
+							self.sessions.remove(session)	// remove the abrupted session
+						})
+					}
 				}
 
 			} else {
@@ -162,11 +165,12 @@ extension Cusp: CBCentralManagerDelegate {
 					dispatch_async(self.reqOpQ, { () -> Void in
 						self.disconnectRequests.remove(req)
 					})
-
-					if let session = self.sessionFor(peripheral) {
-						dispatch_async(self.sesOpQ, { () -> Void in
-							self.sessions.remove(session)	// remove the disconnected session
-						})
+					if let p = self.peripheralFor(peripheral) {
+						if let session = self.sessionFor(p) {
+							dispatch_async(self.sesOpQ, { () -> Void in
+								self.sessions.remove(session)	// remove the disconnected session
+							})
+						}
 					}
 					return
 				}

@@ -18,7 +18,7 @@ class CommunicatingSession: NSObject {
 	// MARK: Stored Properties
 
 	/// 已建立连接的从设备
-	weak var peripheral: CBPeripheral!
+	weak var peripheral: Peripheral!
 
 	var update: ((NSData?) -> Void)?
 
@@ -37,7 +37,7 @@ class CommunicatingSession: NSObject {
 	}
 
 	/// 快速构造方法
-	convenience init(peripheral: CBPeripheral) {
+	convenience init(peripheral: Peripheral) {
 		self.init()
 		self.peripheral = peripheral
 		let qLabel = "com.keyang.cusp.session." + peripheral.identifier.UUIDString

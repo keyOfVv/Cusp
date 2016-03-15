@@ -11,7 +11,7 @@ import Foundation
 // MARK: ConnectRequest
 
 /// device connect request
-internal class ConnectRequest: OperationRequest {
+internal class ConnectRequest: CentralOperationRequest {
 
 	// MARK: Stored Properties
 
