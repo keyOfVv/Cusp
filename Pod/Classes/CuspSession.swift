@@ -20,7 +20,7 @@ class PeripheralSession: NSObject {
 	/// 已建立连接的从设备
 	weak var peripheral: Peripheral!
 
-	var update: ((NSData?) -> Void)?
+//	var update: ((NSData?) -> Void)?
 
 	var abruption: ((NSError?) -> Void)?
 
