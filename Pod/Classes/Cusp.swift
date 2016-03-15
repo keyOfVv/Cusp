@@ -5,13 +5,18 @@
 //  Created by keyang on 10/21/15.
 //  Copyright © 2015 com.keyang. All rights reserved.
 //
+/*
+ *
+ *
+ */
 
 import Foundation
+import CoreBluetooth
 
 /// Notification
 public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
 
-/// main operation queue identifier (主并发队列ID)
+/// main operation queue identifier
 private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
 
 /// request operation serial queue identifier
@@ -20,10 +25,10 @@ private let QIDReqOp = "com.keyang.cusp.requestOperationQ"
 /// session operation serial queue identifier
 private let QIDSesOp = "com.keyang.cusp.sessionOperationQ"
 
-/// Bluetooth Low Energy library in swift (使用swift编写的BLE通讯框架)
+/// Bluetooth Low Energy library in swift
 public class Cusp: NSObject {
 
-	/// Singleton (单例)
+	/// Singleton
 	public class var central: Cusp {
 		struct Static {
 			static let instance: Cusp = Cusp()
@@ -35,21 +40,21 @@ public class Cusp: NSObject {
 		super.init()
 	}
 
-	/// main operation concurrent queue (主并发队列)
+	/// main operation concurrent queue, operations (scan, connect, cancel-connect, disconnect) will be submitted to this Q
     internal let mainQ: dispatch_queue_t = dispatch_queue_create(QIDMain, DISPATCH_QUEUE_CONCURRENT)
 
-	/// request operation serial queue
+	/// request operation serial queue, operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect) will be submitted to this Q;
 	internal let reqOpQ: dispatch_queue_t = dispatch_queue_create(QIDReqOp, DISPATCH_QUEUE_SERIAL)
 
-	/// session operation serial queue
+	/// session operation serial queue, operations (add/remove) on sessions (with peripheral) will be submitted to this Q;
 	internal let sesOpQ: dispatch_queue_t = dispatch_queue_create(QIDSesOp, DISPATCH_QUEUE_SERIAL)
 
-	/// central avator, read only(蓝牙主设备对象, 只读)
+	/// central avator, read only
 	private(set) lazy var centralManager: CentralManager = {
 		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
-	/// BLE state (蓝牙状态)
+	/// BLE state
 	public var state: State {
 		return State(rawValue: self.centralManager.state.rawValue)!
 	}
@@ -67,27 +72,6 @@ public class Cusp: NSObject {
 
 	/// disconnect requests set (断开连接请求的集合)
     internal var disconnectRequests                = Set<DisconnectRequest>()
-
-	/// requests of service discovering (发现服务请求的集合)
-    internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
-
-	/// requests of characteristic discovering (发现特征请求的集合)
-    internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
-
-	/// requests of write characteristic value (写值请求的集合)
-    internal var writeRequests                     = Set<WriteRequest>()
-
-	/// requests of read characteristic value (读值请求的集合)
-    internal var readRequests                      = Set<ReadRequest>()
-
-	/// requests of subscribe characteristic value (订阅请求的集合)
-    internal var subscribeRequests                 = Set<SubscribeRequest>()
-
-	/// requests of unsubscribe characteristic value (退订请求的集合)
-    internal var unsubscribeRequests               = Set<UnsubscribeRequest>()
-
-	/// requests of RSSI reading (信号强度查询请求的集合)
-    internal var RSSIRequests                      = Set<RSSIRequest>()
 
 	// MARK: Peripheral Sets
 
@@ -162,11 +146,39 @@ extension Cusp {
 // MARK: - Custom CBPeripheral subclass registeration
 extension Cusp {
 
-//	public func registerCustomPeripheral(ofClass: class, pattern: String) {
-//
-//	}
-}
+	internal func sessionFor(peripheral: Peripheral?) -> CommunicatingSession? {
+		if peripheral == nil { return nil }
 
+		var tgtSession: CommunicatingSession?
+
+		dispatch_sync(self.sesOpQ) { () -> Void in
+			for session in self.sessions {
+				if session.peripheral == peripheral {
+					tgtSession = session
+					break
+				}
+			}
+		}
+
+		return tgtSession
+	}
+
+	/**
+	retrieve specific Peripheral object that core matches
+
+	- parameter core: CBPeripheral object
+
+	- returns: Peripheral object or nil if not found
+	*/
+	internal func peripheralFor(core: CBPeripheral) -> Peripheral? {
+		for p in discoveredPeripherals {
+			if p.core == core {
+				return p
+			}
+		}
+		return nil
+	}
+}
 
 
 
