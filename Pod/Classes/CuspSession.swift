@@ -27,7 +27,7 @@ class PeripheralSession: NSObject {
 	// MARK: Initializer
 
 	/// 初始化
-	override init() {
+	private override init() {
 		super.init()
 	}
 
