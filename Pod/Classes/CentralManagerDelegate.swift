@@ -197,6 +197,26 @@ extension Cusp: CBCentralManagerDelegate {
 	}
 }
 
+private extension Cusp {
+
+	/**
+	Retrieve Peripheral object for specific core from property "discoveredPeripherals"
+	Note: this method is private
+
+	- parameter core: CBPeripheral object
+
+	- returns: Peripheral object or nil if not found
+	*/
+	private func peripheralFor(core: CBPeripheral) -> Peripheral? {
+		for p in discoveredPeripherals {
+			if p.core == core {
+				return p
+			}
+		}
+		return nil
+	}
+}
+
 // MARK: -
 extension SequenceType where Generator.Element : Equatable {
 

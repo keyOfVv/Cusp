@@ -162,11 +162,20 @@ internal extension Cusp {
 // MARK: -
 extension Cusp {
 
+	/**
+	Retrieve session for specific peripheral.
+	Note: there is no connected-peripheral array in Cusp, each connected peripheral will be wrapped in PeripheralSession object and stored in property "sessions".
+
+	- parameter peripheral: Peripheral object
+
+	- returns: PeripheralSession object or nil if doesn't exist
+	*/
 	internal func sessionFor(peripheral: Peripheral?) -> PeripheralSession? {
+		// return nil if peripheral is nil
 		if peripheral == nil { return nil }
 
+		// session retrieval operation shall be performed in sesQ to prevent race condition
 		var tgtSession: PeripheralSession?
-
 		dispatch_sync(self.sesQ) { () -> Void in
 			for session in self.sessions {
 				if session.peripheral == peripheral {
@@ -175,24 +184,7 @@ extension Cusp {
 				}
 			}
 		}
-
 		return tgtSession
-	}
-
-	/**
-	retrieve specific Peripheral object that core matches
-
-	- parameter core: CBPeripheral object
-
-	- returns: Peripheral object or nil if not found
-	*/
-	internal func peripheralFor(core: CBPeripheral) -> Peripheral? {
-		for p in discoveredPeripherals {
-			if p.core == core {
-				return p
-			}
-		}
-		return nil
 	}
 }
 
