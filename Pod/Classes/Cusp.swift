@@ -65,25 +65,25 @@ public class Cusp: NSObject {
 
 	// MARK: Requests
 
-	/// scan request set (扫描请求的集合)
-    internal var scanRequests                      = Set<ScanRequest>()
+	/// scan request set
+    internal var scanRequests          = Set<ScanRequest>()
 
-	/// connect requests set (连接请求的集合)
-    internal var connectRequests                   = Set<ConnectRequest>()
+	/// connect requests set
+    internal var connectRequests       = Set<ConnectRequest>()
 
-	/// cancel-connects set (取消连接请求的集合)
-    internal var cancelConnectRequests             = Set<CancelConnectRequest>()
+	/// cancel-connects set
+    internal var cancelConnectRequests = Set<CancelConnectRequest>()
 
-	/// disconnect requests set (断开连接请求的集合)
-    internal var disconnectRequests                = Set<DisconnectRequest>()
+	/// disconnect requests set
+    internal var disconnectRequests    = Set<DisconnectRequest>()
 
 	// MARK: Peripheral Sets
 
-	/// ever discovered peripherals after scanning (扫描后获取的蓝牙设备集合)
-    internal var discoveredPeripherals             = Set<Peripheral>()
+	/// discovered peripherals ever after scanning
+    internal var discoveredPeripherals = Set<Peripheral>()
 
-	/// communicating session with connected peripheral (已建立的连接集合)
-    internal var sessions                          = Set<CommunicatingSession>()
+	/// session of connected peripheral
+    internal var sessions              = Set<CommunicatingSession>()
 }
 
 // MARK: - Interface
@@ -93,17 +93,29 @@ public extension Cusp {
 
 	/**
 	Prepare BLE module, this method shall be called once before any BLE operation.
-	执行任何蓝牙功能前必须执行一次本方法
 	*/
-	public func prepare() {
-		self.centralManager.state.rawValue
+	public class func prepare() {
+		if !self.isBLEAvailable() {
+			print("BLE is currently unavailable")
+		}
 	}
 
+	/**
+	check if BLE is available
+
+	- returns: boolean value
+	*/
+	public class func isBLEAvailable() -> Bool {
+		if let _ = Cusp.central.assertAvailability() {
+			return false
+		}
+		return true
+	}
 }
 
 // MARK: - Availability Check
 
-extension Cusp {
+internal extension Cusp {
 
 	/**
 	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
