@@ -83,7 +83,7 @@ public class Cusp: NSObject {
     internal var discoveredPeripherals = Set<Peripheral>()
 
 	/// session of connected peripheral
-    internal var sessions              = Set<CommunicatingSession>()
+    internal var sessions              = Set<PeripheralSession>()
 }
 
 // MARK: - Interface
@@ -162,10 +162,10 @@ internal extension Cusp {
 // MARK: -
 extension Cusp {
 
-	internal func sessionFor(peripheral: Peripheral?) -> CommunicatingSession? {
+	internal func sessionFor(peripheral: Peripheral?) -> PeripheralSession? {
 		if peripheral == nil { return nil }
 
-		var tgtSession: CommunicatingSession?
+		var tgtSession: PeripheralSession?
 
 		dispatch_sync(self.sesQ) { () -> Void in
 			for session in self.sessions {

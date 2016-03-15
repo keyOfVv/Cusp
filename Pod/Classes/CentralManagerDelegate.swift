@@ -78,7 +78,7 @@ extension Cusp: CBCentralManagerDelegate {
 
 				dispatch_async(self.sesQ, { () -> Void in
 					if let p = self.peripheralFor(peripheral) {
-						let session = CommunicatingSession(peripheral: p)
+						let session = PeripheralSession(peripheral: p)
 						session.abruption = req.abruption
 						self.sessions.insert(session)
 					}
