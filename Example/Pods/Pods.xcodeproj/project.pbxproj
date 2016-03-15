@@ -570,6 +570,36 @@
 			name = "Development Pods";
 			sourceTree = "<group>";
 		};
+		701CA57B1C981506004C19F6 /* Central */ = {
+			isa = PBXGroup;
+			children = (
+				07D7D450943FA1FCDC95CAC0523CCFB0 /* Cusp.swift */,
+				95DF83AA5AEB505025EF4E0C0432A16B /* CancelConnect.swift */,
+				1244A115709749C92ABA368B8538AA0E /* CentralManagerDelegate.swift */,
+				CCC70F68D12B834B3BBC41C57EA77C6C /* Connect.swift */,
+				E918B9D2B8A4B160BC0123DFC534F565 /* CuspSession.swift */,
+				8F8127E3873E7C12894A44091C61A4E8 /* Disconnect.swift */,
+				0C74C77A60064985197222094DD8FE95 /* Scan.swift */,
+				701CA5771C97AE52004C19F6 /* Advertisement.swift */,
+			);
+			name = Central;
+			sourceTree = "<group>";
+		};
+		701CA57C1C981571004C19F6 /* Peripheral */ = {
+			isa = PBXGroup;
+			children = (
+				38033985546BA7821BFECCEB5FC4302D /* Discover.swift */,
+				05C24108E2F7C2E9B90CEE9388913196 /* PeripheralDelegate.swift */,
+				701CA5791C97BDCF004C19F6 /* Peripheral.swift */,
+				CA14173975CEBF19FAF0F16DFD62507D /* Read.swift */,
+				3E2EB9DB1E576CCDA3B3827A06607287 /* Write.swift */,
+				463A54EB6A2E070C65B5849E02BCC9BA /* Subscribe.swift */,
+				00FCBC9CA37E7E975937880B8EDF89F4 /* Unsubscribe.swift */,
+				65061B6660AA7087E9CED25820BE6628 /* RSSI.swift */,
+			);
+			name = Peripheral;
+			sourceTree = "<group>";
+		};
 		7824879E545F9151C66D6BE64564F4A3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -701,29 +731,15 @@
 		BA658925630C0D96786369B7F7DEFCD1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				95DF83AA5AEB505025EF4E0C0432A16B /* CancelConnect.swift */,
-				1244A115709749C92ABA368B8538AA0E /* CentralManagerDelegate.swift */,
-				CCC70F68D12B834B3BBC41C57EA77C6C /* Connect.swift */,
+				701CA57C1C981571004C19F6 /* Peripheral */,
+				701CA57B1C981506004C19F6 /* Central */,
 				95EC4615EF2C333EDF36C6CC1EEDDD48 /* Cusp.h */,
-				07D7D450943FA1FCDC95CAC0523CCFB0 /* Cusp.swift */,
-				E918B9D2B8A4B160BC0123DFC534F565 /* CuspSession.swift */,
-				8F8127E3873E7C12894A44091C61A4E8 /* Disconnect.swift */,
-				38033985546BA7821BFECCEB5FC4302D /* Discover.swift */,
 				7164E91AAA6A0E83E094062FEB630367 /* Error.swift */,
 				8ACD1C8970D1C5E1627A518605ACCA4D /* Extensions.swift */,
 				2BCD42E13361FB5F247F8C6849B82152 /* Functions.swift */,
-				05C24108E2F7C2E9B90CEE9388913196 /* PeripheralDelegate.swift */,
-				701CA5791C97BDCF004C19F6 /* Peripheral.swift */,
-				CA14173975CEBF19FAF0F16DFD62507D /* Read.swift */,
 				84AA6D7EF84D7BE38D7C2C241872CA2C /* Request.swift */,
 				3E1730379AC81C3136863E7669F4C754 /* Response.swift */,
-				65061B6660AA7087E9CED25820BE6628 /* RSSI.swift */,
-				0C74C77A60064985197222094DD8FE95 /* Scan.swift */,
 				F2B1FFB8261EA3806A293F76EF4252E4 /* State.swift */,
-				463A54EB6A2E070C65B5849E02BCC9BA /* Subscribe.swift */,
-				00FCBC9CA37E7E975937880B8EDF89F4 /* Unsubscribe.swift */,
-				3E2EB9DB1E576CCDA3B3827A06607287 /* Write.swift */,
-				701CA5771C97AE52004C19F6 /* Advertisement.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
