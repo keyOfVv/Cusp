@@ -588,9 +588,9 @@
 		701CA57C1C981571004C19F6 /* Peripheral */ = {
 			isa = PBXGroup;
 			children = (
+				701CA5791C97BDCF004C19F6 /* Peripheral.swift */,
 				38033985546BA7821BFECCEB5FC4302D /* Discover.swift */,
 				05C24108E2F7C2E9B90CEE9388913196 /* PeripheralDelegate.swift */,
-				701CA5791C97BDCF004C19F6 /* Peripheral.swift */,
 				CA14173975CEBF19FAF0F16DFD62507D /* Read.swift */,
 				3E2EB9DB1E576CCDA3B3827A06607287 /* Write.swift */,
 				463A54EB6A2E070C65B5849E02BCC9BA /* Subscribe.swift */,

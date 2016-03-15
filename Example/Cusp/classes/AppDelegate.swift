@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		window.makeKeyAndVisible()
 
-		Cusp.central.prepare()
+		Cusp.prepare()
 
         return true
     }

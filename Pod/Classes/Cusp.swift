@@ -159,7 +159,7 @@ internal extension Cusp {
 	}
 }
 
-// MARK: - Custom CBPeripheral subclass registeration
+// MARK: -
 extension Cusp {
 
 	internal func sessionFor(peripheral: Peripheral?) -> CommunicatingSession? {
