@@ -66,16 +66,17 @@ internal class ScanRequest: NSObject {
 	- returns: a ScanRequest instance
 	*/
 	internal convenience init(advertisingUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
-		if let uuidStrings = advertisingUUIDStrings {
-			var uuids = [UUID]()
-			for uuidString in uuidStrings {
-				let uuid = UUID(string: uuidString)
-				uuids.append(uuid)
-			}
-			self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
-		} else {
+		guard let uuidStrings = advertisingUUIDStrings else {
 			self.init(advertisingUUIDs: nil, duration: duration, completion: completion, abruption: abruption)
+			return
 		}
+		// convert uuid string array into UUID array
+		var uuids = [UUID]()
+		for uuidString in uuidStrings {
+			let uuid = UUID(string: uuidString)
+			uuids.append(uuid)
+		}
+		self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
 	}
 
 	internal override var hash: Int {
