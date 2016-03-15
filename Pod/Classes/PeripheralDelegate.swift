@@ -11,7 +11,7 @@ import CoreBluetooth
 
 // MARK: - CBPeripheralDelegate
 
-extension Cusp: CBPeripheralDelegate {
+extension Peripheral: CBPeripheralDelegate {
 
 	/*!
 	*  @method peripheral:didDiscoverServices:
@@ -24,30 +24,28 @@ extension Cusp: CBPeripheralDelegate {
 	*
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ) { () -> Void in
-				var tgtReq: ServiceDiscoveringRequest?
-				for req in self.serviceDiscoveringRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ) { () -> Void in
+			for req in self.serviceDiscoveringRequests {
+				if let uuids = req.serviceUUIDs {
+					if !self.areServicesAvailable(uuids: uuids) {
+						return
 					}
 				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// discovering failed
-							req.failure?(errorInfo)
-						} else {
-							// discovering succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.serviceDiscoveringRequests.remove(req)
-					})
-				}
+			}
+			for req in self.serviceDiscoveringRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// discovering failed
+						req.failure?(errorInfo)
+					} else {
+						// discovering succeed
+						req.success?(nil)
+					}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.serviceDiscoveringRequests.remove(req)
+				})
 			}
 		}
 	}
@@ -63,30 +61,28 @@ extension Cusp: CBPeripheralDelegate {
 	*						they can be retrieved via <i>service</i>'s <code>characteristics</code> property.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ) { () -> Void in
-				var tgtReq: CharacteristicDiscoveringRequest?
-				for req in self.characteristicDiscoveringRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ) { () -> Void in
+			for req in self.characteristicDiscoveringRequests {
+				if let uuids = req.characteristicUUIDs {
+					if !self.areCharacteristicsAvailable(uuids: uuids) {
+						return
 					}
 				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// discovering failed
-							req.failure?(errorInfo)
-						} else {
-							// discovering succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.characteristicDiscoveringRequests.remove(req)
-					})
-				}
+			}
+			for req in self.characteristicDiscoveringRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// discovering failed
+						req.failure?(errorInfo)
+					} else {
+						// discovering succeed
+						req.success?(nil)
+					}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.characteristicDiscoveringRequests.remove(req)
+				})
 			}
 		}
 	}
@@ -102,11 +98,11 @@ extension Cusp: CBPeripheralDelegate {
 	*/
 	public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
 		// found out whether value is read or subscirbed
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
+
+			dispatch_async(self.operationQ, { () -> Void in
 				var tgtReq: ReadRequest?
 				for req in self.readRequests {
-					if req.peripheral == peripheral {
+					if req.characteristic == characteristic {
 						tgtReq = req
 						break
 					}
@@ -124,16 +120,17 @@ extension Cusp: CBPeripheralDelegate {
 							resp.value = characteristic.value
 							req.success?(resp)
 						}
-						dispatch_async(session.reqOpQ, { () -> Void in
+						dispatch_async(self.requestQ, { () -> Void in
 							self.readRequests.remove(req)
 						})
 					} else {
 						// subscribed
-						session.update?(characteristic.value)
+						// TODO: deal with value updates
+//						session.update?(characteristic.value)
 					}
 				})
 			})
-		}
+
 	}
 
 	/*!
@@ -146,11 +143,11 @@ extension Cusp: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a {@link writeValue:forCharacteristic:type:} call, when the <code>CBCharacteristicWriteWithResponse</code> type is used.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
+
+			dispatch_async(self.operationQ, { () -> Void in
 				var tgtReq: WriteRequest?
 				for req in self.writeRequests {
-					if req.peripheral == peripheral {
+					if req.characteristic == characteristic {
 						tgtReq = req
 						break
 					}
@@ -166,12 +163,12 @@ extension Cusp: CBPeripheralDelegate {
 							req.success?(nil)
 						}
 					})
-					dispatch_async(session.reqOpQ, { () -> Void in
+					dispatch_async(self.requestQ, { () -> Void in
 						self.writeRequests.remove(req)
 					})
 				}
 			})
-		}
+
 	}
 
 	/*!
@@ -184,11 +181,34 @@ extension Cusp: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a @link setNotifyValue:forCharacteristic: @/link call.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: SubscribeRequest?
-				for req in self.subscribeRequests {
-					if req.peripheral == peripheral {
+		dispatch_async(self.operationQ, { () -> Void in
+			var tgtReq: SubscribeRequest?
+			for req in self.subscribeRequests {
+				if req.characteristic == characteristic {
+					tgtReq = req
+					break
+				}
+			}
+			if let req = tgtReq {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// subscribe failed
+						req.failure?(errorInfo)
+					} else {
+						// subscribe succeed
+						req.success?(nil)
+						// TODO: deal with value updates
+//						session.update = req.update
+					}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.subscribeRequests.remove(req)
+				})
+			} else {
+				var tgtReq: UnsubscribeRequest?
+				for req in self.unsubscribeRequests {
+					if req.characteristic == characteristic {
 						tgtReq = req
 						break
 					}
@@ -197,91 +217,41 @@ extension Cusp: CBPeripheralDelegate {
 					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
-							// subscribe failed
+							// unsubscribe failed
 							req.failure?(errorInfo)
 						} else {
-							// subscribe succeed
+							// unsubscribe succeed
 							req.success?(nil)
-							session.update = req.update
 						}
 					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.subscribeRequests.remove(req)
+					dispatch_async(self.requestQ, { () -> Void in
+						self.unsubscribeRequests.remove(req)
 					})
-				} else {
-					var tgtReq: UnsubscribeRequest?
-					for req in self.unsubscribeRequests {
-						if req.peripheral == peripheral {
-							tgtReq = req
-							break
-						}
-					}
-					if let req = tgtReq {
-						req.timedOut = false
-						dispatch_async(dispatch_get_main_queue(), { () -> Void in
-							if let errorInfo = error {
-								// unsubscribe failed
-								req.failure?(errorInfo)
-							} else {
-								// unsubscribe succeed
-								req.success?(nil)
-							}
-						})
-						dispatch_async(session.reqOpQ, { () -> Void in
-							self.unsubscribeRequests.remove(req)
-						})
-					}
 				}
-			})
-		}
+			}
+		})
 	}
 
 	// TODO: 8.0+ only
 	public func peripheral(peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: RSSIRequest?
-				for req in self.RSSIRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ, { () -> Void in
+			for req in self.RSSIRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// read RSSI failed
+						req.failure?(errorInfo)
+					} else {
+						// read RSSI succeed
+						let resp = Response()
+						resp.RSSI = RSSI
+						req.success?(resp)
 					}
-				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// write failed
-							req.failure?(errorInfo)
-						} else {
-							// write succeed
-							let resp = Response()
-							resp.RSSI = RSSI
-							req.success?(resp)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.RSSIRequests.remove(req)
-					})
-				}
-			})
-		}
-	}
-
-	internal func sessionFor(peripheral: CBPeripheral?) -> CommunicatingSession? {
-		if peripheral == nil { return nil }
-
-		var tgtSession: CommunicatingSession?
-
-		dispatch_sync(self.sesOpQ) { () -> Void in
-			for session in self.sessions {
-				if session.peripheral == peripheral {
-					tgtSession = session
-					break
-				}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.RSSIRequests.remove(req)
+				})
 			}
-		}
-
-		return tgtSession
+		})
 	}
 }
