@@ -145,22 +145,24 @@ extension Peripheral {
 			failure?(error)
 			return
 		}
-
+		// 1. create request object
 		let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, success: success, failure: failure)
+		// 2. add request
 		dispatch_async(self.requestQ, { () -> Void in
 			self.serviceDiscoveringRequests.insert(req)
 		})
-
+		// 3. start discovering service(s)
 		dispatch_async(self.operationQ, { () -> Void in
 			self.core.discoverServices(serviceUUIDs)
 		})
-
+		// 4. set time out closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
 					failure?(error)
 				})
+				// since req timed out, don't need it any more...
 				dispatch_async(self.requestQ, { () -> Void in
 					self.serviceDiscoveringRequests.remove(req)
 				})
@@ -183,22 +185,24 @@ extension Peripheral {
 			failure?(error)
 			return
 		}
-
+		// 1. create request object
 		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, success: success, failure: failure)
+		// 2. add request
 		dispatch_async(self.requestQ, { () -> Void in
 			self.characteristicDiscoveringRequests.insert(req)
 		})
-
+		// 3. start discovering characteristic(s)
 		dispatch_async(self.operationQ, { () -> Void in
 			self.core.discoverCharacteristics(characteristicUUIDs, forService: service)
 		})
-
+		// 4. set time out closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
 					failure?(error)
 				})
+				// since req timed out, don't need it any more
 				dispatch_async(self.requestQ, { () -> Void in
 					self.characteristicDiscoveringRequests.remove(req)
 				})
