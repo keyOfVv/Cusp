@@ -26,7 +26,6 @@ internal class ReadRequest: PeripheralOperationRequest {
 	Convenient initializer
 
 	- parameter characteristic: a CBCharacteristic object of which the value to be read
-	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs
 	- parameter success:        a closure called when value read successfully
 	- parameter failure:        a closure called when value read failed
 
@@ -46,7 +45,7 @@ internal class ReadRequest: PeripheralOperationRequest {
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ReadRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -69,22 +68,24 @@ extension Peripheral {
 			failure?(error)
 			return
 		}
-
+		// 1. create req object
 		let req = ReadRequest(characteristic: characteristic, success: success, failure: failure)
+		// 2. add read req
 		dispatch_async(self.requestQ, { () -> Void in
 			self.readRequests.insert(req)
 		})
-
+		// 3. start reading value
 		dispatch_async(self.operationQ, { () -> Void in
 			peripheral.core.readValueForCharacteristic(characteristic)
 		})
-
+		// 4. set time out closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
 					failure?(error)
 				})
+				// since req timed out, don't need it any more
 				dispatch_async(self.requestQ, { () -> Void in
 					self.readRequests.remove(req)
 				})
