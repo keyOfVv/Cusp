@@ -107,7 +107,7 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 	override internal var hash: Int {
 		// if characteristic uuid array is nil, return hash value of service uuid
 		guard let uuids = characteristicUUIDs else {
-			return service.UUID.UUIDString.hashValue
+			return service.UUID.hashValue
 		}
 		// sort the uuids
 		let array = uuids.sort { (a, b) -> Bool in
