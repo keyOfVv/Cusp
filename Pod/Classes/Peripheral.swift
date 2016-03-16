@@ -92,7 +92,7 @@ public class Peripheral: NSObject {
 	internal var subscriptions = Set<Subscription>()
 
 	public override var hash: Int {
-		return self.identifier.UUIDString.hashValue
+		return core.hashValue
 	}
 
 	public override func isEqual(object: AnyObject?) -> Bool {
