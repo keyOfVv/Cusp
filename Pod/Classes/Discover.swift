@@ -42,13 +42,25 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 	}
 
 	override internal var hash: Int {
-		// TODO: service discovering req's unique id shall be determined
-		return self.hash
+		// if service uuid array is nil, return hash value of empty string
+		guard let uuids = serviceUUIDs else {
+			return "".hashValue
+		}
+		// sort the uuids
+		let array = uuids.sort { (a, b) -> Bool in
+			return a.UUIDString <= b.UUIDString
+		}
+		// assemble uuid strings
+		var string = ""
+		for uuid in array {
+			string += uuid.UUIDString
+		}
+		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ServiceDiscoveringRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
