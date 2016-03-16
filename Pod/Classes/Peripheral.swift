@@ -9,10 +9,11 @@
 import Foundation
 import CoreBluetooth
 
-/// session operation serial queue identifier
-private let QIDOp = "com.keyang.cusp.peripheral.operationQ"
+/// operation concurrent queue identifier
+private let CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT = "com.keyang.cusp.peripheral.operationQ"
 
-private let QIDReq = "com.keyang.cusp.peripheral.operationQ"
+/// request serial queue identifier
+private let CUSP_PERIPHERAL_Q_REQUEST_SERIAL = "com.keyang.cusp.peripheral.requestQ"
 
 public enum PeripheralState : Int {
 
@@ -23,7 +24,6 @@ public enum PeripheralState : Int {
 //	case Disconnecting
 	case Unknown	// this shall be "Disconnecting" in version 9.x
 }
-
 
 /// peripheral class for Cusp, shall be subclassed by custom peripheral class
 public class Peripheral: NSObject {
@@ -56,34 +56,32 @@ public class Peripheral: NSObject {
 		return core.identifier
 	}
 
-	/// session operation serial queue
-	internal let operationQ: dispatch_queue_t = dispatch_queue_create(QIDOp, DISPATCH_QUEUE_CONCURRENT)
+	/// operation concurrent queue for all operations including read, write, subscribe, unsubscribe, RSSI, etc.;
+	internal let operationQ: dispatch_queue_t = dispatch_queue_create(CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, DISPATCH_QUEUE_CONCURRENT)
 
-	internal var requestQ: dispatch_queue_t = dispatch_queue_create(QIDReq, DISPATCH_QUEUE_SERIAL)
+	/// request serial queue for all add/remove operation on all kinds of request;
+	internal var requestQ: dispatch_queue_t = dispatch_queue_create(CUSP_PERIPHERAL_Q_REQUEST_SERIAL, DISPATCH_QUEUE_SERIAL)
 
-	/// requests of service discovering (发现服务请求的集合)
+	/// requests of service discovering
 	internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
 
-	/// requests of characteristic discovering (发现特征请求的集合)
+	/// requests of characteristic discovering
 	internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
 
-	/// requests of read characteristic value (读值请求的集合)
+	/// requests of read characteristic value
 	internal var readRequests                      = Set<ReadRequest>()
 
-	/// requests of write characteristic value (写值请求的集合)
+	/// requests of write characteristic value
 	internal var writeRequests                     = Set<WriteRequest>()
 
-	/// requests of subscribe characteristic value (订阅请求的集合)
+	/// requests of subscribe characteristic value
 	internal var subscribeRequests                 = Set<SubscribeRequest>()
 
-	/// requests of unsubscribe characteristic value (退订请求的集合)
+	/// requests of unsubscribe characteristic value
 	internal var unsubscribeRequests               = Set<UnsubscribeRequest>()
 
-	/// requests of RSSI reading (信号强度查询请求的集合)
+	/// requests of RSSI reading
 	internal var RSSIRequests                      = Set<RSSIRequest>()
-
-	/// communicating session with connected peripheral (已建立的连接集合)
-//	internal var sessions                          = Set<CommunicatingSession>()
 }
 
 // MARK: - CustomStringConvertible
