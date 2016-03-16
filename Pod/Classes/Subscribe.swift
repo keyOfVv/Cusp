@@ -34,7 +34,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs
 	- parameter success:        a closure called when subscription succeed
 	- parameter failure:        a closure called when subscription failed
-	- parameter update:         a closure called when characteristic's value updated
+	- parameter update:         a closure called when characteristic's value updated, after successfully subscribed, the update closure will be wrapped in Subscription object
 
 	- returns: a SubscribeRequest instance
 	*/
@@ -64,12 +64,11 @@ extension Peripheral {
 
 	/**
 	Subscribe value update of specific characteristic on specific peripheral
-	订阅指定从设备的指定特征的数值变化
 
-	- parameter characteristic: a CBCharacteristic object of which the value update to be subscribed. 待订阅数值更新的特征.
-	- parameter success:        a closure called when subscription succeed. 订阅成功时执行的闭包.
-	- parameter failure:        a closure called when subscription failed. 订阅失败时执行的闭包.
-	- parameter update:         a closure called when characteristic's value updated. 数值更新时执行的闭包.
+	- parameter characteristic: a CBCharacteristic object of which the value update to be subscribed.
+	- parameter success:        a closure called when subscription succeed.
+	- parameter failure:        a closure called when subscription failed.
+	- parameter update:         a closure called when characteristic's value updated, after successfully subscribed, the update closure will be wrapped in Subscription object.
 	*/
 	public func subscribe(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response?) -> Void)?) {
 		// 0. check if ble is available
