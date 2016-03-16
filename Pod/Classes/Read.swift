@@ -62,7 +62,7 @@ extension Peripheral {
 	- parameter success:        a closure called when value read successfully. 读值成功时执行的闭包.
 	- parameter failure:        a closure called when value read failed. 读值失败时执行的闭包.
 	*/
-	public func read(characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func read(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -76,7 +76,7 @@ extension Peripheral {
 		})
 		// 3. start reading value
 		dispatch_async(self.operationQ, { () -> Void in
-			peripheral.core.readValueForCharacteristic(characteristic)
+			self.core.readValueForCharacteristic(characteristic)
 		})
 		// 4. set time out closure
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
