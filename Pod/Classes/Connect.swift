@@ -84,15 +84,16 @@ public extension Cusp {
 		// start connecting
 		self.centralManager.connectPeripheral(peripheral.core, options: nil)
 
+		// deal with timeout
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.mainQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
 					failure?(error)
 				})
+				// cancel conncect since it's timed out
 				self.cancelConnection(peripheral, completion: nil)
 			}
 		}
 	}
-
 }
