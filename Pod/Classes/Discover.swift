@@ -210,6 +210,13 @@ extension Peripheral {
 		}
 	}
 
+	/**
+	check if services of specific UUID(s) discovered already
+
+	- parameter uuids: an array of service UUID
+
+	- returns: return true if every service of specific UUID(s) discovered already, otherwise false
+	*/
 	func areServicesAvailable(uuids uuids: [UUID]) -> Bool {
 		for uuid in uuids {
 			if let _ = self.core.serviceWith(UUIDString: uuid.UUIDString) {
@@ -220,6 +227,13 @@ extension Peripheral {
 		return true
 	}
 
+	/**
+	check if services of specific UUID string(s) discovered
+
+	- parameter uuidStrings: an array of service UUID string
+
+	- returns: return true if every service of specific UUID string(s) discovered already, otherwise false
+	*/
 	func areServicesAvailable(uuidStrings uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
 			if let _ = self.core.serviceWith(UUIDString: string) {
@@ -230,6 +244,13 @@ extension Peripheral {
 		return true
 	}
 
+	/**
+	check if characteristic of specific UUID(s) discovered already
+
+	- parameter uuids: an array of characteristic UUID
+
+	- returns: return true if every characteristic of specific UUID(s) discovered already, otherwise false
+	*/
 	func areCharacteristicsAvailable(uuids uuids: [UUID]) -> Bool {
 		for uuid in uuids {
 			if let _ = self.core.characteristicWith(UUIDString: uuid.UUIDString) {
@@ -240,6 +261,13 @@ extension Peripheral {
 		return true
 	}
 
+	/**
+	check if characteristic of specific UUID string(s) discovered already
+
+	- parameter uuidStrings: an array of characteristic UUID string
+
+	- returns: return true if every characteristic of specific UUID string(s) discovered already, otherwise false
+	*/
 	func areCharacteristicsAvailable(uuidStrings uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
 			if let _ = self.core.characteristicWith(UUIDString: string) {
