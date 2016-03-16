@@ -27,7 +27,7 @@ extension CBUUID {
 
 	public override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CBUUID {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -43,7 +43,7 @@ extension CBPeripheral {
 
 	public override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CBPeripheral {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -90,7 +90,7 @@ extension CBService {
 
 	public override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CBService {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -106,7 +106,7 @@ extension CBCharacteristic {
 
 	public override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CBCharacteristic {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}

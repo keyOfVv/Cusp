@@ -43,12 +43,12 @@ internal class ConnectRequest: CentralOperationRequest {
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hash
+		return self.peripheral.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ConnectRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}

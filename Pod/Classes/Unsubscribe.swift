@@ -46,7 +46,7 @@ internal class UnsubscribeRequest: PeripheralOperationRequest {
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? UnsubscribeRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}

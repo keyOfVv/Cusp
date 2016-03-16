@@ -43,7 +43,7 @@ class PeripheralSession: NSObject {
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? PeripheralSession {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}

@@ -92,7 +92,7 @@ internal class ScanRequest: NSObject {
 
 	internal override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ScanRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
