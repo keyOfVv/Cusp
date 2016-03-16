@@ -105,13 +105,25 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 	}
 
 	override internal var hash: Int {
-		let string = self.service.UUID.UUIDString
+		// if characteristic uuid array is nil, return hash value of service uuid
+		guard let uuids = characteristicUUIDs else {
+			return service.UUID.UUIDString.hashValue
+		}
+		// sort the uuids
+		let array = uuids.sort { (a, b) -> Bool in
+			return a.UUIDString <= b.UUIDString
+		}
+		// assemble uuid strings
+		var string = service.UUID.UUIDString
+		for uuid in array {
+			string += uuid.UUIDString
+		}
 		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CharacteristicDiscoveringRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
