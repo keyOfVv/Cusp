@@ -19,7 +19,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 	internal var characteristic: Characteristic!
 
 	/// a closure called when characteristic's value updated
-	internal var update: ((NSData?) -> Void)?
+	internal var update: ((Response) -> Void)?
 
 	// MARK: Initializer
 
@@ -38,7 +38,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a SubscribeRequest instance
 	*/
-	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
+	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success

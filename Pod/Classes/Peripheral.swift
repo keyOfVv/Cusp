@@ -15,6 +15,9 @@ private let CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT = "com.keyang.cusp.peripheral
 /// request serial queue identifier
 private let CUSP_PERIPHERAL_Q_REQUEST_SERIAL = "com.keyang.cusp.peripheral.requestQ"
 
+/// subscription serial queue identifier
+private let CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL = "com.keyang.cusp.peripheral.subscriptionQ"
+
 public enum PeripheralState : Int {
 
 	case Disconnected
@@ -62,6 +65,9 @@ public class Peripheral: NSObject {
 	/// request serial queue for all add/remove operation on all kinds of request;
 	internal var requestQ: dispatch_queue_t = dispatch_queue_create(CUSP_PERIPHERAL_Q_REQUEST_SERIAL, DISPATCH_QUEUE_SERIAL)
 
+	/// subscription serial queue for subscription operation;
+	internal var subscriptionQ: dispatch_queue_t = dispatch_queue_create(CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL, DISPATCH_QUEUE_SERIAL)
+
 	/// requests of service discovering
 	internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
 
@@ -82,6 +88,8 @@ public class Peripheral: NSObject {
 
 	/// requests of RSSI reading
 	internal var RSSIRequests                      = Set<RSSIRequest>()
+
+	internal var subscriptions = Set<Subscription>()
 }
 
 // MARK: - CustomStringConvertible

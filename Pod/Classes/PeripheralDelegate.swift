@@ -107,39 +107,50 @@ extension Peripheral: CBPeripheralDelegate {
 	*  @discussion				This method is invoked after a @link readValueForCharacteristic: @/link call, or upon receipt of a notification/indication.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		// found out whether value is read or subscirbed
-
-		dispatch_async(self.operationQ, { () -> Void in
-			var tgtReq: ReadRequest?
-			for req in self.readRequests {
-				if req.characteristic == characteristic {
-					tgtReq = req
-					break
+		// this method is invoked after readValueForCharacteristic call or subscription...
+		// so it's necessary to find out whether value is read or subscirbed...
+		// if subscribed, then ignore read req
+		dispatch_async(operationQ) { () -> Void in
+			if characteristic.isNotifying {
+				// subscription update
+				// find out specific subscription
+				for sub in self.subscriptions {
+					if sub.characteristic == characteristic {
+						// prepare to call update call back
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							if error == nil {
+								let resp = Response()
+								resp.value = characteristic.value	// wrap value
+								sub.update?(resp)
+							}
+						})
+						return
+					}
+				}
+			} else {
+				// may invoked by value reading req
+				// find out specific req
+				for req in self.readRequests {
+					if req.characteristic == characteristic {
+						// prepare to call back
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							// disable timeout closure
+							req.timedOut = false
+							if let err = error {
+								// read value failed
+								req.failure?(err)
+							} else {
+								// read value succeed
+								let resp = Response()
+								resp.value = characteristic.value	// wrap value
+								req.success?(resp)
+							}
+						})
+						return
+					}
 				}
 			}
-			dispatch_async(dispatch_get_main_queue(), { () -> Void in
-				if let req = tgtReq {
-					req.timedOut = false
-					// read
-					if let errorInfo = error {
-						// failed
-						req.failure?(errorInfo)
-					} else {
-						// succeed
-						let resp = Response()
-						resp.value = characteristic.value
-						req.success?(resp)
-					}
-					dispatch_async(self.requestQ, { () -> Void in
-						self.readRequests.remove(req)
-					})
-				} else {
-					// subscribed
-					// TODO: deal with value updates
-					//						session.update?(characteristic.value)
-				}
-			})
-		})
+		}
 	}
 
 	/*!
@@ -206,8 +217,11 @@ extension Peripheral: CBPeripheralDelegate {
 					} else {
 						// subscribe succeed
 						req.success?(nil)
-						// TODO: deal with value updates
-//						session.update = req.update
+						dispatch_async(self.subscriptionQ, { () -> Void in
+							// create subscription object
+							let subscription = Subscription(characteristic: characteristic, update: req.update)
+							self.subscriptions.insert(subscription)
+						})
 					}
 				})
 				dispatch_async(self.requestQ, { () -> Void in
@@ -230,6 +244,18 @@ extension Peripheral: CBPeripheralDelegate {
 						} else {
 							// unsubscribe succeed
 							req.success?(nil)
+							dispatch_async(self.subscriptionQ, { () -> Void in
+								var tgtSub: Subscription?
+								for sub in self.subscriptions {
+									if sub.characteristic == characteristic {
+										tgtSub = sub
+										break
+									}
+								}
+								if let sub = tgtSub {
+									self.subscriptions.remove(sub)
+								}
+							})
 						}
 					})
 					dispatch_async(self.requestQ, { () -> Void in
