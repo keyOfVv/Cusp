@@ -23,7 +23,7 @@ internal class Subscription: NSObject {
 	}
 
 	override var hash: Int {
-		return self.characteristic.hashValue
+		return characteristic.hashValue
 	}
 
 	override func isEqual(object: AnyObject?) -> Bool {
