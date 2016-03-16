@@ -19,10 +19,26 @@ public typealias CharacteristicWriteType = CBCharacteristicWriteType
 
 // MARK: - CBUUID
 
+extension NSUUID {
+
+	public override var hash: Int {
+		return UUIDString.hashValue
+	}
+
+	public override func isEqual(object: AnyObject?) -> Bool {
+		if let other = object as? NSUUID {
+			return self.hashValue == other.hashValue
+		}
+		return false
+	}
+}
+
+// MARK: - CBUUID
+
 extension CBUUID {
 
 	public override var hash: Int {
-		return self.UUIDString.hashValue
+		return UUIDString.hashValue
 	}
 
 	public override func isEqual(object: AnyObject?) -> Bool {
@@ -38,7 +54,7 @@ extension CBUUID {
 extension CBPeripheral {
 
 	public override var hash: Int {
-		return self.identifier.hashValue
+		return identifier.hashValue
 	}
 
 	public override func isEqual(object: AnyObject?) -> Bool {
@@ -85,7 +101,7 @@ extension CBPeripheral {
 extension CBService {
 	
 	public override var hash: Int {
-		return self.UUID.hashValue
+		return UUID.hashValue
 	}
 
 	public override func isEqual(object: AnyObject?) -> Bool {
@@ -101,7 +117,7 @@ extension CBService {
 extension CBCharacteristic {
 
 	public override var hash: Int {
-		return self.UUID.hashValue
+		return UUID.hashValue
 	}
 
 	public override func isEqual(object: AnyObject?) -> Bool {
