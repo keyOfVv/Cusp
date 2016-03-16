@@ -90,6 +90,17 @@ public class Peripheral: NSObject {
 	internal var RSSIRequests                      = Set<RSSIRequest>()
 
 	internal var subscriptions = Set<Subscription>()
+
+	public override var hash: Int {
+		return self.identifier.UUIDString.hashValue
+	}
+
+	public override func isEqual(object: AnyObject?) -> Bool {
+		if let other = object as? Peripheral {
+			return self.hashValue == other.hashValue
+		}
+		return false
+	}
 }
 
 // MARK: - CustomStringConvertible
