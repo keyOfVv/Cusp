@@ -19,7 +19,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 	internal var characteristic: Characteristic!
 
 	/// a closure called when characteristic's value updated
-	internal var update: ((Response) -> Void)?
+	internal var update: ((Response?) -> Void)?
 
 	// MARK: Initializer
 
@@ -38,7 +38,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a SubscribeRequest instance
 	*/
-	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response) -> Void)?) {
+	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response?) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success
@@ -71,7 +71,7 @@ extension Peripheral {
 	- parameter failure:        a closure called when subscription failed. 订阅失败时执行的闭包.
 	- parameter update:         a closure called when characteristic's value updated. 数值更新时执行的闭包.
 	*/
-	public func subscribe(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((NSData?) -> Void)?) {
+	public func subscribe(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
