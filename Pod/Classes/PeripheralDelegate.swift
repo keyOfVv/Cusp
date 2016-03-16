@@ -25,13 +25,17 @@ extension Peripheral: CBPeripheralDelegate {
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
 		dispatch_async(self.operationQ) { () -> Void in
+			// multiple reqs of discovering service within a short duration will be responsed simultaneously
+			// 1. check if service UUID specified in req...
 			for req in self.serviceDiscoveringRequests {
 				if let uuids = req.serviceUUIDs {
+					// if so, check if all interested services are discovered, otherwise return directly
 					if !self.areServicesAvailable(uuids: uuids) {
 						return
 					}
 				}
 			}
+			// 2. all interested services are discovered, OR in case no service UUID specified in req...
 			for req in self.serviceDiscoveringRequests {
 				req.timedOut = false
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -39,10 +43,11 @@ extension Peripheral: CBPeripheralDelegate {
 						// discovering failed
 						req.failure?(errorInfo)
 					} else {
-						// discovering succeed
+						// discovering succeed, call success closure of each req
 						req.success?(nil)
 					}
 				})
+				// 4. once the success/failure closure called, remove the req
 				dispatch_async(self.requestQ, { () -> Void in
 					self.serviceDiscoveringRequests.remove(req)
 				})
@@ -62,13 +67,17 @@ extension Peripheral: CBPeripheralDelegate {
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
 		dispatch_async(self.operationQ) { () -> Void in
+			// multiple reqs of discovering characteristic within a short duration will be responsed simultaneously
+			// 1. check if characteristic UUID specified in req...
 			for req in self.characteristicDiscoveringRequests {
 				if let uuids = req.characteristicUUIDs {
+					// if so, check if all interested characteristics are discovered, otherwise return directly
 					if !self.areCharacteristicsAvailable(uuids: uuids) {
 						return
 					}
 				}
 			}
+			// 2. all interested characteristics are discovered, OR in case no characteristic UUID specified in req...
 			for req in self.characteristicDiscoveringRequests {
 				req.timedOut = false
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -76,10 +85,11 @@ extension Peripheral: CBPeripheralDelegate {
 						// discovering failed
 						req.failure?(errorInfo)
 					} else {
-						// discovering succeed
+						// discovering succeed, call success closure of each req
 						req.success?(nil)
 					}
 				})
+				// 4. once the success/failure closure called, remove the req
 				dispatch_async(self.requestQ, { () -> Void in
 					self.characteristicDiscoveringRequests.remove(req)
 				})
@@ -99,38 +109,37 @@ extension Peripheral: CBPeripheralDelegate {
 	public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
 		// found out whether value is read or subscirbed
 
-			dispatch_async(self.operationQ, { () -> Void in
-				var tgtReq: ReadRequest?
-				for req in self.readRequests {
-					if req.characteristic == characteristic {
-						tgtReq = req
-						break
-					}
+		dispatch_async(self.operationQ, { () -> Void in
+			var tgtReq: ReadRequest?
+			for req in self.readRequests {
+				if req.characteristic == characteristic {
+					tgtReq = req
+					break
 				}
-				dispatch_async(dispatch_get_main_queue(), { () -> Void in
-					if let req = tgtReq {
-						req.timedOut = false
-						// read
-						if let errorInfo = error {
-							// failed
-							req.failure?(errorInfo)
-						} else {
-							// succeed
-							let resp = Response()
-							resp.value = characteristic.value
-							req.success?(resp)
-						}
-						dispatch_async(self.requestQ, { () -> Void in
-							self.readRequests.remove(req)
-						})
+			}
+			dispatch_async(dispatch_get_main_queue(), { () -> Void in
+				if let req = tgtReq {
+					req.timedOut = false
+					// read
+					if let errorInfo = error {
+						// failed
+						req.failure?(errorInfo)
 					} else {
-						// subscribed
-						// TODO: deal with value updates
-//						session.update?(characteristic.value)
+						// succeed
+						let resp = Response()
+						resp.value = characteristic.value
+						req.success?(resp)
 					}
-				})
+					dispatch_async(self.requestQ, { () -> Void in
+						self.readRequests.remove(req)
+					})
+				} else {
+					// subscribed
+					// TODO: deal with value updates
+					//						session.update?(characteristic.value)
+				}
 			})
-
+		})
 	}
 
 	/*!
@@ -144,31 +153,30 @@ extension Peripheral: CBPeripheralDelegate {
 	*/
 	public func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
 
-			dispatch_async(self.operationQ, { () -> Void in
-				var tgtReq: WriteRequest?
-				for req in self.writeRequests {
-					if req.characteristic == characteristic {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ, { () -> Void in
+			var tgtReq: WriteRequest?
+			for req in self.writeRequests {
+				if req.characteristic == characteristic {
+					tgtReq = req
+					break
+				}
+			}
+			if let req = tgtReq {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// write failed
+						req.failure?(errorInfo)
+					} else {
+						// write succeed
+						req.success?(nil)
 					}
-				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// write failed
-							req.failure?(errorInfo)
-						} else {
-							// write succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(self.requestQ, { () -> Void in
-						self.writeRequests.remove(req)
-					})
-				}
-			})
-
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.writeRequests.remove(req)
+				})
+			}
+		})
 	}
 
 	/*!
