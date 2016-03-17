@@ -60,7 +60,7 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ServiceDiscoveringRequest {
-			return self.hashValue == other.hashValue
+			return hashValue == other.hashValue
 		}
 		return false
 	}
@@ -123,7 +123,7 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CharacteristicDiscoveringRequest {
-			return self.hashValue == other.hashValue
+			return hashValue == other.hashValue
 		}
 		return false
 	}
@@ -148,15 +148,15 @@ extension Peripheral {
 		// 1. create request object
 		let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, success: success, failure: failure)
 		// 2. add request
-		dispatch_async(self.requestQ, { () -> Void in
+		dispatch_async(requestQ, { () -> Void in
 			self.serviceDiscoveringRequests.insert(req)
 		})
 		// 3. start discovering service(s)
-		dispatch_async(self.operationQ, { () -> Void in
+		dispatch_async(operationQ, { () -> Void in
 			self.core.discoverServices(serviceUUIDs)
 		})
 		// 4. set time out closure
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), operationQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
@@ -188,15 +188,15 @@ extension Peripheral {
 		// 1. create request object
 		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, success: success, failure: failure)
 		// 2. add request
-		dispatch_async(self.requestQ, { () -> Void in
+		dispatch_async(requestQ, { () -> Void in
 			self.characteristicDiscoveringRequests.insert(req)
 		})
 		// 3. start discovering characteristic(s)
-		dispatch_async(self.operationQ, { () -> Void in
+		dispatch_async(operationQ, { () -> Void in
 			self.core.discoverCharacteristics(characteristicUUIDs, forService: service)
 		})
 		// 4. set time out closure
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), operationQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
@@ -219,7 +219,7 @@ extension Peripheral {
 	*/
 	func areServicesAvailable(uuids uuids: [UUID]) -> Bool {
 		for uuid in uuids {
-			if let _ = self.core.serviceWith(UUIDString: uuid.UUIDString) {
+			if let _ = core.serviceWith(UUIDString: uuid.UUIDString) {
 				continue
 			}
 			return false
@@ -236,7 +236,7 @@ extension Peripheral {
 	*/
 	func areServicesAvailable(uuidStrings uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
-			if let _ = self.core.serviceWith(UUIDString: string) {
+			if let _ = core.serviceWith(UUIDString: string) {
 				continue
 			}
 			return false
@@ -253,7 +253,7 @@ extension Peripheral {
 	*/
 	func areCharacteristicsAvailable(uuids uuids: [UUID]) -> Bool {
 		for uuid in uuids {
-			if let _ = self.core.characteristicWith(UUIDString: uuid.UUIDString) {
+			if let _ = core.characteristicWith(UUIDString: uuid.UUIDString) {
 				continue
 			}
 			return false
@@ -270,7 +270,7 @@ extension Peripheral {
 	*/
 	func areCharacteristicsAvailable(uuidStrings uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
-			if let _ = self.core.characteristicWith(UUIDString: string) {
+			if let _ = core.characteristicWith(UUIDString: string) {
 				continue
 			}
 			return false
