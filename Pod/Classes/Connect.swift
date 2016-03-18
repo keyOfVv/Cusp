@@ -11,7 +11,7 @@ import Foundation
 // MARK: ConnectRequest
 
 /// device connect request
-internal class ConnectRequest: OperationRequest {
+internal class ConnectRequest: CentralOperationRequest {
 
 	// MARK: Stored Properties
 
@@ -43,12 +43,12 @@ internal class ConnectRequest: OperationRequest {
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hash
+		return self.peripheral.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ConnectRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -78,21 +78,22 @@ public extension Cusp {
 		// create a connect request ...
 		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set
-		dispatch_async(self.reqOpQ) { () -> Void in
+		dispatch_async(self.reqQ) { () -> Void in
 			self.connectRequests.insert(req)
 		}
 		// start connecting
-		self.centralManager.connectPeripheral(peripheral, options: nil)
+		self.centralManager.connectPeripheral(peripheral.core, options: nil)
 
+		// deal with timeout
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.mainQ) { () -> Void in
 			if req.timedOut {
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
 					let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
 					failure?(error)
 				})
+				// cancel conncect since it's timed out
 				self.cancelConnection(peripheral, completion: nil)
 			}
 		}
 	}
-
 }

@@ -66,16 +66,17 @@ internal class ScanRequest: NSObject {
 	- returns: a ScanRequest instance
 	*/
 	internal convenience init(advertisingUUIDStrings: [String]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
-		if let uuidStrings = advertisingUUIDStrings {
-			var uuids = [UUID]()
-			for uuidString in uuidStrings {
-				let uuid = UUID(string: uuidString)
-				uuids.append(uuid)
-			}
-			self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
-		} else {
+		guard let uuidStrings = advertisingUUIDStrings else {
 			self.init(advertisingUUIDs: nil, duration: duration, completion: completion, abruption: abruption)
+			return
 		}
+		// convert uuid string array into UUID array
+		var uuids = [UUID]()
+		for uuidString in uuidStrings {
+			let uuid = UUID(string: uuidString)
+			uuids.append(uuid)
+		}
+		self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
 	}
 
 	internal override var hash: Int {
@@ -91,7 +92,7 @@ internal class ScanRequest: NSObject {
 
 	internal override func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? ScanRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -127,7 +128,7 @@ public extension Cusp {
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.duration * Double(NSEC_PER_SEC))), self.mainQ, {[weak self] () -> Void in
 			dispatch_async(dispatch_get_main_queue(), { () -> Void in
 				let infoSet = req.available.sort({ (a, b) -> Bool in
-					return a.peripheral.identifier.UUIDString <= b.peripheral.identifier.UUIDString
+					return a.peripheral.core.identifier.UUIDString <= b.peripheral.core.identifier.UUIDString
 				})
 				completion?(infoSet)
 			})
@@ -176,7 +177,7 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkIn(request: ScanRequest) -> Void {
-		dispatch_async(self.reqOpQ) { () -> Void in
+		dispatch_async(self.reqQ) { () -> Void in
 			self.scanRequests.insert(request)
 		}
 
@@ -190,7 +191,7 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	private func checkOut(request: ScanRequest) -> Void {
-		dispatch_async(self.reqOpQ) { () -> Void in
+		dispatch_async(self.reqQ) { () -> Void in
 			self.scanRequests.remove(request)
 		}
 

@@ -5,25 +5,40 @@
 //  Created by keyang on 10/21/15.
 //  Copyright © 2015 com.keyang. All rights reserved.
 //
+/*
+ *
+ *
+ */
 
 import Foundation
+import CoreBluetooth
 
-/// Notification
+// MARK: - Protocol
+@objc public protocol CustomPeripheral: NSObjectProtocol {
+	var core: CBPeripheral { get }
+	init(core: CBPeripheral)
+}
+
+// MARK: Notifications
+
+/// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
 public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
 
-/// main operation queue identifier (主并发队列ID)
-private let QIDMain = "com.keyang.cusp.mainConcurrentQ"
+// MARK: Constants
+
+/// main operation queue identifier
+private let CUSP_CENTRAL_Q_MAIN_CONCURRENT = "com.keyang.cusp.central_Q_main_concurrent"
 
 /// request operation serial queue identifier
-private let QIDReqOp = "com.keyang.cusp.requestOperationQ"
+private let CUSP_CENTRAL_Q_REQUEST_SERIAL  = "com.keyang.cusp.central_Q_request_serial"
 
 /// session operation serial queue identifier
-private let QIDSesOp = "com.keyang.cusp.sessionOperationQ"
+private let CUSP_CENTRAL_Q_SESSION_SERIAL  = "com.keyang.cusp.central_Q_session_serial"
 
-/// Bluetooth Low Energy library in swift (使用swift编写的BLE通讯框架)
+/// Bluetooth Low Energy library in swift
 public class Cusp: NSObject {
 
-	/// Singleton (单例)
+	/// Singleton
 	public class var central: Cusp {
 		struct Static {
 			static let instance: Cusp = Cusp()
@@ -35,67 +50,53 @@ public class Cusp: NSObject {
 		super.init()
 	}
 
-	/// main operation concurrent queue (主并发队列)
-    internal let mainQ: dispatch_queue_t = dispatch_queue_create(QIDMain, DISPATCH_QUEUE_CONCURRENT)
+	/// main operation concurrent queue, operations (scan, connect, cancel-connect, disconnect) will be submitted to this Q
+    internal let mainQ: dispatch_queue_t = dispatch_queue_create(CUSP_CENTRAL_Q_MAIN_CONCURRENT, DISPATCH_QUEUE_CONCURRENT)
 
-	/// request operation serial queue
-	internal let reqOpQ: dispatch_queue_t = dispatch_queue_create(QIDReqOp, DISPATCH_QUEUE_SERIAL)
+	/// request operation serial queue, operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect) will be submitted to this Q;
+    internal let reqQ: dispatch_queue_t  = dispatch_queue_create(CUSP_CENTRAL_Q_REQUEST_SERIAL, DISPATCH_QUEUE_SERIAL)
 
-	/// session operation serial queue
-	internal let sesOpQ: dispatch_queue_t = dispatch_queue_create(QIDSesOp, DISPATCH_QUEUE_SERIAL)
+	/// session operation serial queue, operations (add/remove) on sessions (with peripheral) will be submitted to this Q;
+    internal let sesQ: dispatch_queue_t  = dispatch_queue_create(CUSP_CENTRAL_Q_SESSION_SERIAL, DISPATCH_QUEUE_SERIAL)
 
-	/// central avator, read only(蓝牙主设备对象, 只读)
+	/// central avator, read only
 	private(set) lazy var centralManager: CentralManager = {
 		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
-	/// BLE state (蓝牙状态)
+	/// BLE state
 	public var state: State {
 		return State(rawValue: self.centralManager.state.rawValue)!
 	}
 
 	// MARK: Requests
 
-	/// scan request set (扫描请求的集合)
-    internal var scanRequests                      = Set<ScanRequest>()
+	/// scan request set
+    internal var scanRequests          = Set<ScanRequest>()
 
-	/// connect requests set (连接请求的集合)
-    internal var connectRequests                   = Set<ConnectRequest>()
+	/// connect requests set
+    internal var connectRequests       = Set<ConnectRequest>()
 
-	/// cancel-connects set (取消连接请求的集合)
-    internal var cancelConnectRequests             = Set<CancelConnectRequest>()
+	/// cancel-connects set
+    internal var cancelConnectRequests = Set<CancelConnectRequest>()
 
-	/// disconnect requests set (断开连接请求的集合)
-    internal var disconnectRequests                = Set<DisconnectRequest>()
-
-	/// requests of service discovering (发现服务请求的集合)
-    internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
-
-	/// requests of characteristic discovering (发现特征请求的集合)
-    internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
-
-	/// requests of write characteristic value (写值请求的集合)
-    internal var writeRequests                     = Set<WriteRequest>()
-
-	/// requests of read characteristic value (读值请求的集合)
-    internal var readRequests                      = Set<ReadRequest>()
-
-	/// requests of subscribe characteristic value (订阅请求的集合)
-    internal var subscribeRequests                 = Set<SubscribeRequest>()
-
-	/// requests of unsubscribe characteristic value (退订请求的集合)
-    internal var unsubscribeRequests               = Set<UnsubscribeRequest>()
-
-	/// requests of RSSI reading (信号强度查询请求的集合)
-    internal var RSSIRequests                      = Set<RSSIRequest>()
+	/// disconnect requests set
+    internal var disconnectRequests    = Set<DisconnectRequest>()
 
 	// MARK: Peripheral Sets
 
-	/// ever discovered peripherals after scanning (扫描后获取的蓝牙设备集合)
-    internal var discoveredPeripherals             = Set<Peripheral>()
+	/// discovered peripherals ever after scanning
+    internal var availables            = Set<Peripheral>()
 
-	/// communicating session with connected peripheral (已建立的连接集合)
-    internal var sessions                          = Set<CommunicatingSession>()
+	/// session of connected peripheral
+    internal var sessions              = Set<PeripheralSession>()
+
+	/// registered custom classes
+	internal var customClasses: Dictionary<String, AnyClass> = [:]
+
+	public var isConnectedWithAnyPeripheral: Bool {
+		return !sessions.isEmpty
+	}
 }
 
 // MARK: - Interface
@@ -105,17 +106,39 @@ public extension Cusp {
 
 	/**
 	Prepare BLE module, this method shall be called once before any BLE operation.
-	执行任何蓝牙功能前必须执行一次本方法
 	*/
-	public func prepare() {
-		self.centralManager.state.rawValue
+	public class func prepare() {
+		if !self.isBLEAvailable() {
+			print("BLE is currently unavailable")
+		}
 	}
 
+	/**
+	check if BLE is available
+
+	- returns: boolean value
+	*/
+	public class func isBLEAvailable() -> Bool {
+		if let _ = Cusp.central.assertAvailability() {
+			return false
+		}
+		return true
+	}
+
+	/**
+	register peripheral of a custom class, which shall be a subclass of Peripheral; any peripheral object of which the name matches specific pattern will be initialized in custom class.
+
+	- parameter aClass: custom peripheral class subclassing Peripheral
+	- parameter p:      regex pattern for name
+	*/
+	public func registerPeripheralClass<T: CustomPeripheral>(aClass: T.Type, forNamePattern p: String) {
+		self.customClasses[p] = aClass
+	}
 }
 
 // MARK: - Availability Check
 
-extension Cusp {
+internal extension Cusp {
 
 	/**
 	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
@@ -159,6 +182,34 @@ extension Cusp {
 	}
 }
 
+// MARK: -
+extension Cusp {
+
+	/**
+	Retrieve session for specific peripheral.
+	Note: there is no connected-peripheral array in Cusp, each connected peripheral will be wrapped in PeripheralSession object and stored in property "sessions".
+
+	- parameter peripheral: Peripheral object
+
+	- returns: PeripheralSession object or nil if doesn't exist
+	*/
+	internal func sessionFor(peripheral: Peripheral?) -> PeripheralSession? {
+		// return nil if peripheral is nil
+		if peripheral == nil { return nil }
+
+		// session retrieval operation shall be performed in sesQ to prevent race condition
+		var tgtSession: PeripheralSession?
+		dispatch_sync(self.sesQ) { () -> Void in
+			for session in self.sessions {
+				if session.peripheral == peripheral {
+					tgtSession = session
+					break
+				}
+			}
+		}
+		return tgtSession
+	}
+}
 
 
 

@@ -33,18 +33,27 @@ extension Cusp: CBCentralManagerDelegate {
 	*/
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		dispatch_async(self.mainQ) { () -> Void in
-			self.discoveredPeripherals.insert(peripheral)
-
-			let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
-			let uuids = advInfo.advertisingUUIDs
-
-			for req in self.scanRequests {
-				if req.advertisingUUIDs == nil {
-					req.available.insert(advInfo)
-					break
-				} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {
-					req.available.insert(advInfo)
-					break
+			// 1. once discovered, wrap CBPeripheral into custom class...
+			for (regex, aClass) in self.customClasses {
+				if peripheral.matches(regex) {
+					if let classRef = aClass.self as? Peripheral.Type {
+						let p = classRef.init(core: peripheral)
+						peripheral.delegate = p
+						self.availables.insert(p)
+						// 2. then forge an advertisement object...
+						let advInfo = Advertisement(peripheral: p, advertisementData: advertisementData, RSSI: RSSI)
+						let uuids = advInfo.advertisingUUIDs
+						// 3. finally, put it into Set "available" of scan req
+						for req in self.scanRequests {
+							if req.advertisingUUIDs == nil {	// a scan req for all peripherals
+								req.available.insert(advInfo)	// put any peripheral into Set "available"
+								break
+							} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {	// a scan req for specific peripheral(s)
+								req.available.insert(advInfo)	// put specific peripheral into Set "available"
+								break
+							}
+						}
+					}
 				}
 			}
 		}
@@ -62,26 +71,32 @@ extension Cusp: CBCentralManagerDelegate {
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
 			for req in self.connectRequests {
-				if req.peripheral == peripheral {
+				if req.peripheral.core == peripheral {
 					tgtReq = req
 					break
 				}
 			}
-			// target found, call its success closure, then remove it
+			// req target found
 			if let req = tgtReq {
+				// 1.disable timeout call
 				req.timedOut = false
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					// 2.call success closure
 					req.success?(nil)
 				})
 
-				dispatch_async(self.sesOpQ, { () -> Void in
-					let session = CommunicatingSession(peripheral: peripheral)
-					session.abruption = req.abruption
-					peripheral.delegate = self
-					self.sessions.insert(session)
+				dispatch_async(self.sesQ, { () -> Void in
+					// 3.find out specific peripheral
+					if let p = self.peripheralFor(peripheral) {
+						// 4.wrap peripheral into a session
+						let session = PeripheralSession(peripheral: p)
+						session.abruption = req.abruption
+						self.sessions.insert(session)
+					}
 				})
 
-				dispatch_async(self.reqOpQ, { () -> Void in
+				dispatch_async(self.reqQ, { () -> Void in
+					// 5. remove req
 					self.connectRequests.remove(req)
 				})
 			}
@@ -106,13 +121,16 @@ extension Cusp: CBCentralManagerDelegate {
 					break
 				}
 			}
-			// target found, call its failure closure, then remove it
+			// req target found, call its failure closure, then remove it
 			if let req = tgtReq {
+				// 1. disable timeout call
 				req.timedOut = false
 				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					// 2. call failure closure
 					req.failure?(error)
 				})
-				dispatch_async(self.reqOpQ, { () -> Void in
+				dispatch_async(self.reqQ, { () -> Void in
+					// 3. remove req
 					self.connectRequests.remove(req)
 				})
 			}
@@ -131,14 +149,18 @@ extension Cusp: CBCentralManagerDelegate {
 		log("\(error)")
 		dispatch_async(self.mainQ) { () -> Void in
 			if let errorInfo = error {
-				// abnormal disconnection, find out specific session
-				if let session = self.sessionFor(peripheral) {
-					dispatch_async(dispatch_get_main_queue(), {[weak session] () -> Void in
-						session?.abruption?(errorInfo)
-					})
-					dispatch_async(self.sesOpQ, { () -> Void in
-						self.sessions.remove(session)	// remove the abrupted session
-					})
+				// abnormal disconnection, find out specific Peripheral and session
+				if let p = self.peripheralFor(peripheral) {
+					if let session = self.sessionFor(p) {
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							// call abruption closure
+							session.abruption?(errorInfo)
+							})
+						dispatch_async(self.sesQ, { () -> Void in
+							// remove the abrupted session
+							self.sessions.remove(session)
+						})
+					}
 				}
 
 			} else {
@@ -146,48 +168,94 @@ extension Cusp: CBCentralManagerDelegate {
 				// whether disconnect-active or cancel-pending?
 
 				// disconnect-active
+				// find out specific disconnect req
 				var tgtDisReq: DisconnectRequest?
 				for req in self.disconnectRequests {
-					if req.peripheral == peripheral {
+					if req.peripheral.core == peripheral {
 						tgtDisReq = req
 						break
 					}
 				}
 				if let req = tgtDisReq {
-					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
-						req?.completion?()
+					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+						// call completion closure
+						req.completion?()
 					})
-					dispatch_async(self.reqOpQ, { () -> Void in
+					dispatch_async(self.reqQ, { () -> Void in
+						// remove req
 						self.disconnectRequests.remove(req)
 					})
-
-					if let session = self.sessionFor(peripheral) {
-						dispatch_async(self.sesOpQ, { () -> Void in
-							self.sessions.remove(session)	// remove the disconnected session
-						})
+					if let p = self.peripheralFor(peripheral) {
+						if let session = self.sessionFor(p) {
+							dispatch_async(self.sesQ, { () -> Void in
+								// remove the disconnected session
+								self.sessions.remove(session)
+							})
+						}
 					}
 					return
 				}
 
 				// cancel-pending
+				// find out specific cancel-connect req
 				var tgtKclReq: CancelConnectRequest?
 				for req in self.cancelConnectRequests {
-					if req.peripheral == peripheral {
+					if req.peripheral.core == peripheral {
 						tgtKclReq = req
 						break
 					}
 				}
 				if let req = tgtKclReq {
-					dispatch_async(dispatch_get_main_queue(), {[weak req] () -> Void in
-						req?.completion?()
+					dispatch_async(dispatch_get_main_queue(), { () -> Void in
+						// call completion closure
+						req.completion?()
 					})
-					dispatch_async(self.reqOpQ, { () -> Void in
+					dispatch_async(self.reqQ, { () -> Void in
+						// remove req
 						self.cancelConnectRequests.remove(req)
 					})
 					return
 				}
 			}
 		}
+	}
+}
+
+private extension Cusp {
+
+	/**
+	Retrieve Peripheral object for specific core from discoveredPeripherals.
+	Note: this method is private
+
+	- parameter core: CBPeripheral object
+
+	- returns: Peripheral object or nil if not found
+	*/
+	private func peripheralFor(core: CBPeripheral) -> Peripheral? {
+		for p in availables {
+			if p.core == core {
+				return p
+			}
+		}
+		return nil
+	}
+}
+
+private extension CBPeripheral {
+
+	private func matches(pattern: String) -> Bool {
+		do {
+			let name = self.name ?? ""
+			let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+			if let result = regex.firstMatchInString(name, options: NSMatchingOptions.ReportProgress, range: NSMakeRange(0, name.length)) {
+				if result.range.location != NSNotFound {
+					return true
+				}
+			}
+		} catch {
+
+		}
+		return false
 	}
 }
 

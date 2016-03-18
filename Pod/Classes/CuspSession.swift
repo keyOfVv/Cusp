@@ -13,46 +13,37 @@ import CoreBluetooth
 
 /// 从设备连接Session
 ///
-class CommunicatingSession: NSObject {
+class PeripheralSession: NSObject {
 
 	// MARK: Stored Properties
 
 	/// 已建立连接的从设备
-	weak var peripheral: CBPeripheral!
+	weak var peripheral: Peripheral!
 
-	var update: ((NSData?) -> Void)?
+//	var update: ((NSData?) -> Void)?
 
 	var abruption: ((NSError?) -> Void)?
-
-	/// 操作队列
-	internal var sessionQ: dispatch_queue_t!
-
-	internal var reqOpQ:dispatch_queue_t!
 
 	// MARK: Initializer
 
 	/// 初始化
-	override init() {
+	private override init() {
 		super.init()
 	}
 
 	/// 快速构造方法
-	convenience init(peripheral: CBPeripheral) {
+	convenience init(peripheral: Peripheral) {
 		self.init()
 		self.peripheral = peripheral
-		let qLabel = "com.keyang.cusp.session." + peripheral.identifier.UUIDString
-		self.sessionQ = dispatch_queue_create(qLabel, DISPATCH_QUEUE_CONCURRENT)
-		let reqOpLabel = "com.keyang.cusp.sessionReqOp." + peripheral.identifier.UUIDString
-		self.reqOpQ = dispatch_queue_create(reqOpLabel, DISPATCH_QUEUE_SERIAL)
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hashValue
+		return peripheral.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
-		if let other = object as? CommunicatingSession {
-			return self.peripheral == other.peripheral
+		if let other = object as? PeripheralSession {
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}

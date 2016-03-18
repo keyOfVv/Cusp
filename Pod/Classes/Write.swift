@@ -9,7 +9,7 @@
 import Foundation
 
 /// request of write value to specific characteristic
-internal class WriteRequest: OperationRequest {
+internal class WriteRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
@@ -36,30 +36,29 @@ internal class WriteRequest: OperationRequest {
 
 	- returns: a WriteRequest instance
 	*/
-	convenience init(data: NSData?, characteristic: Characteristic, peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(data: NSData?, characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		self.init()
         self.data           = data
         self.characteristic = characteristic
-        self.peripheral     = peripheral
         self.success        = success
         self.failure        = failure
 	}
 
 	override internal var hash: Int {
-		let string = self.peripheral.identifier.UUIDString + self.characteristic.UUID.UUIDString
+		let string = self.characteristic.UUID.UUIDString
 		return string.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? WriteRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
 }
 
 // MARK: Communicate
-extension Cusp {
+extension Peripheral {
 
 	/**
 	Write value to specific characteristic of specific peripheral.
@@ -71,34 +70,31 @@ extension Cusp {
 	- parameter success:        a closure called when value written successfully. 写值成功时执行的闭包.
 	- parameter failure:        a closure called when value written failed. 写值失败时执行的闭包.
 	*/
-	public func write(data: NSData, forCharacteristic characteristic: Characteristic, inPeripheral peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func write(data: NSData, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = self.assertAvailability() {
+		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
 			return
 		}
 
-		if let session = self.sessionFor(peripheral) {
+		let req = WriteRequest(data: data, characteristic: characteristic, success: success, failure: failure)
+		dispatch_async(self.requestQ, { () -> Void in
+			self.writeRequests.insert(req)
+		})
 
-			let req = WriteRequest(data: data, characteristic: characteristic, peripheral: peripheral, success: success, failure: failure)
-			dispatch_async(session.reqOpQ, { () -> Void in
-				self.writeRequests.insert(req)
-			})
+		dispatch_async(self.operationQ, { () -> Void in
+			self.core.writeValue(data, forCharacteristic: characteristic, type: CharacteristicWriteType.WithResponse)
+		})
 
-			dispatch_async(session.sessionQ, { () -> Void in
-				peripheral.writeValue(data, forCharacteristic: characteristic, type: CharacteristicWriteType.WithResponse)
-			})
-
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), session.sessionQ) { () -> Void in
-				if req.timedOut {
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						let error = NSError(domain: "connect operation timed out", code: Error.TimedOut.rawValue, userInfo: nil)
-						failure?(error)
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.writeRequests.remove(req)
-					})
-				}
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))), self.operationQ) { () -> Void in
+			if req.timedOut {
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.TimedOut.rawValue, userInfo: nil)
+					failure?(error)
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.writeRequests.remove(req)
+				})
 			}
 		}
 	}

@@ -40,12 +40,12 @@ internal class CancelConnectRequest: NSObject {
 	}
 
 	override internal var hash: Int {
-		return self.peripheral.hash
+		return self.peripheral.hashValue
 	}
 
 	override internal func isEqual(object: AnyObject?) -> Bool {
 		if let other = object as? CancelConnectRequest {
-			return self.hash == other.hash
+			return self.hashValue == other.hashValue
 		}
 		return false
 	}
@@ -64,10 +64,10 @@ public extension Cusp {
 		// create a cancel-connect request ...
 		let req = CancelConnectRequest(peripheral: peripheral, completion: completion)
 		// insert it into cancelConnectRequests set
-		dispatch_async(self.reqOpQ) { () -> Void in
+		dispatch_async(self.reqQ) { () -> Void in
 			self.cancelConnectRequests.insert(req)
 		}
 		// start disconnecting
-		self.centralManager.cancelPeripheralConnection(peripheral)
+		self.centralManager.cancelPeripheralConnection(peripheral.core)
 	}
 }

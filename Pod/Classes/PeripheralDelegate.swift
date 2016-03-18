@@ -11,7 +11,7 @@ import CoreBluetooth
 
 // MARK: - CBPeripheralDelegate
 
-extension Cusp: CBPeripheralDelegate {
+extension Peripheral: CBPeripheralDelegate {
 
 	/*!
 	*  @method peripheral:didDiscoverServices:
@@ -24,30 +24,33 @@ extension Cusp: CBPeripheralDelegate {
 	*
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ) { () -> Void in
-				var tgtReq: ServiceDiscoveringRequest?
-				for req in self.serviceDiscoveringRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ) { () -> Void in
+			// multiple reqs of discovering service within a short duration will be responsed simultaneously
+			// 1. check if service UUID specified in req...
+			for req in self.serviceDiscoveringRequests {
+				if let uuids = req.serviceUUIDs {
+					// if so, check if all interested services are discovered, otherwise return directly
+					if !self.areServicesAvailable(uuids: uuids) {
+						return
 					}
 				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// discovering failed
-							req.failure?(errorInfo)
-						} else {
-							// discovering succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.serviceDiscoveringRequests.remove(req)
-					})
-				}
+			}
+			// 2. all interested services are discovered, OR in case no service UUID specified in req...
+			for req in self.serviceDiscoveringRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// discovering failed
+						req.failure?(errorInfo)
+					} else {
+						// discovering succeed, call success closure of each req
+						req.success?(nil)
+					}
+				})
+				// 4. once the success/failure closure called, remove the req
+				dispatch_async(self.requestQ, { () -> Void in
+					self.serviceDiscoveringRequests.remove(req)
+				})
 			}
 		}
 	}
@@ -63,30 +66,33 @@ extension Cusp: CBPeripheralDelegate {
 	*						they can be retrieved via <i>service</i>'s <code>characteristics</code> property.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ) { () -> Void in
-				var tgtReq: CharacteristicDiscoveringRequest?
-				for req in self.characteristicDiscoveringRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ) { () -> Void in
+			// multiple reqs of discovering characteristic within a short duration will be responsed simultaneously
+			// 1. check if characteristic UUID specified in req...
+			for req in self.characteristicDiscoveringRequests {
+				if let uuids = req.characteristicUUIDs {
+					// if so, check if all interested characteristics are discovered, otherwise return directly
+					if !self.areCharacteristicsAvailable(uuids: uuids) {
+						return
 					}
 				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// discovering failed
-							req.failure?(errorInfo)
-						} else {
-							// discovering succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.characteristicDiscoveringRequests.remove(req)
-					})
-				}
+			}
+			// 2. all interested characteristics are discovered, OR in case no characteristic UUID specified in req...
+			for req in self.characteristicDiscoveringRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// discovering failed
+						req.failure?(errorInfo)
+					} else {
+						// discovering succeed, call success closure of each req
+						req.success?(nil)
+					}
+				})
+				// 4. once the success/failure closure called, remove the req
+				dispatch_async(self.requestQ, { () -> Void in
+					self.characteristicDiscoveringRequests.remove(req)
+				})
 			}
 		}
 	}
@@ -101,38 +107,49 @@ extension Cusp: CBPeripheralDelegate {
 	*  @discussion				This method is invoked after a @link readValueForCharacteristic: @/link call, or upon receipt of a notification/indication.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		// found out whether value is read or subscirbed
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: ReadRequest?
-				for req in self.readRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		// this method is invoked after readValueForCharacteristic call or subscription...
+		// so it's necessary to find out whether value is read or subscirbed...
+		// if subscribed, then ignore read req
+		dispatch_async(operationQ) { () -> Void in
+			if characteristic.isNotifying {
+				// subscription update
+				// find out specific subscription
+				for sub in self.subscriptions {
+					if sub.characteristic == characteristic {
+						// prepare to call update call back
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							if error == nil {
+								let resp = Response()
+								resp.value = characteristic.value	// wrap value
+								sub.update?(resp)
+							}
+						})
+						return
 					}
 				}
-				dispatch_async(dispatch_get_main_queue(), { () -> Void in
-					if let req = tgtReq {
-						req.timedOut = false
-						// read
-						if let errorInfo = error {
-							// failed
-							req.failure?(errorInfo)
-						} else {
-							// succeed
-							let resp = Response()
-							resp.value = characteristic.value
-							req.success?(resp)
-						}
-						dispatch_async(session.reqOpQ, { () -> Void in
-							self.readRequests.remove(req)
+			} else {
+				// may invoked by value reading req
+				// find out specific req
+				for req in self.readRequests {
+					if req.characteristic == characteristic {
+						// prepare to call back
+						dispatch_async(dispatch_get_main_queue(), { () -> Void in
+							// disable timeout closure
+							req.timedOut = false
+							if let err = error {
+								// read value failed
+								req.failure?(err)
+							} else {
+								// read value succeed
+								let resp = Response()
+								resp.value = characteristic.value	// wrap value
+								req.success?(resp)
+							}
 						})
-					} else {
-						// subscribed
-						session.update?(characteristic.value)
+						return
 					}
-				})
-			})
+				}
+			}
 		}
 	}
 
@@ -146,32 +163,31 @@ extension Cusp: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a {@link writeValue:forCharacteristic:type:} call, when the <code>CBCharacteristicWriteWithResponse</code> type is used.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: WriteRequest?
-				for req in self.writeRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+
+		dispatch_async(self.operationQ, { () -> Void in
+			var tgtReq: WriteRequest?
+			for req in self.writeRequests {
+				if req.characteristic == characteristic {
+					tgtReq = req
+					break
+				}
+			}
+			if let req = tgtReq {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// write failed
+						req.failure?(errorInfo)
+					} else {
+						// write succeed
+						req.success?(nil)
 					}
-				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// write failed
-							req.failure?(errorInfo)
-						} else {
-							// write succeed
-							req.success?(nil)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.writeRequests.remove(req)
-					})
-				}
-			})
-		}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.writeRequests.remove(req)
+				})
+			}
+		})
 	}
 
 	/*!
@@ -184,11 +200,37 @@ extension Cusp: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a @link setNotifyValue:forCharacteristic: @/link call.
 	*/
 	public func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: SubscribeRequest?
-				for req in self.subscribeRequests {
-					if req.peripheral == peripheral {
+		dispatch_async(self.operationQ, { () -> Void in
+			var tgtReq: SubscribeRequest?
+			for req in self.subscribeRequests {
+				if req.characteristic == characteristic {
+					tgtReq = req
+					break
+				}
+			}
+			if let req = tgtReq {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// subscribe failed
+						req.failure?(errorInfo)
+					} else {
+						// subscribe succeed
+						req.success?(nil)
+						dispatch_async(self.subscriptionQ, { () -> Void in
+							// create subscription object
+							let subscription = Subscription(characteristic: characteristic, update: req.update)
+							self.subscriptions.insert(subscription)
+						})
+					}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.subscribeRequests.remove(req)
+				})
+			} else {
+				var tgtReq: UnsubscribeRequest?
+				for req in self.unsubscribeRequests {
+					if req.characteristic == characteristic {
 						tgtReq = req
 						break
 					}
@@ -197,91 +239,53 @@ extension Cusp: CBPeripheralDelegate {
 					req.timedOut = false
 					dispatch_async(dispatch_get_main_queue(), { () -> Void in
 						if let errorInfo = error {
-							// subscribe failed
+							// unsubscribe failed
 							req.failure?(errorInfo)
 						} else {
-							// subscribe succeed
+							// unsubscribe succeed
 							req.success?(nil)
-							session.update = req.update
+							dispatch_async(self.subscriptionQ, { () -> Void in
+								var tgtSub: Subscription?
+								for sub in self.subscriptions {
+									if sub.characteristic == characteristic {
+										tgtSub = sub
+										break
+									}
+								}
+								if let sub = tgtSub {
+									self.subscriptions.remove(sub)
+								}
+							})
 						}
 					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.subscribeRequests.remove(req)
+					dispatch_async(self.requestQ, { () -> Void in
+						self.unsubscribeRequests.remove(req)
 					})
-				} else {
-					var tgtReq: UnsubscribeRequest?
-					for req in self.unsubscribeRequests {
-						if req.peripheral == peripheral {
-							tgtReq = req
-							break
-						}
-					}
-					if let req = tgtReq {
-						req.timedOut = false
-						dispatch_async(dispatch_get_main_queue(), { () -> Void in
-							if let errorInfo = error {
-								// unsubscribe failed
-								req.failure?(errorInfo)
-							} else {
-								// unsubscribe succeed
-								req.success?(nil)
-							}
-						})
-						dispatch_async(session.reqOpQ, { () -> Void in
-							self.unsubscribeRequests.remove(req)
-						})
-					}
 				}
-			})
-		}
+			}
+		})
 	}
 
 	// TODO: 8.0+ only
 	public func peripheral(peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: NSError?) {
-		if let session = self.sessionFor(peripheral) {
-			dispatch_async(session.sessionQ, { () -> Void in
-				var tgtReq: RSSIRequest?
-				for req in self.RSSIRequests {
-					if req.peripheral == peripheral {
-						tgtReq = req
-						break
+		dispatch_async(self.operationQ, { () -> Void in
+			for req in self.RSSIRequests {
+				req.timedOut = false
+				dispatch_async(dispatch_get_main_queue(), { () -> Void in
+					if let errorInfo = error {
+						// read RSSI failed
+						req.failure?(errorInfo)
+					} else {
+						// read RSSI succeed
+						let resp = Response()
+						resp.RSSI = RSSI
+						req.success?(resp)
 					}
-				}
-				if let req = tgtReq {
-					req.timedOut = false
-					dispatch_async(dispatch_get_main_queue(), { () -> Void in
-						if let errorInfo = error {
-							// write failed
-							req.failure?(errorInfo)
-						} else {
-							// write succeed
-							let resp = Response()
-							resp.RSSI = RSSI
-							req.success?(resp)
-						}
-					})
-					dispatch_async(session.reqOpQ, { () -> Void in
-						self.RSSIRequests.remove(req)
-					})
-				}
-			})
-		}
-	}
-
-	internal func sessionFor(peripheral: CBPeripheral?) -> CommunicatingSession? {
-		if peripheral == nil { return nil }
-
-		var tgtSession: CommunicatingSession?
-
-		dispatch_sync(self.sesOpQ) { () -> Void in
-			for session in self.sessions {
-				if session.peripheral == peripheral {
-					tgtSession = session
-					break
-				}
+				})
+				dispatch_async(self.requestQ, { () -> Void in
+					self.RSSIRequests.remove(req)
+				})
 			}
-		}
-
-		return tgtSession
+		})
 	}
 }
