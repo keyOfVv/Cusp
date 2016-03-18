@@ -34,19 +34,26 @@ extension Cusp: CBCentralManagerDelegate {
 	public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		dispatch_async(self.mainQ) { () -> Void in
 			// 1. once discovered, wrap CBPeripheral into custom class...
-			let p = Peripheral(core: peripheral)
-			self.discoveredPeripherals.insert(p)
-			// 2. then forge an advertisement object...
-			let advInfo = Advertisement(peripheral: p, advertisementData: advertisementData, RSSI: RSSI)
-			let uuids = advInfo.advertisingUUIDs
-			// 3. finally, put it into Set "available" of scan req
-			for req in self.scanRequests {
-				if req.advertisingUUIDs == nil {	// a scan req for all peripherals
-					req.available.insert(advInfo)	// put any peripheral into Set "available"
-					break
-				} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {	// a scan req for specific peripheral(s)
-					req.available.insert(advInfo)	// put specific peripheral into Set "available"
-					break
+			for (regex, aClass) in self.customClasses {
+				if peripheral.matches(regex) {
+					if let classRef = aClass.self as? Peripheral.Type {
+						let p = classRef.init(core: peripheral)
+						peripheral.delegate = p
+						self.availables.insert(p)
+						// 2. then forge an advertisement object...
+						let advInfo = Advertisement(peripheral: p, advertisementData: advertisementData, RSSI: RSSI)
+						let uuids = advInfo.advertisingUUIDs
+						// 3. finally, put it into Set "available" of scan req
+						for req in self.scanRequests {
+							if req.advertisingUUIDs == nil {	// a scan req for all peripherals
+								req.available.insert(advInfo)	// put any peripheral into Set "available"
+								break
+							} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {	// a scan req for specific peripheral(s)
+								req.available.insert(advInfo)	// put specific peripheral into Set "available"
+								break
+							}
+						}
+					}
 				}
 			}
 		}
@@ -225,12 +232,30 @@ private extension Cusp {
 	- returns: Peripheral object or nil if not found
 	*/
 	private func peripheralFor(core: CBPeripheral) -> Peripheral? {
-		for p in discoveredPeripherals {
+		for p in availables {
 			if p.core == core {
 				return p
 			}
 		}
 		return nil
+	}
+}
+
+private extension CBPeripheral {
+
+	private func matches(pattern: String) -> Bool {
+		do {
+			let name = self.name ?? ""
+			let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
+			if let result = regex.firstMatchInString(name, options: NSMatchingOptions.ReportProgress, range: NSMakeRange(0, name.length)) {
+				if result.range.location != NSNotFound {
+					return true
+				}
+			}
+		} catch {
+
+		}
+		return false
 	}
 }
 

@@ -29,7 +29,7 @@ public enum PeripheralState : Int {
 }
 
 /// peripheral class for Cusp, shall be subclassed by custom peripheral class
-public class Peripheral: NSObject {
+@objc public class Peripheral: NSObject, CustomPeripheral {
 
 	/// a retained reference to CBPeripheral object, read-only
 	public private(set) var core: CBPeripheral {
@@ -38,7 +38,7 @@ public class Peripheral: NSObject {
 		}
 	}
 
-	init(core: CBPeripheral) {
+	required public init(core: CBPeripheral) {
 		self.core = core
 	}
 

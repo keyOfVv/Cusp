@@ -13,6 +13,12 @@
 import Foundation
 import CoreBluetooth
 
+// MARK: - Protocol
+@objc public protocol CustomPeripheral: NSObjectProtocol {
+	var core: CBPeripheral { get }
+	init(core: CBPeripheral)
+}
+
 // MARK: Notifications
 
 /// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
@@ -80,10 +86,17 @@ public class Cusp: NSObject {
 	// MARK: Peripheral Sets
 
 	/// discovered peripherals ever after scanning
-    internal var discoveredPeripherals = Set<Peripheral>()
+    internal var availables            = Set<Peripheral>()
 
 	/// session of connected peripheral
     internal var sessions              = Set<PeripheralSession>()
+
+	/// registered custom classes
+	internal var customClasses: Dictionary<String, AnyClass> = [:]
+
+	public var isConnectedWithAnyPeripheral: Bool {
+		return !sessions.isEmpty
+	}
 }
 
 // MARK: - Interface
@@ -110,6 +123,16 @@ public extension Cusp {
 			return false
 		}
 		return true
+	}
+
+	/**
+	register peripheral of a custom class, which shall be a subclass of Peripheral; any peripheral object of which the name matches specific pattern will be initialized in custom class.
+
+	- parameter aClass: custom peripheral class subclassing Peripheral
+	- parameter p:      regex pattern for name
+	*/
+	public func registerPeripheralClass<T: CustomPeripheral>(aClass: T.Type, forNamePattern p: String) {
+		self.customClasses[p] = aClass
 	}
 }
 
