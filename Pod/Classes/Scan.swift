@@ -97,6 +97,10 @@ internal class ScanRequest: NSObject {
 		return false
 	}
 
+	deinit {
+		log("\(self.classForCoder) deinited")
+	}
+
 }
 
 // MARK: - scan methods
@@ -114,6 +118,9 @@ public extension Cusp {
 	*/
 	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
 		log("CUSP START SCANNING")
+		// -1.
+		self.isScanning = true
+
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
 			abruption?(error)
@@ -130,7 +137,9 @@ public extension Cusp {
 				let infoSet = req.available.sort({ (a, b) -> Bool in
 					return a.peripheral.core.identifier.UUIDString <= b.peripheral.core.identifier.UUIDString
 				})
-				completion?(infoSet)
+				if self?.isScanning == true {
+					req.completion?(infoSet)
+				}
 			})
 			// scan completed, check request out
 			self?.checkOut(req)
@@ -170,10 +179,11 @@ public extension Cusp {
 	stop scanning, it's an non-block method, and scanRequests will be emptied once called
 	*/
 	public func stopScan() {
+		self.isScanning = false
+		self.centralManager.stopScan()
 		dispatch_async(self.reqQ) { () -> Void in
 			self.scanRequests.removeAll()
 		}
-		self.centralManager.stopScan()
 		log("CUSP STOPPED SCAN")
 	}
 }
