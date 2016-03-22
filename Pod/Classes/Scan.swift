@@ -165,6 +165,13 @@ public extension Cusp {
 			self.scanForUUID(nil, duration: duration, completion: completion, abruption: abruption)
 		}
 	}
+
+	/**
+	stop scanning
+	*/
+	public func stopScan() {
+		self.centralManager.stopScan()
+	}
 }
 
 // MARK: - Privates
