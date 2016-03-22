@@ -94,9 +94,13 @@ public class Cusp: NSObject {
 	/// registered custom classes
 	internal var customClasses: Dictionary<String, AnyClass> = [:]
 
+	/// a boolean value indicates whether Cusp is connected with any peripheral
 	public var isConnectedWithAnyPeripheral: Bool {
 		return !sessions.isEmpty
 	}
+
+	/// a boolean value indicates whether Cusp is scanning
+	public var isScanning: Bool = false
 }
 
 // MARK: - Interface
@@ -133,6 +137,20 @@ public extension Cusp {
 	*/
 	public func registerPeripheralClass<T: CustomPeripheral>(aClass: T.Type, forNamePattern p: String) {
 		self.customClasses[p] = aClass
+	}
+
+	/**
+	clear all
+	*/
+	public func clear() {
+		dispatch_async(reqQ) { () -> Void in
+			self.sessions.removeAll()
+			self.availables.removeAll()
+			self.scanRequests.removeAll()
+			self.connectRequests.removeAll()
+			self.disconnectRequests.removeAll()
+			self.cancelConnectRequests.removeAll()
+		}
 	}
 }
 
