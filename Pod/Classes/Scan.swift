@@ -113,7 +113,7 @@ public extension Cusp {
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
 	public func scanForUUID(advertisingServiceUUIDs: [UUID]?, duration: NSTimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
-
+		log("CUSP START SCANNING")
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
 			abruption?(error)
@@ -167,10 +167,14 @@ public extension Cusp {
 	}
 
 	/**
-	stop scanning
+	stop scanning, it's an non-block method, and scanRequests will be emptied once called
 	*/
 	public func stopScan() {
+		dispatch_async(self.reqQ) { () -> Void in
+			self.scanRequests.removeAll()
+		}
 		self.centralManager.stopScan()
+		log("CUSP STOPPED SCAN")
 	}
 }
 
