@@ -247,7 +247,7 @@ private extension CBPeripheral {
 		do {
 			let name = self.name ?? ""
 			let regex = try NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.CaseInsensitive)
-			if let result = regex.firstMatchInString(name, options: NSMatchingOptions.ReportProgress, range: NSMakeRange(0, name.length)) {
+			if let result = regex.firstMatchInString(name, options: NSMatchingOptions.ReportProgress, range: NSMakeRange(0, name.characters.count)) {
 				if result.range.location != NSNotFound {
 					return true
 				}

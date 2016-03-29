@@ -65,7 +65,7 @@ extension CBPeripheral {
 	}
 
 	/// 根据UUID字符串获取对应的服务
-	func serviceWith(UUIDString UUIDString: String) -> CBService? {
+	public func serviceWith(UUIDString UUIDString: String) -> CBService? {
 
 		if let services = self.services {
 			for aService in services {
@@ -78,7 +78,7 @@ extension CBPeripheral {
 	}
 
 	/// 根据UUID字符串获取对应的特征
-	func characteristicWith(UUIDString UUIDString: String) -> CBCharacteristic? {
+	public func characteristicWith(UUIDString UUIDString: String) -> CBCharacteristic? {
 
 		if let services = self.services {
 			for aService in services {
