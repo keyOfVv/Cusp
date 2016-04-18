@@ -20,7 +20,78 @@ Cusp is still an infant in cradle, your advices means its growth, and I am looki
 ```swift
 import Cusp
 
-Cusp.central.prepare()
+Cusp.prepare { (available) in
+			print(available ? "BLE IS AVAILABLE" : "BLE IS NOT AVAILABLE")
+			if available {
+				Cusp.central.registerPeripheralClass(C2.self, forNamePattern: "MN581N_[A-Z0-9]{5}")
+			}
+		}
+```
+
+### Custom Peripheral Class
+
+Sometimes, i think it's more convenient to have a custom class of Ble device instance for my project. I can define its own properties like "advertisingUUID", "writeDataUUID", "notifyUUID", etc. Then, i can use those properties in my code without typing literally.
+
+```swift
+// my custome Peripheral class
+public class C2: Peripheral {
+
+	/**
+	UUIDs
+
+	- Advertise: ad
+	- Pipe:      UUID of service that contains below characteristics
+	- Notify:    UUID of characteristic for data update notification
+	- Write:     UUID of characteristic for writing data
+	*/
+	public enum UUID: String {
+        case Advertise = "1803"
+        case Pipe      = "FFF0"
+        case Notify    = "FFF1"
+        case Write     = "FFF2"
+	}
+
+	/**
+	custom communication orders
+
+	- GetPM:      get PM2.5 value
+	- GetVer:     get device version No.
+	- GetBattery: get device battery life
+	- Sleep:      make device sleep
+	- WakeUp:     wake device up
+	- OT:         ??
+	- Beats:      ??
+	*/
+	enum Order: String {
+        case GetPM      = "tp=1"
+        case GetVer     = "tp=3"
+        case GetBattery = "tp=4"
+        case Sleep      = "tp=5"
+        case WakeUp     = "tp=6"
+        case OT         = "tp=7"
+        case Beats      = "tp=8"
+	}
+
+	// MARK: Computed Properties
+
+	var service: String {
+		return UUID.Pipe.rawValue
+	}
+	
+	var charNotify: String {
+		return UUID.Notify.rawValue
+	}
+	
+	var charWrite: String {
+		return UUID.Write.rawValue
+	}
+}
+```
+
+After define my own custom peripheral, i can register it to Cusp with class name and regex of name pattern:
+
+```swift
+Cusp.central.registerPeripheralClass(C2.self, forNamePattern: "MN581N_[A-Z0-9]{5}")
 ```
 
 ### Scan for BLE device
