@@ -104,7 +104,7 @@ public enum PeripheralState : Int {
 	}
 
 	deinit {
-//		dog("\(self) DESTROIED")
+		dog("\(self) DESTROIED")
 	}
 }
 
