@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: - Super Request Model Definitions
@@ -23,7 +23,7 @@ internal class CentralOperationRequest: NSObject {
 	internal var success: ((Response?) -> Void)?
 
 	/// 连接失败的回调
-	internal var failure: ((Error?) -> Void)?
+	internal var failure: ((CuspError?) -> Void)?
 
 	/// timeout period
 	internal var timeoutPeriod: TimeInterval = 10.0
@@ -47,7 +47,7 @@ internal class PeripheralOperationRequest: NSObject {
 	internal var success: ((Response?) -> Void)?
 
 	/// 连接失败的回调
-	internal var failure: ((NSError?) -> Void)?
+	internal var failure: ((CuspError?) -> Void)?
 
 	/// timeout period
 	internal var timeoutPeriod: TimeInterval = 10.0

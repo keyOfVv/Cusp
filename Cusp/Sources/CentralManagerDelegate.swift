@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: - CBCentralManagerDelegate
@@ -137,7 +137,7 @@ extension Cusp: CBCentralManagerDelegate {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
 					// 2. call failure closure
-					req.failure?(error)
+					req.failure?(CuspError.unknown)
 				})
 				self.reqQ.async(execute: { () -> Void in
 					// 3. remove req
@@ -165,7 +165,7 @@ extension Cusp: CBCentralManagerDelegate {
 					if let session = self.sessionFor(p) {
 						DispatchQueue.main.async(execute: { () -> Void in
 							// call abruption closure
-							session.abruption?(errorInfo)
+							session.abruption?(CuspError.unknown)
 							})
 						self.sesQ.async(execute: { () -> Void in
 							// remove the abrupted session

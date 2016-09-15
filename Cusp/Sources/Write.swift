@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 /// request of write value to specific characteristic
 internal class WriteRequest: PeripheralOperationRequest {
@@ -37,7 +37,7 @@ internal class WriteRequest: PeripheralOperationRequest {
 
 	- returns: a WriteRequest instance
 	*/
-	convenience init(data: Data?, characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(data: Data?, characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.data           = data
         self.characteristic = characteristic
@@ -71,7 +71,7 @@ extension Peripheral {
 	- parameter success:        a closure called when value written successfully. 写值成功时执行的闭包.
 	- parameter failure:        a closure called when value written failed. 写值失败时执行的闭包.
 	*/
-	public func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -90,8 +90,7 @@ extension Peripheral {
 		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				self.requestQ.async(execute: { () -> Void in
 					self.writeRequests.remove(req)
@@ -101,7 +100,17 @@ extension Peripheral {
 	}
 }
 
+func dog(_ anyObject: Any?, function: String = #function, file: String = #file, line: Int = #line) {
+	#if DEBUG
+		let dateFormat		  = DateFormatter()
+		dateFormat.dateFormat = "HH:mm:ss.SSS"
 
+		let date = NSDate()
+		let time = dateFormat.string(from: date as Date)
+
+		print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
+	#endif
+}
 
 
 

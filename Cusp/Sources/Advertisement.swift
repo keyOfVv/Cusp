@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import KEYExtension
 
 // MARK: - AdvertisementInfo
 

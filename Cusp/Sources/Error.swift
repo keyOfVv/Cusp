@@ -7,25 +7,12 @@
 //
 
 import Foundation
-import KEYExtension
 
-extension Cusp {
-
-	public enum Error: Error {
-		case unknown
-		case resetting
-		case unsupported
-		case unauthorized
-		case poweredOff
-//		case BusyScanning
-		case timedOut
-
-//		static var count: Int = {
-//			var max: Int = 1
-//			while let _ = Error(rawValue: max) {
-//				max += 1
-//			}
-//			return max
-//		}()
-	}
+public enum CuspError: Error {
+	case unknown
+	case resetting
+	case unsupported
+	case unauthorized
+	case poweredOff
+	case timedOut
 }

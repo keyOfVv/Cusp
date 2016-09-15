@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: - CBPeripheralDelegate
@@ -42,7 +42,7 @@ extension Peripheral: CBPeripheralDelegate {
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
 						// discovering failed
-						req.failure?(errorInfo as NSError?)
+						req.failure?(CuspError.unknown)
 					} else {
 						// discovering succeed, call success closure of each req
 						req.success?(nil)
@@ -84,7 +84,7 @@ extension Peripheral: CBPeripheralDelegate {
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
 						// discovering failed
-						req.failure?(errorInfo as NSError?)
+						req.failure?(CuspError.unknown)
 					} else {
 						// discovering succeed, call success closure of each req
 						req.success?(nil)
@@ -139,7 +139,7 @@ extension Peripheral: CBPeripheralDelegate {
 							req.timedOut = false
 							if let err = error {
 								// read value failed
-								req.failure?(err as NSError?)
+								req.failure?(CuspError.unknown)
 							} else {
 								// read value succeed
 								let resp = Response()
@@ -178,7 +178,7 @@ extension Peripheral: CBPeripheralDelegate {
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
 						// write failed
-						req.failure?(errorInfo as NSError?)
+						req.failure?(CuspError.unknown)
 					} else {
 						// write succeed
 						req.success?(nil)
@@ -216,7 +216,7 @@ extension Peripheral: CBPeripheralDelegate {
 					DispatchQueue.main.async(execute: { () -> Void in
 						if let errorInfo = error {
 							// subscribe failed
-							req.failure?(errorInfo as NSError?)
+							req.failure?(CuspError.unknown)
 						} else {
 							// subscribe succeed
 							req.success?(nil)
@@ -245,7 +245,7 @@ extension Peripheral: CBPeripheralDelegate {
 					DispatchQueue.main.async(execute: { () -> Void in
 						if let errorInfo = error {
 							// unsubscribe failed
-							req.failure?(errorInfo as NSError?)
+							req.failure?(CuspError.unknown)
 						} else {
 							// unsubscribe succeed
 							req.success?(nil)
@@ -280,7 +280,7 @@ extension Peripheral: CBPeripheralDelegate {
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
 						// read RSSI failed
-						req.failure?(errorInfo as NSError?)
+						req.failure?(CuspError.unknown)
 					} else {
 						// read RSSI succeed
 						let resp = Response()

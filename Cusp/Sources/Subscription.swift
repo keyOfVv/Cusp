@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 internal class Subscription: NSObject {
 	internal fileprivate(set) var characteristic: Characteristic!

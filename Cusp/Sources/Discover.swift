@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 // MARK: ServiceDiscoveringRequest
 
@@ -35,7 +35,7 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 
 	- returns: a ServiceDiscoveringRequest instance
 	*/
-	internal convenience init(serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	internal convenience init(serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.serviceUUIDs = serviceUUIDs
         self.success      = success
@@ -97,7 +97,7 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 
 	- returns: a CharacteristicDiscoveringRequest instance
 	*/
-	internal convenience init(characteristicUUIDs: [UUID]?, service: Service, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	internal convenience init(characteristicUUIDs: [UUID]?, service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.characteristicUUIDs = characteristicUUIDs
         self.service             = service
@@ -140,7 +140,7 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed. 发现服务成功的闭包.
 	- parameter failure:      a closure called when discovering failed. 发现服务失败的闭包.
 	*/
-	public func discover(_ serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((Error?) -> Void)?) {
+	public func discover(_ serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -160,8 +160,7 @@ extension Peripheral {
 		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more...
 				self.requestQ.async(execute: { () -> Void in
@@ -180,7 +179,7 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed. 发现特征成功的闭包.
 	- parameter failure:             a closure called when discovering failed. 发现特征失败的闭包.
 	*/
-	public func discover(_ characteristicUUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func discover(_ characteristicUUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -200,8 +199,7 @@ extension Peripheral {
 		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more
 				self.requestQ.async(execute: { () -> Void in

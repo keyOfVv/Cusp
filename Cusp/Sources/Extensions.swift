@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 public typealias UUID           = CBUUID

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 // MARK: SubscribeRequest
 
@@ -39,7 +39,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a SubscribeRequest instance
 	*/
-	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response?) -> Void)?) {
+	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success
@@ -71,7 +71,7 @@ extension Peripheral {
 	- parameter failure:        a closure called when subscription failed.
 	- parameter update:         a closure called when characteristic's value updated, after successfully subscribed, the update closure will be wrapped in Subscription object.
 	*/
-	public func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?, update: ((Response?) -> Void)?) {
+	public func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -91,8 +91,7 @@ extension Peripheral {
 		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "subscription timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more
 				self.requestQ.async(execute: { () -> Void in

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 /// request of disconnecting a connected peripheral
 internal class DisconnectRequest: NSObject {

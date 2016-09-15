@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 /// request of read value from specific characteristic
 internal class ReadRequest: PeripheralOperationRequest {
@@ -32,7 +32,7 @@ internal class ReadRequest: PeripheralOperationRequest {
 
 	- returns: a ReadRequest instance
 	*/
-	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
 		self.characteristic = characteristic
 		self.success        = success
@@ -63,7 +63,7 @@ extension Peripheral {
 	- parameter success:        a closure called when value read successfully. 读值成功时执行的闭包.
 	- parameter failure:        a closure called when value read failed. 读值失败时执行的闭包.
 	*/
-	public func read(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	public func read(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -83,8 +83,7 @@ extension Peripheral {
 		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more
 				self.requestQ.async(execute: { () -> Void in

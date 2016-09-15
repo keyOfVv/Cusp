@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 /// default scan duration
 private let defaultDuration: TimeInterval = 3.0
@@ -27,7 +27,7 @@ internal class ScanRequest: NSObject {
 	internal var completion: (([Advertisement]) -> Void)?
 
 	/// closure to be called when scan abrupted
-	internal var abruption: ((NSError) -> Void)?
+	internal var abruption: ((CuspError) -> Void)?
 
 	/// peripherals scanned
 	internal var available = Set<Advertisement>()
@@ -48,7 +48,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 		self.init()
         self.advertisingUUIDs = advertisingUUIDs
         self.duration         = duration
@@ -66,7 +66,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	internal convenience init(advertisingUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 		guard let uuidStrings = advertisingUUIDStrings else {
 			self.init(advertisingUUIDs: nil, duration: duration, completion: completion, abruption: abruption)
 			return
@@ -99,7 +99,7 @@ internal class ScanRequest: NSObject {
 	}
 
 	deinit {
-		dog("\(self.classForCoder) deinited")
+//		dog("\(self.classForCoder) deinited")
 	}
 
 }
@@ -117,8 +117,8 @@ public extension Cusp {
 	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
-	public func scanForUUID(_ advertisingServiceUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
-		dog("CUSP START SCANNING")
+	public func scanForUUID(_ advertisingServiceUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
+//		dog("CUSP START SCANNING")
 		// -1.
 		self.isScanning = true
 
@@ -156,7 +156,7 @@ public extension Cusp {
 	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
 	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
 	*/
-	public func scanForUUIDString(_ advertisingServiceUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((NSError) -> Void)?) {
+	public func scanForUUIDString(_ advertisingServiceUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
@@ -185,7 +185,7 @@ public extension Cusp {
 		self.reqQ.async { () -> Void in
 			self.scanRequests.removeAll()
 		}
-		dog("CUSP STOPPED SCAN")
+//		dog("CUSP STOPPED SCAN")
 	}
 }
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: - Cusp Session Definition
@@ -23,7 +23,7 @@ class PeripheralSession: NSObject {
 
 //	var update: ((NSData?) -> Void)?
 
-	var abruption: ((Error?) -> Void)?
+	var abruption: ((CuspError?) -> Void)?
 
 	// MARK: Initializer
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 // MARK: ConnectRequest
 
@@ -17,7 +17,7 @@ internal class ConnectRequest: CentralOperationRequest {
 	// MARK: Stored Properties
 
 	/// closure called when connection broken-down
-	internal var abruption: ((NSError?) -> Void)?
+	internal var abruption: ((CuspError?) -> Void)?
 
 	// MARK: Initializer
 
@@ -35,7 +35,7 @@ internal class ConnectRequest: CentralOperationRequest {
 
 	- returns: a ConnectRequest instance
 	*/
-	internal convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((Error?) -> Void)?, abruption: ((Error?) -> Void)?) {
+	internal convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 		self.init()
         self.peripheral = peripheral
         self.success    = success
@@ -69,7 +69,7 @@ public extension Cusp {
 	- parameter failure:    a closure called when connecting attempt failed or timed-out. 连接失败或超时时执行的闭包
 	- parameter abruption:  a closure called when connection broken-down. 连接中断时执行的闭包
 	*/
-	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((Error?) -> Void)?, abruption: ((Error?) -> Void)?) {
+	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
@@ -89,8 +89,7 @@ public extension Cusp {
 		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// cancel conncect since it's timed out
 				self.cancelConnection(peripheral, completion: nil)

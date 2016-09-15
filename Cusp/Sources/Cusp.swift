@@ -11,7 +11,7 @@
  */
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: - Constants
@@ -134,7 +134,7 @@ public extension Cusp {
 //		dispatch_once(&onceToken) {
 			_ = self.isBLEAvailable()
 			Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
-				GLOBAL_MAIN_QUEUE.async(execute: {
+				DispatchQueue.main.async(execute: { 
 					completion?(self.isBLEAvailable())
 				})
 			})
@@ -192,41 +192,21 @@ internal extension Cusp {
 
 	- returns: A NSError object or nil.
 	*/
-	internal func assertAvailability() -> Error? {
-
-		var errorCode: Int?
-		var domain = ""
+	internal func assertAvailability() -> CuspError? {
 		switch self.state {
 		case .poweredOff:
-			errorCode = Error.poweredOff.rawValue
-			domain    = "BLE is powered off."
-			break
+			return CuspError.poweredOff
 		case .resetting:
-			errorCode = Error.resetting.rawValue
-			domain    = "BLE is resetting, please try again later."
-			break
+			return CuspError.resetting
 		case .unauthorized:
-			errorCode = Error.unauthorized.rawValue
-			domain    = "BLE is unauthorized."
-			break
+			return CuspError.unauthorized
 		case .unsupported:
-			errorCode = Error.unsupported.rawValue
-			domain    = "BLE is unsupported."
-			break
+			return CuspError.unsupported
 		case .unknown:
-			errorCode = Error.unknown.rawValue
-			domain    = "BLE is in unknown state."
-			break
+			return CuspError.unknown
 		default:
-			break
+			return nil
 		}
-
-		if let code = errorCode {
-//			return NSError(domain: domain, code: code, userInfo: nil)
-			return Error(rawValue: code)
-		}
-
-		return nil
 	}
 }
 

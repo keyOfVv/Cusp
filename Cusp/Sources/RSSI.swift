@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 import CoreBluetooth
 
 // MARK: RSSIRequest
@@ -33,7 +33,7 @@ internal class RSSIRequest: PeripheralOperationRequest {
 
 	- returns: 返回一个RSSIRequest对象
 	*/
-	convenience init(success: ((Response?) -> Void)?, failure: ((NSError?) -> Void)?) {
+	convenience init(success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
 		self.success = success
 		self.failure = failure
@@ -61,7 +61,7 @@ extension Peripheral {
 	/// - parameter success: 获取成功的回调;
 	/// - parameter failure: 获取失败的回调;
 	/// - parameter timedOut: 获取超时的回调;
-	public func readRSSI(success: ((Response?) -> Void)?, failure: ((Error?) -> Void)?) {
+	public func readRSSI(success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -81,8 +81,7 @@ extension Peripheral {
 		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
-					let error = NSError(domain: "connect operation timed out", code: Cusp.Error.timedOut.rawValue, userInfo: nil)
-					failure?(error)
+					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more
 				self.requestQ.async(execute: { () -> Void in

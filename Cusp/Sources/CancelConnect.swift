@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KEYExtension
+
 
 /// request of cancelling an in-progress connecting attempt
 internal class CancelConnectRequest: NSObject {
