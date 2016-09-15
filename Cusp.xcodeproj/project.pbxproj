@@ -10,6 +10,28 @@
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		70AD57401D8A8F41003042F4 /* Advertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572A1D8A8F41003042F4 /* Advertisement.swift */; };
+		70AD57411D8A8F41003042F4 /* CancelConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572B1D8A8F41003042F4 /* CancelConnect.swift */; };
+		70AD57421D8A8F41003042F4 /* CentralManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572C1D8A8F41003042F4 /* CentralManagerDelegate.swift */; };
+		70AD57431D8A8F41003042F4 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572D1D8A8F41003042F4 /* Connect.swift */; };
+		70AD57441D8A8F41003042F4 /* Cusp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572E1D8A8F41003042F4 /* Cusp.swift */; };
+		70AD57451D8A8F41003042F4 /* CuspSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD572F1D8A8F41003042F4 /* CuspSession.swift */; };
+		70AD57461D8A8F41003042F4 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57301D8A8F41003042F4 /* Disconnect.swift */; };
+		70AD57471D8A8F41003042F4 /* Discover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57311D8A8F41003042F4 /* Discover.swift */; };
+		70AD57481D8A8F41003042F4 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57321D8A8F41003042F4 /* Error.swift */; };
+		70AD57491D8A8F41003042F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57331D8A8F41003042F4 /* Extensions.swift */; };
+		70AD574A1D8A8F41003042F4 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57341D8A8F41003042F4 /* Peripheral.swift */; };
+		70AD574B1D8A8F41003042F4 /* PeripheralDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57351D8A8F41003042F4 /* PeripheralDelegate.swift */; };
+		70AD574C1D8A8F41003042F4 /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57361D8A8F41003042F4 /* Read.swift */; };
+		70AD574D1D8A8F41003042F4 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57371D8A8F41003042F4 /* Request.swift */; };
+		70AD574E1D8A8F41003042F4 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57381D8A8F41003042F4 /* Response.swift */; };
+		70AD574F1D8A8F41003042F4 /* RSSI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD57391D8A8F41003042F4 /* RSSI.swift */; };
+		70AD57501D8A8F41003042F4 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573A1D8A8F41003042F4 /* Scan.swift */; };
+		70AD57511D8A8F41003042F4 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573B1D8A8F41003042F4 /* State.swift */; };
+		70AD57521D8A8F41003042F4 /* Subscribe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573C1D8A8F41003042F4 /* Subscribe.swift */; };
+		70AD57531D8A8F41003042F4 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573D1D8A8F41003042F4 /* Subscription.swift */; };
+		70AD57541D8A8F41003042F4 /* Unsubscribe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573E1D8A8F41003042F4 /* Unsubscribe.swift */; };
+		70AD57551D8A8F41003042F4 /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD573F1D8A8F41003042F4 /* Write.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +51,28 @@
 		70AD57171D8A8E59003042F4 /* CuspTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuspTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD571C1D8A8E59003042F4 /* CuspTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuspTests.swift; sourceTree = "<group>"; };
 		70AD571E1D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		70AD572A1D8A8F41003042F4 /* Advertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Advertisement.swift; sourceTree = "<group>"; };
+		70AD572B1D8A8F41003042F4 /* CancelConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CancelConnect.swift; sourceTree = "<group>"; };
+		70AD572C1D8A8F41003042F4 /* CentralManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentralManagerDelegate.swift; sourceTree = "<group>"; };
+		70AD572D1D8A8F41003042F4 /* Connect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
+		70AD572E1D8A8F41003042F4 /* Cusp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cusp.swift; sourceTree = "<group>"; };
+		70AD572F1D8A8F41003042F4 /* CuspSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CuspSession.swift; sourceTree = "<group>"; };
+		70AD57301D8A8F41003042F4 /* Disconnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
+		70AD57311D8A8F41003042F4 /* Discover.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discover.swift; sourceTree = "<group>"; };
+		70AD57321D8A8F41003042F4 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		70AD57331D8A8F41003042F4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		70AD57341D8A8F41003042F4 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peripheral.swift; sourceTree = "<group>"; };
+		70AD57351D8A8F41003042F4 /* PeripheralDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralDelegate.swift; sourceTree = "<group>"; };
+		70AD57361D8A8F41003042F4 /* Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Read.swift; sourceTree = "<group>"; };
+		70AD57371D8A8F41003042F4 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		70AD57381D8A8F41003042F4 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		70AD57391D8A8F41003042F4 /* RSSI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RSSI.swift; sourceTree = "<group>"; };
+		70AD573A1D8A8F41003042F4 /* Scan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
+		70AD573B1D8A8F41003042F4 /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		70AD573C1D8A8F41003042F4 /* Subscribe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribe.swift; sourceTree = "<group>"; };
+		70AD573D1D8A8F41003042F4 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
+		70AD573E1D8A8F41003042F4 /* Unsubscribe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsubscribe.swift; sourceTree = "<group>"; };
+		70AD573F1D8A8F41003042F4 /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +115,7 @@
 		70AD57101D8A8E59003042F4 /* Cusp */ = {
 			isa = PBXGroup;
 			children = (
+				70AD57291D8A8F41003042F4 /* Sources */,
 				70AD57111D8A8E59003042F4 /* Cusp.h */,
 				70AD57121D8A8E59003042F4 /* Info.plist */,
 			);
@@ -84,6 +129,35 @@
 				70AD571E1D8A8E59003042F4 /* Info.plist */,
 			);
 			path = CuspTests;
+			sourceTree = "<group>";
+		};
+		70AD57291D8A8F41003042F4 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				70AD572A1D8A8F41003042F4 /* Advertisement.swift */,
+				70AD572B1D8A8F41003042F4 /* CancelConnect.swift */,
+				70AD572C1D8A8F41003042F4 /* CentralManagerDelegate.swift */,
+				70AD572D1D8A8F41003042F4 /* Connect.swift */,
+				70AD572E1D8A8F41003042F4 /* Cusp.swift */,
+				70AD572F1D8A8F41003042F4 /* CuspSession.swift */,
+				70AD57301D8A8F41003042F4 /* Disconnect.swift */,
+				70AD57311D8A8F41003042F4 /* Discover.swift */,
+				70AD57321D8A8F41003042F4 /* Error.swift */,
+				70AD57331D8A8F41003042F4 /* Extensions.swift */,
+				70AD57341D8A8F41003042F4 /* Peripheral.swift */,
+				70AD57351D8A8F41003042F4 /* PeripheralDelegate.swift */,
+				70AD57361D8A8F41003042F4 /* Read.swift */,
+				70AD57371D8A8F41003042F4 /* Request.swift */,
+				70AD57381D8A8F41003042F4 /* Response.swift */,
+				70AD57391D8A8F41003042F4 /* RSSI.swift */,
+				70AD573A1D8A8F41003042F4 /* Scan.swift */,
+				70AD573B1D8A8F41003042F4 /* State.swift */,
+				70AD573C1D8A8F41003042F4 /* Subscribe.swift */,
+				70AD573D1D8A8F41003042F4 /* Subscription.swift */,
+				70AD573E1D8A8F41003042F4 /* Unsubscribe.swift */,
+				70AD573F1D8A8F41003042F4 /* Write.swift */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -108,6 +182,7 @@
 				70AD570A1D8A8E59003042F4 /* Frameworks */,
 				70AD570B1D8A8E59003042F4 /* Headers */,
 				70AD570C1D8A8E59003042F4 /* Resources */,
+				70AD57281D8A8F2D003042F4 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -191,11 +266,49 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		70AD57281D8A8F2D003042F4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		70AD57091D8A8E59003042F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70AD57471D8A8F41003042F4 /* Discover.swift in Sources */,
+				70AD57541D8A8F41003042F4 /* Unsubscribe.swift in Sources */,
+				70AD57501D8A8F41003042F4 /* Scan.swift in Sources */,
+				70AD574A1D8A8F41003042F4 /* Peripheral.swift in Sources */,
+				70AD57421D8A8F41003042F4 /* CentralManagerDelegate.swift in Sources */,
+				70AD57451D8A8F41003042F4 /* CuspSession.swift in Sources */,
+				70AD57511D8A8F41003042F4 /* State.swift in Sources */,
+				70AD57551D8A8F41003042F4 /* Write.swift in Sources */,
+				70AD574E1D8A8F41003042F4 /* Response.swift in Sources */,
+				70AD57461D8A8F41003042F4 /* Disconnect.swift in Sources */,
+				70AD574F1D8A8F41003042F4 /* RSSI.swift in Sources */,
+				70AD57411D8A8F41003042F4 /* CancelConnect.swift in Sources */,
+				70AD574B1D8A8F41003042F4 /* PeripheralDelegate.swift in Sources */,
+				70AD57491D8A8F41003042F4 /* Extensions.swift in Sources */,
+				70AD57431D8A8F41003042F4 /* Connect.swift in Sources */,
+				70AD57401D8A8F41003042F4 /* Advertisement.swift in Sources */,
+				70AD57531D8A8F41003042F4 /* Subscription.swift in Sources */,
+				70AD57521D8A8F41003042F4 /* Subscribe.swift in Sources */,
+				70AD574C1D8A8F41003042F4 /* Read.swift in Sources */,
+				70AD574D1D8A8F41003042F4 /* Request.swift in Sources */,
+				70AD57481D8A8F41003042F4 /* Error.swift in Sources */,
+				70AD57441D8A8F41003042F4 /* Cusp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +469,7 @@
 		70AD57261D8A8E59003042F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = CuspTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspTests;
@@ -367,6 +481,7 @@
 		70AD57271D8A8E59003042F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = CuspTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspTests;
@@ -394,6 +509,7 @@
 				70AD57241D8A8E59003042F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70AD57251D8A8E59003042F4 /* Build configuration list for PBXNativeTarget "CuspTests" */ = {
 			isa = XCConfigurationList;
@@ -402,6 +518,7 @@
 				70AD57271D8A8E59003042F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
