@@ -19,7 +19,7 @@ open class Advertisement: NSObject {
 	open fileprivate(set) var peripheral: Peripheral!
 
 	/// advertisement data dictionary 广播信息
-	fileprivate fileprivate(set) var advertisementData: Dictionary<String, AnyObject>!
+	fileprivate fileprivate(set) var advertisementData: Dictionary<String, Any>!
 
 	/// is peripheral connectable or not
 	open var isConnectable: Bool {
@@ -50,7 +50,7 @@ open class Advertisement: NSObject {
 		super.init()
 	}
 
-	internal convenience init(peripheral: Peripheral, advertisementData: Dictionary<String, AnyObject>, RSSI: NSNumber) {
+	internal convenience init(peripheral: Peripheral, advertisementData: Dictionary<String, Any>, RSSI: NSNumber) {
 		self.init()
 		self.peripheral        = peripheral
 		self.advertisementData = advertisementData

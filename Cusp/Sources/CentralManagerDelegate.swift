@@ -44,12 +44,12 @@ extension Cusp: CBCentralManagerDelegate {
 							// 1. check if core catched
 							if let p = self.peripheralFor(peripheral) {
 								peripheral.delegate = p
-								self.dealWithFoundPeripherals(p, advertisementData: advertisementData as [String : AnyObject], RSSI: RSSI)
+								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
 							} else {
 								// 2. uncatched, then catch it!
 								let p = classRef.init(core: peripheral)
 								peripheral.delegate = p
-								self.dealWithFoundPeripherals(p, advertisementData: advertisementData as [String : AnyObject], RSSI: RSSI)
+								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
 							}
 						}
 					}
@@ -59,11 +59,11 @@ extension Cusp: CBCentralManagerDelegate {
 				// 1. check if core catched
 				if let p = self.peripheralFor(peripheral) {
 					peripheral.delegate = p
-					self.dealWithFoundPeripherals(p, advertisementData: advertisementData as [String : AnyObject], RSSI: RSSI)
+					self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
 				} else {
 					let p = Peripheral.init(core: peripheral)
 					peripheral.delegate = p
-					self.dealWithFoundPeripherals(p, advertisementData: advertisementData as [String : AnyObject], RSSI: RSSI)
+					self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
 				}
 			}
 		}
@@ -260,7 +260,7 @@ private extension Cusp {
 	- parameter advertisementData: advertisement info
 	- parameter RSSI:              RSSI
 	*/
-	func dealWithFoundPeripherals(_ peripheral: Peripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
+	func dealWithFoundPeripherals(_ peripheral: Peripheral, advertisementData: [String : Any], RSSI: NSNumber) {
 		self.availables.insert(peripheral)
 		dog("added peripheral in \(self.availables) of \(self)")
 		// 2. then forge an advertisement object...
