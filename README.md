@@ -1,9 +1,5 @@
 # Cusp
 
-[![CI Status](http://img.shields.io/travis/Ke Yang/Cusp.svg?style=flat)](https://travis-ci.org/Ke Yang/Cusp)
-[![Version](https://img.shields.io/cocoapods/v/Cusp.svg?style=flat)](http://cocoapods.org/pods/Cusp)
-[![License](https://img.shields.io/cocoapods/l/Cusp.svg?style=flat)](http://cocoapods.org/pods/Cusp)
-[![Platform](https://img.shields.io/cocoapods/p/Cusp.svg?style=flat)](http://cocoapods.org/pods/Cusp)
 
 ## Introduction
 
@@ -160,20 +156,29 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-For now, it's recommended using Cusp in Swift. I have been recently testing Cusp in an Unity program, of which the bridge between C# and Swift is Objective-C and pure C, so I think it works well in OC either...(except those Swift-style enums).
+* iOS 8.0+
+* swift 3.0
+* Xcode 8.0
 
 ## Installation
 
-To install Cusp, one way is simply download sources from another Git repository: [Cusp-Pure](https://github.com/keyOfVv/Cusp-Pure.git), then add those sources into your project and DONE.
+### Carthage
 
-OR...
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+You can install Carthage with [Homebrew](http://brew.sh) using the following command:
 
-Cusp is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "Cusp"
+```sh
+$ brew update
+$ brew install carthage
 ```
+
+To integrate Cusp into your Xcode project using Carthage, specify it in your Cartfile:
+
+```sh
+github "keyOfVv/Cusp"
+```
+
+Run carthage update to build the framework and drag the built Cusp.framework (in Carthage/Build/iOS folder) into your Xcode project (Linked Frameworks and Libraries in Targets).
 
 ## Author
 
