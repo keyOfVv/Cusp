@@ -15,4 +15,6 @@ public enum CuspError: Error {
 	case unauthorized
 	case poweredOff
 	case timedOut
+
+	case scanningCanceled
 }
