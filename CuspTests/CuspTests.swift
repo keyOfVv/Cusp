@@ -24,6 +24,18 @@ class CuspTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+		let expect = expectation(description: "featured articles shall NOT be nil or empty")
+		waitForExpectations(timeout: 45.0) { (error) in
+			if let err = error {
+				XCTFail("timed out due to: \(err)")
+			}
+		}
+		Cusp.central.scanForUUIDString(["1803"], completion: { (ads) in
+			dog(ads)
+			expect.fulfill()
+			}) { (err) in
+
+		}
     }
     
     func testPerformanceExample() {
