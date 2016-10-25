@@ -140,6 +140,8 @@ public extension Cusp {
 				})
 				if self?.isScanning == true {
 					req.completion?(infoSet)
+				} else {
+					req.abruption?(CuspError.scanningCanceled)
 				}
 			})
 			// scan completed, check request out
