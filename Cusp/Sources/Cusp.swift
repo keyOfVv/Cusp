@@ -52,6 +52,8 @@ open class Cusp: NSObject {
 		return Static.instance
 	}
 
+	static var showsDebugLog: Bool = false
+
 	fileprivate override init() {
 		super.init()
 	}
@@ -107,6 +109,10 @@ open class Cusp: NSObject {
 
 	/// a boolean value indicates whether Cusp is scanning
 	open var isScanning: Bool = false
+
+	public class func enableDebugLog(enabled: Bool) {
+		self.showsDebugLog = enabled
+	}
 }
 
 // MARK: - Interface

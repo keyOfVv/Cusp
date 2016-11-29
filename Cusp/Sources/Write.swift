@@ -101,15 +101,17 @@ extension Peripheral {
 }
 
 func dog(_ anyObject: Any?, function: String = #function, file: String = #file, line: Int = #line) {
-	#if DEBUG
-		let dateFormat		  = DateFormatter()
-		dateFormat.dateFormat = "HH:mm:ss.SSS"
+	if !Cusp.showsDebugLog {
+		return
+	}
 
-		let date = NSDate()
-		let time = dateFormat.string(from: date as Date)
+	let dateFormat		  = DateFormatter()
+	dateFormat.dateFormat = "HH:mm:ss.SSS"
 
-		print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
-	#endif
+	let date = NSDate()
+	let time = dateFormat.string(from: date as Date)
+
+	print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
 }
 
 
