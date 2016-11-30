@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// request of cancelling an in-progress connecting attempt
 internal class CancelConnectRequest: NSObject {
 
@@ -22,9 +21,7 @@ internal class CancelConnectRequest: NSObject {
 
 	// MARK: Initializer
 
-	fileprivate override init() {
-		super.init()
-	}
+	fileprivate override init() { super.init() }
 
 	/**
 	Convenient initializer
@@ -45,10 +42,8 @@ internal class CancelConnectRequest: NSObject {
 	}
 
 	override internal func isEqual(_ object: Any?) -> Bool {
-		if let other = object as? CancelConnectRequest {
-			return self.hashValue == other.hashValue
-		}
-		return false
+		guard let other = object as? CancelConnectRequest else { return false }
+		return self.hashValue == other.hashValue
 	}
 }
 

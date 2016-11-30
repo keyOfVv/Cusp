@@ -15,15 +15,15 @@ open class Advertisement: NSObject {
 
 	// MARK: Stored Properties
 
-	/// peripheral 从设备
+	/// peripheral
 	open fileprivate(set) var peripheral: Peripheral!
 
-	/// advertisement data dictionary 广播信息
+	/// advertisement data dictionary
 	fileprivate fileprivate(set) var advertisementData: Dictionary<String, Any>!
 
 	/// is peripheral connectable or not
 	open var isConnectable: Bool {
-		return advertisementData["kCBAdvDataIsConnectable"] as! Bool
+		return advertisementData["kCBAdvDataIsConnectable"] as? Bool ?? false
 	}
 
 	/// a UUID array contains advertising UUID of peripheral
