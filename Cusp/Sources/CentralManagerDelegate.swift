@@ -269,11 +269,12 @@ private extension Cusp {
 		let uuids = advInfo.advertisingUUIDs
 		// 3. finally, put it into Set "available" of scan req
 		for req in self.scanRequests {
-			if req.advertisingUUIDs == nil {	// a scan req for all peripherals
-				req.available.insert(advInfo)	// put any peripheral into Set "available"
-				break
-			} else if req.advertisingUUIDs?.overlapsWith(uuids) == true {	// a scan req for specific peripheral(s)
-				req.available.insert(advInfo)	// put specific peripheral into Set "available"
+			if let adUuids = req.advertisingUUIDs {	// if specific req has intended advertising uuids...
+				if adUuids.overlapsWith(uuids) {	// and these intended advertising uuids overlaps with those that are advertising...
+					req.available.insert(advInfo)	// then put specific peripheral into Set "available"
+				}
+			} else {	// if specific req has no intended advertising uuids...
+				req.available.insert(advInfo)	// then put any peripheral into Set "available"
 				break
 			}
 		}

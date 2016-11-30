@@ -32,7 +32,7 @@ internal class ScanRequest: NSObject {
 	internal var available = Set<Advertisement>()
 
 	// MARK: Initializer
-	/// intently made private
+	/// intendedly made private
 	fileprivate override init() { super.init() }
 
 	/**
