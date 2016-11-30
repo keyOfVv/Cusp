@@ -128,6 +128,7 @@ public extension Cusp {
 					return a.peripheral.core.identifier.uuidString <= b.peripheral.core.identifier.uuidString
 				})
 				if self.isScanning {
+					dog(infoSet)
 					req.completion?(infoSet)
 				} else {
 					req.abruption?(CuspError.scanningCanceled)

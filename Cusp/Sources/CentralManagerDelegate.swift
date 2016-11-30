@@ -20,7 +20,6 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter central: a CBCentralManager instance
 	*/
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-//		Foundation.NotificationCenter.default.post(name: Notification.Name(rawValue: CuspStateDidChangeNotification), object: nil)	// post BLE state change notification
 		Foundation.NotificationCenter.default.post(name: Notification.Name.CuspStateDidChange, object: nil) // post BLE state change notification
 	}
 
@@ -33,7 +32,6 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter RSSI:              an NSNumber object representing the signal strength of discovered peripheral
 	*/
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-		dog(peripheral)
 		self.mainQ.async { () -> Void in
 			// 0. check if any custom peripheral class registered
 			if !self.customClasses.isEmpty {
