@@ -28,7 +28,13 @@ private var onceToken = Int()
 // MARK: Notifications
 
 /// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
+@available(*, deprecated, message: "use Notification.Name.CuspStateDidChange")
 public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
+
+// MARK: -
+extension Notification.Name {
+	public static let CuspStateDidChange: Notification.Name = Notification.Name("CuspStateDidChangeNotification")
+}
 
 // MARK: Constants
 
