@@ -225,10 +225,10 @@ extension Cusp {
 		var targets = Set<UUID>()
 		for req in self.scanRequests {
 			// if any request targets at overall scan...
-			if req.advertisingUUIDs == nil {
-				return nil
+			if let uuids = req.advertisingUUIDs {
+				targets.formUnion(uuids)
 			} else {
-				targets.formUnion(req.advertisingUUIDs!)
+				return nil
 			}
 		}
 
