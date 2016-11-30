@@ -29,14 +29,12 @@ internal class ScanRequest: NSObject {
 	/// closure to be called when scan abrupted
 	internal var abruption: ((CuspError) -> Void)?
 
-	/// peripherals scanned
+	/// scanned peripherals with miscellaneous info, all wrapped as Advertisement
 	internal var available = Set<Advertisement>()
 
 	// MARK: Initializer
-
-	fileprivate override init() {
-		super.init()
-	}
+	/// intently made private
+	fileprivate override init() { super.init() }
 
 	/**
 	convenient initializer
@@ -74,34 +72,28 @@ internal class ScanRequest: NSObject {
 		// convert uuid string array into UUID array
 		var uuids = [UUID]()
 		for uuidString in uuidStrings {
-			let uuid = UUID(string: uuidString)
-			uuids.append(uuid)
+			uuids.append(UUID(string: uuidString))
 		}
 		self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
 	}
 
 	internal override var hash: Int {
-		if let UUIDs = self.advertisingUUIDs {
-			var string = ""
-			for UUID in UUIDs {
-				string += UUID.uuidString
-			}
-			return string.hashValue
+		guard let UUIDs = self.advertisingUUIDs else { return 0 }
+		var string = ""
+		for UUID in UUIDs {
+			string += UUID.uuidString
 		}
-		return 0
+		return string.hashValue
 	}
 
 	internal override func isEqual(_ object: Any?) -> Bool {
-		if let other = object as? ScanRequest {
-			return self.hashValue == other.hashValue
-		}
-		return false
+		guard let other = object as? ScanRequest else { return false }
+		return self.hashValue == other.hashValue
 	}
 
 	deinit {
 //		dog("\(self.classForCoder) deinited")
 	}
-
 }
 
 // MARK: - scan methods
