@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // MARK: ConnectRequest
 
 /// device connect request
@@ -21,9 +20,7 @@ internal class ConnectRequest: CentralOperationRequest {
 
 	// MARK: Initializer
 
-	fileprivate override init() {
-		super.init()
-	}
+	fileprivate override init() { super.init() }
 
 	/**
 	convenient initializer
@@ -48,10 +45,8 @@ internal class ConnectRequest: CentralOperationRequest {
 	}
 
 	override internal func isEqual(_ object: Any?) -> Bool {
-		if let other = object as? ConnectRequest {
-			return self.hashValue == other.hashValue
-		}
-		return false
+		guard let other = object as? ConnectRequest else { return false }
+		return self.hash == other.hash
 	}
 }
 
@@ -62,12 +57,11 @@ public extension Cusp {
 
 	/**
 	connect a peripheral
-	连接从设备
 
-	- parameter peripheral: a CBPeripheral instance to be connected. 待连接的从设备
-	- parameter success:    a closure called when connection established. 连接成功时执行的闭包
-	- parameter failure:    a closure called when connecting attempt failed or timed-out. 连接失败或超时时执行的闭包
-	- parameter abruption:  a closure called when connection broken-down. 连接中断时执行的闭包
+	- parameter peripheral: a CBPeripheral instance to be connected.
+	- parameter success:    a closure called when connection established.
+	- parameter failure:    a closure called when connecting attempt failed or timed-out.
+	- parameter abruption:  a closure called when connection broken-down.
 	*/
 	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 
@@ -86,13 +80,17 @@ public extension Cusp {
 		self.centralManager.connect(peripheral.core, options: nil)
 
 		// deal with timeout
-		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
+		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)
 				})
 				// cancel conncect since it's timed out
 				self.cancelConnection(peripheral, completion: nil)
+				// remove req
+				self.reqQ.async(execute: { () -> Void in
+					self.connectRequests.remove(req)
+				})
 			}
 		}
 	}
