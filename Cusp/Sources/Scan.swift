@@ -122,20 +122,20 @@ public extension Cusp {
 		self.checkIn(req)
 
 		// 3. dispatch completion closure
-		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(req.duration), execute: {[weak self] () -> Void in
+		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(req.duration), execute: { () -> Void in
 			DispatchQueue.main.async(execute: { () -> Void in
 				let infoSet = req.available.sorted(by: { (a, b) -> Bool in
 					return a.peripheral.core.identifier.uuidString <= b.peripheral.core.identifier.uuidString
 				})
-				if self?.isScanning == true {
+				if self.isScanning {
 					req.completion?(infoSet)
 				} else {
 					req.abruption?(CuspError.scanningCanceled)
 				}
 			})
 			// scan completed, check request out
-			self?.checkOut(req)
-			})
+			self.checkOut(req)
+		})
 	}
 
 	/**

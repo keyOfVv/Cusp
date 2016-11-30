@@ -113,8 +113,8 @@ open class Cusp: NSObject {
 		return !sessions.isEmpty
 	}
 
-	/// a boolean value indicates whether Cusp is scanning
-	open var isScanning: Bool = false
+	/// a boolean value indicates whether Cusp is scanning;
+	public internal(set) var isScanning: Bool = false
 
 	public class func enableDebugLog(enabled: Bool) {
 		self.showsDebugLog = enabled
