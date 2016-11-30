@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// default scan duration
 private let defaultDuration: TimeInterval = 3.0
 
@@ -101,30 +100,28 @@ internal class ScanRequest: NSObject {
 public extension Cusp {
 
 	/**
-	Scan for BLE peripherals of specific advertising service UUIDs. If pass nil, all kinds of peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
-	根据UUID数组扫描指定从设备, 如不指定UUID, 则扫描任意从设备. 扫描成功会执行completion闭包, 反之则执行abruption闭包;
+	Scan for BLE peripherals of specific advertising service UUIDs. If pass nil, all peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
 
-	- parameter advertisingServiceUUIDs: a specific UUID array or nil. 指定的广播服务UUID数组或nil
-	- parameter duration:                scan duration in second, 3.0s by default. 扫描时长, 默认3.0秒
-	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
-	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
+	- parameter advertisingServiceUUIDs: a specific UUID array or nil.
+	- parameter duration:                scan duration in second, 3.0s by default.
+	- parameter completion:              a closure called when scan timed out.
+	- parameter abruption:               a closure called when scan is abrupted.
 	*/
 	public func scanForUUID(_ advertisingServiceUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
-//		dog("CUSP START SCANNING")
-		// -1.
-		self.isScanning = true
-
-		// 0. check if ble is available
+		// 0. check if ble is available, if error is non-nil, call abruption closure
 		if let error = self.assertAvailability() {
 			abruption?(error)
 			return
 		}
 
-		// 1. create a ScanRequest object and check it in
+		// 1. passed BLE availability check
+		self.isScanning = true
+
+		// 2. create a ScanRequest object and check it in
 		let req = ScanRequest(advertisingUUIDs: advertisingServiceUUIDs, duration: duration, completion: completion, abruption: abruption)
 		self.checkIn(req)
 
-		// 2. dispatch completion closure
+		// 3. dispatch completion closure
 		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.duration * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {[weak self] () -> Void in
 			DispatchQueue.main.async(execute: { () -> Void in
 				let infoSet = req.available.sorted(by: { (a, b) -> Bool in
