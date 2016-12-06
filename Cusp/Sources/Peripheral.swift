@@ -114,4 +114,35 @@ extension Peripheral {
 	open override var description: String {
 		return core.description
 	}
+
+	/// 根据UUID字符串获取对应的服务
+	public func serviceWith(UUIDString: String) -> CBService? {
+
+		if let services = self.core.services {
+			for aService in services {
+				if (aService.uuid.uuidString == UUIDString) {
+					return aService
+				}
+			}
+		}
+		return nil
+	}
+
+	/// 根据UUID字符串获取对应的特征
+	public func characteristicWith(UUIDString: String) -> CBCharacteristic? {
+
+		if let services = self.core.services {
+			for aService in services {
+				if let characteristics = aService.characteristics {
+					for aCharacteristics in characteristics {
+						if (aCharacteristics.uuid.uuidString == UUIDString) {
+							return aCharacteristics
+						}
+					}
+				}
+			}
+		}
+		return nil
+	}
+	
 }
