@@ -66,6 +66,7 @@ extension CBPeripheral {
 	}
 
 	/// 根据UUID字符串获取对应的服务
+	@available(*, deprecated, message: "use Peripheral's -serviceWith(UUIDString:) method instead")
 	public func serviceWith(UUIDString: String) -> CBService? {
 
 		if let services = self.services {
@@ -79,6 +80,7 @@ extension CBPeripheral {
 	}
 
 	/// 根据UUID字符串获取对应的特征
+	@available(*, deprecated, message: "use Peripheral's -characteristicWith(UUIDString:) method instead")
 	public func characteristicWith(UUIDString: String) -> CBCharacteristic? {
 
 		if let services = self.services {
