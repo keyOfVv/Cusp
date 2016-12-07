@@ -26,7 +26,7 @@ Cusp.prepare { (available) in
 
 ### Custom Peripheral Class
 
-Sometimes, i think it's more convenient to have a custom class (subclass Peripheral is REQUIRED) of Ble device instance for my project. I can define its own properties like "advertisingUUID", "writeDataUUID", "notifyUUID", etc. Then, i can use those properties in my code without typing literally.
+Sometimes, i think it's more convenient to have a custom class (subclassing `Peripheral` is REQUIRED) of Ble device instance for my project. I can define its own properties like "advertisingUUID", "writeDataUUID", "notifyUUID", etc. Then, i can use those properties in my code without typing literally.
 
 ```swift
 // my custome Peripheral class
@@ -89,6 +89,8 @@ After define my own custom peripheral, i can register it to Cusp with class name
 ```swift
 Cusp.central.registerPeripheralClass(C2.self, forNamePattern: "MN581N_[A-Z0-9]{5}")
 ```
+
+If not, just use `Peripheral`. It's adequate.
 
 ### Scan for BLE device
 ```swift
