@@ -31,6 +31,11 @@ open class Advertisement: NSObject {
 		return advertisementData["kCBAdvDataServiceUUIDs"] as? [UUID]
 	}
 
+	/// manufacturerData of peripheral
+	open var manufacturerData: Data? {
+		return advertisementData["kCBAdvDataManufacturerData"] as? Data
+	}
+
 	/// a UUIDString array contains advertising UUIDStrig of peripheral
 	open var advertisingUUIDStrings: [String] {
 		var UUIDStrings = [String]()
