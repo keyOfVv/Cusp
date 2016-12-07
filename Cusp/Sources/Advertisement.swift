@@ -19,7 +19,7 @@ open class Advertisement: NSObject {
 	open fileprivate(set) var peripheral: Peripheral!
 
 	/// advertisement data dictionary
-	fileprivate fileprivate(set) var advertisementData: Dictionary<String, Any>!
+	public fileprivate(set) var advertisementData: Dictionary<String, Any>!
 
 	/// is peripheral connectable or not
 	open var isConnectable: Bool {
