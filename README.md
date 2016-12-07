@@ -26,7 +26,7 @@ Cusp.prepare { (available) in
 
 ### Custom Peripheral Class
 
-Sometimes, i think it's more convenient to have a custom class of Ble device instance for my project. I can define its own properties like "advertisingUUID", "writeDataUUID", "notifyUUID", etc. Then, i can use those properties in my code without typing literally.
+Sometimes, i think it's more convenient to have a custom class (subclass Peripheral is REQUIRED) of Ble device instance for my project. I can define its own properties like "advertisingUUID", "writeDataUUID", "notifyUUID", etc. Then, i can use those properties in my code without typing literally.
 
 ```swift
 // my custome Peripheral class
