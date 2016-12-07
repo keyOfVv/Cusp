@@ -152,8 +152,6 @@ peripheral.subscribe(characteristcNotify, success: { (response) -> Void in
 })
 ```
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
 
 * iOS 8.0+
@@ -178,7 +176,7 @@ To integrate Cusp into your Xcode project using Carthage, specify it in your Car
 github "keyOfVv/Cusp"
 ```
 
-Run carthage update to build the framework and drag the built Cusp.framework (in Carthage/Build/iOS folder) into your Xcode project (Linked Frameworks and Libraries in Targets).
+Run `carthage update` to build the framework and drag the built Cusp.framework (in Carthage/Build/iOS folder) into your Xcode project (Linked Frameworks and Libraries in Targets), and DON'T forget to add Cusp.framework as an input file in Carthage's Run Script specified in `Targets`>`Build Phases`>`Run Script`.
 
 ## Author
 
