@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */; };
+		702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7E01DF935EF00CC52A8 /* ViewController.swift */; };
+		702DE7E41DF935EF00CC52A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E21DF935EF00CC52A8 /* Main.storyboard */; };
+		702DE7E61DF935EF00CC52A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E51DF935EF00CC52A8 /* Assets.xcassets */; };
+		702DE7E91DF935EF00CC52A8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E71DF935EF00CC52A8 /* LaunchScreen.storyboard */; };
+		702DE7F41DF935F000CC52A8 /* CuspDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */; };
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -35,6 +41,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		702DE7F01DF935EF00CC52A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70AD57051D8A8E59003042F4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 702DE7DB1DF935EF00CC52A8;
+			remoteInfo = CuspDemo;
+		};
 		70AD57191D8A8E59003042F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70AD57051D8A8E59003042F4 /* Project object */;
@@ -45,6 +58,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuspDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		702DE7E01DF935EF00CC52A8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		702DE7E31DF935EF00CC52A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		702DE7E51DF935EF00CC52A8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		702DE7E81DF935EF00CC52A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		702DE7EA1DF935EF00CC52A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		702DE7EF1DF935EF00CC52A8 /* CuspDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuspDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuspDemoTests.swift; sourceTree = "<group>"; };
+		702DE7F51DF935F000CC52A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70AD570E1D8A8E59003042F4 /* Cusp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cusp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD57111D8A8E59003042F4 /* Cusp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cusp.h; sourceTree = "<group>"; };
 		70AD57121D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -76,6 +99,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		702DE7D91DF935EF00CC52A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		702DE7EC1DF935EF00CC52A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70AD570A1D8A8E59003042F4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -94,11 +131,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		702DE7DD1DF935EF00CC52A8 /* CuspDemo */ = {
+			isa = PBXGroup;
+			children = (
+				702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */,
+				702DE7E01DF935EF00CC52A8 /* ViewController.swift */,
+				702DE7E21DF935EF00CC52A8 /* Main.storyboard */,
+				702DE7E51DF935EF00CC52A8 /* Assets.xcassets */,
+				702DE7E71DF935EF00CC52A8 /* LaunchScreen.storyboard */,
+				702DE7EA1DF935EF00CC52A8 /* Info.plist */,
+			);
+			path = CuspDemo;
+			sourceTree = "<group>";
+		};
+		702DE7F21DF935EF00CC52A8 /* CuspDemoTests */ = {
+			isa = PBXGroup;
+			children = (
+				702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */,
+				702DE7F51DF935F000CC52A8 /* Info.plist */,
+			);
+			path = CuspDemoTests;
+			sourceTree = "<group>";
+		};
 		70AD57041D8A8E59003042F4 = {
 			isa = PBXGroup;
 			children = (
 				70AD57101D8A8E59003042F4 /* Cusp */,
 				70AD571B1D8A8E59003042F4 /* CuspTests */,
+				702DE7DD1DF935EF00CC52A8 /* CuspDemo */,
+				702DE7F21DF935EF00CC52A8 /* CuspDemoTests */,
 				70AD570F1D8A8E59003042F4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +169,8 @@
 			children = (
 				70AD570E1D8A8E59003042F4 /* Cusp.framework */,
 				70AD57171D8A8E59003042F4 /* CuspTests.xctest */,
+				702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */,
+				702DE7EF1DF935EF00CC52A8 /* CuspDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,6 +237,41 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		702DE7DB1DF935EF00CC52A8 /* CuspDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 702DE7FA1DF935F000CC52A8 /* Build configuration list for PBXNativeTarget "CuspDemo" */;
+			buildPhases = (
+				702DE7D81DF935EF00CC52A8 /* Sources */,
+				702DE7D91DF935EF00CC52A8 /* Frameworks */,
+				702DE7DA1DF935EF00CC52A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CuspDemo;
+			productName = CuspDemo;
+			productReference = 702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		702DE7EE1DF935EF00CC52A8 /* CuspDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 702DE7FB1DF935F000CC52A8 /* Build configuration list for PBXNativeTarget "CuspDemoTests" */;
+			buildPhases = (
+				702DE7EB1DF935EF00CC52A8 /* Sources */,
+				702DE7EC1DF935EF00CC52A8 /* Frameworks */,
+				702DE7ED1DF935EF00CC52A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				702DE7F11DF935EF00CC52A8 /* PBXTargetDependency */,
+			);
+			name = CuspDemoTests;
+			productName = CuspDemoTests;
+			productReference = 702DE7EF1DF935EF00CC52A8 /* CuspDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		70AD570D1D8A8E59003042F4 /* Cusp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70AD57221D8A8E59003042F4 /* Build configuration list for PBXNativeTarget "Cusp" */;
@@ -217,10 +315,21 @@
 		70AD57051D8A8E59003042F4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0800;
+				LastSwiftUpdateCheck = 0810;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = com.keyofvv;
 				TargetAttributes = {
+					702DE7DB1DF935EF00CC52A8 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = JQH3D93TFY;
+						ProvisioningStyle = Automatic;
+					};
+					702DE7EE1DF935EF00CC52A8 = {
+						CreatedOnToolsVersion = 8.1;
+						DevelopmentTeam = JQH3D93TFY;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 702DE7DB1DF935EF00CC52A8;
+					};
 					70AD570D1D8A8E59003042F4 = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
@@ -237,6 +346,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 70AD57041D8A8E59003042F4;
 			productRefGroup = 70AD570F1D8A8E59003042F4 /* Products */;
@@ -245,11 +355,30 @@
 			targets = (
 				70AD570D1D8A8E59003042F4 /* Cusp */,
 				70AD57161D8A8E59003042F4 /* CuspTests */,
+				702DE7DB1DF935EF00CC52A8 /* CuspDemo */,
+				702DE7EE1DF935EF00CC52A8 /* CuspDemoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		702DE7DA1DF935EF00CC52A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				702DE7E91DF935EF00CC52A8 /* LaunchScreen.storyboard in Resources */,
+				702DE7E61DF935EF00CC52A8 /* Assets.xcassets in Resources */,
+				702DE7E41DF935EF00CC52A8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		702DE7ED1DF935EF00CC52A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70AD570C1D8A8E59003042F4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -283,6 +412,23 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		702DE7D81DF935EF00CC52A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */,
+				702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		702DE7EB1DF935EF00CC52A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				702DE7F41DF935F000CC52A8 /* CuspDemoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70AD57091D8A8E59003042F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -323,6 +469,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		702DE7F11DF935EF00CC52A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 702DE7DB1DF935EF00CC52A8 /* CuspDemo */;
+			targetProxy = 702DE7F01DF935EF00CC52A8 /* PBXContainerItemProxy */;
+		};
 		70AD571A1D8A8E59003042F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 70AD570D1D8A8E59003042F4 /* Cusp */;
@@ -330,7 +481,86 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		702DE7E21DF935EF00CC52A8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				702DE7E31DF935EF00CC52A8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		702DE7E71DF935EF00CC52A8 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				702DE7E81DF935EF00CC52A8 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		702DE7F61DF935F000CC52A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JQH3D93TFY;
+				INFOPLIST_FILE = CuspDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		702DE7F71DF935F000CC52A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JQH3D93TFY;
+				INFOPLIST_FILE = CuspDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		702DE7F81DF935F000CC52A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = JQH3D93TFY;
+				INFOPLIST_FILE = CuspDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CuspDemo.app/CuspDemo";
+			};
+			name = Debug;
+		};
+		702DE7F91DF935F000CC52A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = JQH3D93TFY;
+				INFOPLIST_FILE = CuspDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.keyofvv.CuspDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CuspDemo.app/CuspDemo";
+			};
+			name = Release;
+		};
 		70AD57201D8A8E59003042F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -497,6 +727,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		702DE7FA1DF935F000CC52A8 /* Build configuration list for PBXNativeTarget "CuspDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				702DE7F61DF935F000CC52A8 /* Debug */,
+				702DE7F71DF935F000CC52A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		702DE7FB1DF935F000CC52A8 /* Build configuration list for PBXNativeTarget "CuspDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				702DE7F81DF935F000CC52A8 /* Debug */,
+				702DE7F91DF935F000CC52A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		70AD57081D8A8E59003042F4 /* Build configuration list for PBXProject "Cusp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
