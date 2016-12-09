@@ -153,6 +153,91 @@
 			path = CuspDemoTests;
 			sourceTree = "<group>";
 		};
+		706978C71DFB0F65003A845E /* delegate */ = {
+			isa = PBXGroup;
+			children = (
+				70AD572C1D8A8F41003042F4 /* CentralManagerDelegate.swift */,
+				70AD57351D8A8F41003042F4 /* PeripheralDelegate.swift */,
+			);
+			name = delegate;
+			sourceTree = "<group>";
+		};
+		706978C81DFB107C003A845E /* scan */ = {
+			isa = PBXGroup;
+			children = (
+				70AD572A1D8A8F41003042F4 /* Advertisement.swift */,
+				70AD573A1D8A8F41003042F4 /* Scan.swift */,
+			);
+			name = scan;
+			sourceTree = "<group>";
+		};
+		706978C91DFB10AD003A845E /* subscription */ = {
+			isa = PBXGroup;
+			children = (
+				70AD573C1D8A8F41003042F4 /* Subscribe.swift */,
+				70AD573D1D8A8F41003042F4 /* Subscription.swift */,
+				70AD573E1D8A8F41003042F4 /* Unsubscribe.swift */,
+			);
+			name = subscription;
+			sourceTree = "<group>";
+		};
+		706978CA1DFB10CF003A845E /* write */ = {
+			isa = PBXGroup;
+			children = (
+				70AD573F1D8A8F41003042F4 /* Write.swift */,
+			);
+			name = write;
+			sourceTree = "<group>";
+		};
+		706978CB1DFB10D7003A845E /* read */ = {
+			isa = PBXGroup;
+			children = (
+				70AD57391D8A8F41003042F4 /* RSSI.swift */,
+				70AD57361D8A8F41003042F4 /* Read.swift */,
+			);
+			name = read;
+			sourceTree = "<group>";
+		};
+		706978CC1DFB10E7003A845E /* discover */ = {
+			isa = PBXGroup;
+			children = (
+				70AD57311D8A8F41003042F4 /* Discover.swift */,
+			);
+			name = discover;
+			sourceTree = "<group>";
+		};
+		706978CD1DFB1105003A845E /* connection */ = {
+			isa = PBXGroup;
+			children = (
+				70AD572B1D8A8F41003042F4 /* CancelConnect.swift */,
+				70AD572D1D8A8F41003042F4 /* Connect.swift */,
+				70AD57301D8A8F41003042F4 /* Disconnect.swift */,
+				70AD572F1D8A8F41003042F4 /* CuspSession.swift */,
+			);
+			name = connection;
+			sourceTree = "<group>";
+		};
+		706978CE1DFB1156003A845E /* core */ = {
+			isa = PBXGroup;
+			children = (
+				70AD57321D8A8F41003042F4 /* Error.swift */,
+				70AD572E1D8A8F41003042F4 /* Cusp.swift */,
+				70AD57341D8A8F41003042F4 /* Peripheral.swift */,
+				70AD57371D8A8F41003042F4 /* Request.swift */,
+				70AD57381D8A8F41003042F4 /* Response.swift */,
+				70AD573B1D8A8F41003042F4 /* State.swift */,
+			);
+			name = core;
+			sourceTree = "<group>";
+		};
+		706978CF1DFB1165003A845E /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				70AD57331D8A8F41003042F4 /* Extensions.swift */,
+			);
+			name = extension;
+			sourceTree = "<group>";
+		};
 		70AD57041D8A8E59003042F4 = {
 			isa = PBXGroup;
 			children = (
@@ -197,28 +282,15 @@
 		70AD57291D8A8F41003042F4 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				70AD572A1D8A8F41003042F4 /* Advertisement.swift */,
-				70AD572B1D8A8F41003042F4 /* CancelConnect.swift */,
-				70AD572C1D8A8F41003042F4 /* CentralManagerDelegate.swift */,
-				70AD572D1D8A8F41003042F4 /* Connect.swift */,
-				70AD572E1D8A8F41003042F4 /* Cusp.swift */,
-				70AD572F1D8A8F41003042F4 /* CuspSession.swift */,
-				70AD57301D8A8F41003042F4 /* Disconnect.swift */,
-				70AD57311D8A8F41003042F4 /* Discover.swift */,
-				70AD57321D8A8F41003042F4 /* Error.swift */,
-				70AD57331D8A8F41003042F4 /* Extensions.swift */,
-				70AD57341D8A8F41003042F4 /* Peripheral.swift */,
-				70AD57351D8A8F41003042F4 /* PeripheralDelegate.swift */,
-				70AD57361D8A8F41003042F4 /* Read.swift */,
-				70AD57371D8A8F41003042F4 /* Request.swift */,
-				70AD57381D8A8F41003042F4 /* Response.swift */,
-				70AD57391D8A8F41003042F4 /* RSSI.swift */,
-				70AD573A1D8A8F41003042F4 /* Scan.swift */,
-				70AD573B1D8A8F41003042F4 /* State.swift */,
-				70AD573C1D8A8F41003042F4 /* Subscribe.swift */,
-				70AD573D1D8A8F41003042F4 /* Subscription.swift */,
-				70AD573E1D8A8F41003042F4 /* Unsubscribe.swift */,
-				70AD573F1D8A8F41003042F4 /* Write.swift */,
+				706978CD1DFB1105003A845E /* connection */,
+				706978C71DFB0F65003A845E /* delegate */,
+				706978CE1DFB1156003A845E /* core */,
+				706978CC1DFB10E7003A845E /* discover */,
+				706978CF1DFB1165003A845E /* extension */,
+				706978CB1DFB10D7003A845E /* read */,
+				706978C81DFB107C003A845E /* scan */,
+				706978C91DFB10AD003A845E /* subscription */,
+				706978CA1DFB10CF003A845E /* write */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -734,6 +806,7 @@
 				702DE7F71DF935F000CC52A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		702DE7FB1DF935F000CC52A8 /* Build configuration list for PBXNativeTarget "CuspDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -742,6 +815,7 @@
 				702DE7F91DF935F000CC52A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70AD57081D8A8E59003042F4 /* Build configuration list for PBXProject "Cusp" */ = {
 			isa = XCConfigurationList;
