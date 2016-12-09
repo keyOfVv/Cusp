@@ -43,27 +43,18 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 	}
 
 	override internal var hash: Int {
-		// if service uuid array is nil, return hash value of empty string
-		guard let uuids = serviceUUIDs else {
-			return "".hashValue
-		}
-		// sort the uuids
-		let array = uuids.sorted { (a, b) -> Bool in
+		var joined = ""
+		serviceUUIDs?.sorted(by: { (a, b) -> Bool in
 			return a.uuidString <= b.uuidString
-		}
-		// assemble uuid strings
-		var string = ""
-		for uuid in array {
-			string += uuid.uuidString
-		}
-		return string.hashValue
+		}).forEach({ (uuid) in
+			joined += uuid.uuidString
+		})
+		return joined.hashValue
 	}
 
 	override internal func isEqual(_ object: Any?) -> Bool {
-		if let other = object as? ServiceDiscoveringRequest {
-			return hashValue == other.hashValue
-		}
-		return false
+		guard let other = object as? ServiceDiscoveringRequest else { return false }
+		return hashValue == other.hashValue
 	}
 }
 
@@ -157,7 +148,7 @@ extension Peripheral {
 			self.core.discoverServices(serviceUUIDs)
 		})
 		// 4. set time out closure
-		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
+		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)
@@ -196,7 +187,7 @@ extension Peripheral {
 			self.core.discoverCharacteristics(characteristicUUIDs, for: service)
 		})
 		// 4. set time out closure
-		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
+		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)

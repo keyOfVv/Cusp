@@ -145,7 +145,7 @@ public extension Cusp {
 		// since checking ble status needs little
 //		dispatch_once(&onceToken) {
 			_ = self.isBLEAvailable()
-			Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
+			Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
 				DispatchQueue.main.async(execute: { 
 					completion?(self.isBLEAvailable())
 				})

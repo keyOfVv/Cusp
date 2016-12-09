@@ -88,7 +88,7 @@ extension Peripheral {
 			self.core.setNotifyValue(true, for: characteristic)
 		})
 		// 4. set time out closure
-		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(Int64(req.timeoutPeriod * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
+		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)
