@@ -15,6 +15,7 @@
 		702DE7F41DF935F000CC52A8 /* CuspDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */; };
 		707EED361E03ED8800083BEF /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		707EED371E03ED8800083BEF /* Cusp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		707EED3C1E03FF9D00083BEF /* GATT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EED3B1E03FF9D00083BEF /* GATT.swift */; };
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -91,6 +92,7 @@
 		702DE7EF1DF935EF00CC52A8 /* CuspDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuspDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuspDemoTests.swift; sourceTree = "<group>"; };
 		702DE7F51DF935F000CC52A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		707EED3B1E03FF9D00083BEF /* GATT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GATT.swift; sourceTree = "<group>"; };
 		70AD570E1D8A8E59003042F4 /* Cusp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cusp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD57111D8A8E59003042F4 /* Cusp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cusp.h; sourceTree = "<group>"; };
 		70AD57121D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				70AD57371D8A8F41003042F4 /* Request.swift */,
 				70AD57381D8A8F41003042F4 /* Response.swift */,
 				70AD573B1D8A8F41003042F4 /* State.swift */,
+				707EED3B1E03FF9D00083BEF /* GATT.swift */,
 			);
 			name = core;
 			sourceTree = "<group>";
@@ -533,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70AD57471D8A8F41003042F4 /* Discover.swift in Sources */,
+				707EED3C1E03FF9D00083BEF /* GATT.swift in Sources */,
 				70AD57541D8A8F41003042F4 /* Unsubscribe.swift in Sources */,
 				70AD57501D8A8F41003042F4 /* Scan.swift in Sources */,
 				70AD574A1D8A8F41003042F4 /* Peripheral.swift in Sources */,
