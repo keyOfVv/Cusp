@@ -157,7 +157,18 @@ extension Peripheral {
 		}
 		return nil
 	}
-	
+}
+
+// MARK: - Device Information
+extension Peripheral {
+
+//	public func getManufacturerNameString(completion: (String?) -> Void) {
+//		discoverService(UUIDStrings: ["180A"], success: { (_) in
+//			
+//		}) { (error) in
+//			dog(error)
+//		}
+//	}
 }
 
 // MARK: -

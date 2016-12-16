@@ -36,7 +36,10 @@ class ViewController: UIViewController {
 		Cusp.central.connect(per, success: { (resp) in
 			per.discoverService(UUIDStrings: nil, success: { (resp) in
 				per.discoverCharacteristic(UUIDStrings: nil, ofService: per["180A"]!, success: { (resp) in
-					print(per["180A"]!.characteristics)
+					per["180A"]!.characteristics?.forEach({ (char) in
+						print(char.uuid.uuidString)
+						print(char)
+					})
 				}, failure: { (error) in
 
 				})
