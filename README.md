@@ -161,6 +161,15 @@ let charB = service["FF62"]
 ...
 ```
 
+For Objective-C, using:
+
+```OC
+Service *service = [peripheral serviceWith: @"FF60"];
+Characteristic *charA = [peripheral characteristicWith: @"FF61"];
+Characteristic *charB = [peripheral characteristicWith: @"FF62"];
+...
+```
+
 ### Read or Write
 ```swift
 peripheral.write(data, forCharacteristic: characteristic, success: { (response) -> Void in
