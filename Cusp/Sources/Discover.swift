@@ -130,21 +130,21 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discover(_ serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverService(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
 			return
 		}
 		// 1. create request object
-		let req = ServiceDiscoveringRequest(serviceUUIDs: serviceUUIDs, success: success, failure: failure)
+		let req = ServiceDiscoveringRequest(serviceUUIDs: UUIDs, success: success, failure: failure)
 		// 2. add request
 		requestQ.async(execute: { () -> Void in
 			self.serviceDiscoveringRequests.insert(req)
 		})
 		// 3. start discovering service(s)
 		operationQ.async(execute: { () -> Void in
-			self.core.discoverServices(serviceUUIDs)
+			self.core.discoverServices(UUIDs)
 		})
 		// 4. set time out closure
 		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
@@ -167,13 +167,13 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discover(_ serviceUUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverService(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		var uuids: [UUID] = []
-		serviceUUIDStrings?.forEach({ (uuidString) in
+		UUIDStrings?.forEach({ (uuidString) in
 			let uuid = UUID(string: uuidString)
 			uuids.append(uuid)
 		})
-		discover(uuids.count > 0 ? uuids : nil, success: success, failure: failure)
+		discoverService(UUIDs: uuids.count > 0 ? uuids : nil, success: success, failure: failure)
 	}
 
 	/**
@@ -184,21 +184,21 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discover(_ characteristicUUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverCharacteristic(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
 			return
 		}
 		// 1. create request object
-		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: characteristicUUIDs, service: service, success: success, failure: failure)
+		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: UUIDs, service: service, success: success, failure: failure)
 		// 2. add request
 		requestQ.async(execute: { () -> Void in
 			self.characteristicDiscoveringRequests.insert(req)
 		})
 		// 3. start discovering characteristic(s)
 		operationQ.async(execute: { () -> Void in
-			self.core.discoverCharacteristics(characteristicUUIDs, for: service)
+			self.core.discoverCharacteristics(UUIDs, for: service)
 		})
 		// 4. set time out closure
 		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
@@ -222,13 +222,13 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discover(_ characteristicUUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverCharacteristic(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		var uuids: [UUID] = []
-		characteristicUUIDStrings?.forEach({ (uuidString) in
+		UUIDStrings?.forEach({ (uuidString) in
 			let uuid = UUID(string: uuidString)
 			uuids.append(uuid)
 		})
-		discover(uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
+		discoverCharacteristic(UUIDs: uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
 	}
 
 	/**

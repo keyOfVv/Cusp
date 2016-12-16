@@ -7,12 +7,47 @@
 //
 
 import UIKit
+import Cusp
 
 class ViewController: UIViewController {
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
+	var per: Peripheral? {
+		didSet {
+			self.test()
+		}
 	}
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+
+		Cusp.prepare { (available) in
+			Cusp.central.scanForUUIDString(nil, completion: { (ads) in
+				self.per = ads.first?.peripheral
+			}, abruption: { (error) in
+
+			})
+		}
+	}
+
+	func test() {
+		guard let per = self.per else {
+			return
+		}
+		Cusp.central.connect(per, success: { (resp) in
+			per.discoverService(UUIDStrings: nil, success: { (resp) in
+				per.discoverCharacteristic(UUIDStrings: nil, ofService: per["180A"]!, success: { (resp) in
+					print(per["180A"]!.characteristics)
+				}, failure: { (error) in
+
+				})
+			}, failure: { (error) in
+
+			})
+		}, failure: { (error) in
+
+		}) { (error) in
+
+		}
+	}
 }
 

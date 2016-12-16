@@ -116,7 +116,7 @@ extension Peripheral {
 	}
 
 	/// get service object via subscript
-	subscript(serviceUUIDString: String) -> Service? {
+	public subscript(serviceUUIDString: String) -> Service? {
 		guard let servs = core.services else {
 			return nil
 		}
@@ -164,7 +164,7 @@ extension Peripheral {
 extension Service {
 
 	/// get characteristic object via subscript
-	subscript(characteristicUUIDString: String) -> Characteristic? {
+	public subscript(characteristicUUIDString: String) -> Characteristic? {
 		guard let chars = characteristics else {
 			return nil
 		}
