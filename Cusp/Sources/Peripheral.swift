@@ -115,6 +115,19 @@ extension Peripheral {
 		return core.description
 	}
 
+	/// get service object via subscript
+	subscript(serviceUUIDString: String) -> Service? {
+		guard let servs = core.services else {
+			return nil
+		}
+		for serv in servs {
+			if serv.uuid.uuidString == serviceUUIDString {
+				return serv
+			}
+		}
+		return nil
+	}
+
 	/// 根据UUID字符串获取对应的服务
 	public func serviceWith(UUIDString: String) -> CBService? {
 
@@ -145,4 +158,21 @@ extension Peripheral {
 		return nil
 	}
 	
+}
+
+// MARK: -
+extension Service {
+
+	/// get characteristic object via subscript
+	subscript(characteristicUUIDString: String) -> Characteristic? {
+		guard let chars = characteristics else {
+			return nil
+		}
+		for char in chars {
+			if char.uuid.uuidString == characteristicUUIDString {
+				return char
+			}
+		}
+		return nil
+	}
 }

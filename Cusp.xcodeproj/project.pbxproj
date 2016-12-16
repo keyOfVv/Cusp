@@ -404,6 +404,7 @@
 					};
 					70AD570D1D8A8E59003042F4 = {
 						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = JQH3D93TFY;
 						ProvisioningStyle = Automatic;
 					};
 					70AD57161D8A8E59003042F4 = {
@@ -738,7 +739,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = JQH3D93TFY;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -758,6 +761,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = JQH3D93TFY;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
