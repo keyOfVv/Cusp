@@ -125,11 +125,10 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 extension Peripheral {
 	/**
 	Discover specific or all services of a peripheral.
-	发现从设备的部分或全部服务.
 
-	- parameter serviceUUIDs: an UUID array of services to be discovered, all services will be discovered if passed nil. 服务UUID数组, 传nil则扫描所有服务.
-	- parameter success:      a closure called when discovering succeed. 发现服务成功的闭包.
-	- parameter failure:      a closure called when discovering failed. 发现服务失败的闭包.
+	- parameter serviceUUIDs: an UUID array of services to be discovered, all services will be discovered if passed nil.
+	- parameter success:      a closure called when discovering succeed.
+	- parameter failure:      a closure called when discovering failed.
 	*/
 	public func discover(_ serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
@@ -162,13 +161,28 @@ extension Peripheral {
 	}
 
 	/**
-	Discover specific or all characteristics of a peripheral's specific service.
-	发现从设备某项服务的部分或全部特征.
+	Discover specific or all services of a peripheral.
 
-	- parameter characteristicUUIDs: an UUID array of characteristics to be discovered, all characteristics will be discovered if passed nil. 特征UUID数组, 传nil则扫描所有特征;
-	- parameter service:             a CBService object of which the characteristics to be discovered. 待发现特征的服务.
-	- parameter success:             a closure called when discovering succeed. 发现特征成功的闭包.
-	- parameter failure:             a closure called when discovering failed. 发现特征失败的闭包.
+	- parameter serviceUUIDs: an UUID string literal array of services to be discovered, pass nil for all services.
+	- parameter success:      a closure called when discovering succeed.
+	- parameter failure:      a closure called when discovering failed.
+	*/
+	public func discover(_ serviceUUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		var uuids: [UUID] = []
+		serviceUUIDStrings?.forEach({ (uuidString) in
+			let uuid = UUID(string: uuidString)
+			uuids.append(uuid)
+		})
+		discover(uuids.count > 0 ? uuids : nil, success: success, failure: failure)
+	}
+
+	/**
+	Discover specific or all characteristics of a peripheral's specific service.
+
+	- parameter characteristicUUIDs: an UUID array of characteristics to be discovered, all characteristics will be discovered if passed nil.
+	- parameter service:             a CBService object of which the characteristics to be discovered.
+	- parameter success:             a closure called when discovering succeed.
+	- parameter failure:             a closure called when discovering failed.
 	*/
 	public func discover(_ characteristicUUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
@@ -201,6 +215,23 @@ extension Peripheral {
 	}
 
 	/**
+	Discover specific or all characteristics of a peripheral's specific service.
+
+	- parameter characteristicUUIDs: an UUID string literal array of characteristics to be discovered, pass nil for all characteristics.
+	- parameter service:             a CBService object of which the characteristics to be discovered.
+	- parameter success:             a closure called when discovering succeed.
+	- parameter failure:             a closure called when discovering failed.
+	*/
+	public func discover(_ characteristicUUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		var uuids: [UUID] = []
+		characteristicUUIDStrings?.forEach({ (uuidString) in
+			let uuid = UUID(string: uuidString)
+			uuids.append(uuid)
+		})
+		discover(uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
+	}
+
+	/**
 	check if services of specific UUID(s) discovered already
 
 	- parameter uuids: an array of service UUID
@@ -209,7 +240,7 @@ extension Peripheral {
 	*/
 	func areServicesAvailable(uuids: [UUID]) -> Bool {
 		for uuid in uuids {
-			if let _ = core.serviceWith(UUIDString: uuid.uuidString) {
+			if let _ = self.serviceWith(UUIDString: uuid.uuidString) {
 				continue
 			}
 			return false
@@ -226,7 +257,7 @@ extension Peripheral {
 	*/
 	func areServicesAvailable(uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
-			if let _ = core.serviceWith(UUIDString: string) {
+			if let _ = self.serviceWith(UUIDString: string) {
 				continue
 			}
 			return false
@@ -243,7 +274,7 @@ extension Peripheral {
 	*/
 	func areCharacteristicsAvailable(uuids: [UUID]) -> Bool {
 		for uuid in uuids {
-			if let _ = core.characteristicWith(UUIDString: uuid.uuidString) {
+			if let _ = self.characteristicWith(UUIDString: uuid.uuidString) {
 				continue
 			}
 			return false
@@ -260,7 +291,7 @@ extension Peripheral {
 	*/
 	func areCharacteristicsAvailable(uuidStrings: [String]) -> Bool {
 		for string in uuidStrings {
-			if let _ = core.characteristicWith(UUIDString: string) {
+			if let _ = self.characteristicWith(UUIDString: string) {
 				continue
 			}
 			return false
