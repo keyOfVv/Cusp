@@ -92,8 +92,9 @@ Cusp.central.registerPeripheralClass(C2.self, forNamePattern: "MN581N_[A-Z0-9]{5
 
 If not, just use `Peripheral`. It's adequate.
 
-### Scan for BLE device
+### Scan
 ```swift
+/// scan for all peripherals
 Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
 
 	for advertisementInfo in advertisementInfoArray {
@@ -107,31 +108,57 @@ Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Vo
 })
 ```
 
-### Connect a BLE device
 ```swift
-Cusp.central.connect(peripheral, success: { (response) -> Void in
-
-	}, failure: { (error) -> Void in
-
+/// scan for peripheral of specific advertising UUID
+Cusp.central.scanForUUIDString(["1803"], completion: { (advertisementInfoArray) -> Void in
+	
+	// deal with advertisements ...
+	
 	}, abruption: { (error) -> Void in
 
 })
 ```
 
-### Discover service or characteristic
+### Connect
 ```swift
-peripheral.discover(serviceUUIDArray, success: { (response) -> Void in
+Cusp.central.connect(peripheral, success: { (response) -> Void in
 
+	// successfully connected ...
+	
+	}, failure: { (error) -> Void in
+	
+	// some issues occurred ...
+	
+	}, abruption: { (error) -> Void in
+
+	// an established connection abrupted due to some reasons (e.g., out of distance, BLE device out of battery, etc.) ...
+})
+```
+
+### Discover (service / characteristic)
+```swift
+/// discover service(s)
+peripheral.discover(["FF60"], success: { (response) -> Void in
+	
 	}, failure: { (error) -> Void in
 
 })
-
-peripheral.discover(characteristicUUIDArray, ofService: service, success: { (response) -> Void in
+/// discover characteristic(s)
+peripheral.discover(["FF61", "FF62"], ofService: peripheral["FF60"], success: { (response) -> Void in
 
 }, failure: { (error) -> Void in
 
 })
 
+```
+
+After discovering operations complete, you can get `Service` & `Characteristic` objects using subscription (Swift only):
+
+```swift
+let service = peripheral["FF60"]
+let charA = service["FF61"]
+let charB = service["FF62"]
+...
 ```
 
 ### Read or Write
@@ -150,7 +177,7 @@ peripheral.subscribe(characteristcNotify, success: { (response) -> Void in
 	}, failure: { (error) -> Void in
 
 	}, update: { (value) -> Void in
-
+	// any value updated via characteristcNotify will call update block...
 })
 ```
 
