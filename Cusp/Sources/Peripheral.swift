@@ -33,7 +33,7 @@ public enum PeripheralState : Int {
 @objc open class Peripheral: NSObject, CustomPeripheral {
 
 	/// a retained reference to CBPeripheral object, read-only
-	open fileprivate(set) var core: CBPeripheral {
+	public fileprivate(set) var core: CBPeripheral {
 		didSet {
 			core.delegate = self
 		}
@@ -43,22 +43,7 @@ public enum PeripheralState : Int {
 		self.core = core
 	}
 
-	// MARK: Computed Properties
-
-	/// name of peripheral
-	open var name: String? {
-		return core.name
-	}
-
-	/// state of peripheral
-	open var state: PeripheralState {
-		return PeripheralState(rawValue: core.state.rawValue) ?? .disconnected
-	}
-
-	/// uuid of peripheral
-	open var identifier: Foundation.UUID {
-		return core.identifier
-	}
+	// MARK: Stored Properties
 
 	/// operation concurrent queue for all operations including read, write, subscribe, unsubscribe, RSSI, etc.;
 	internal let operationQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
@@ -92,6 +77,23 @@ public enum PeripheralState : Int {
 
 	internal var subscriptions = Set<Subscription>()
 
+	// MARK: Computed Properties
+
+	/// name of peripheral
+	open var name: String? {
+		return core.name
+	}
+
+	/// state of peripheral
+	open var state: PeripheralState {
+		return PeripheralState(rawValue: core.state.rawValue) ?? .disconnected
+	}
+
+	/// uuid of peripheral
+	open var identifier: Foundation.UUID {
+		return core.identifier
+	}
+
 	open override var hash: Int {
 		return core.hashValue
 	}
@@ -114,10 +116,19 @@ extension Peripheral {
 	open override var description: String {
 		return core.description
 	}
+}
 
-	/// get service object via subscript
+// MARK: - Getter for services
+extension Peripheral {
+
+	/// services
+	public var services: [Service]? {
+		return core.services
+	}
+
+	/// get service object via subscription
 	public subscript(serviceUUIDString: String) -> Service? {
-		guard let servs = core.services else {
+		guard let servs = services else {
 			return nil
 		}
 		for serv in servs {
@@ -128,34 +139,9 @@ extension Peripheral {
 		return nil
 	}
 
-	/// 根据UUID字符串获取对应的服务
-	public func serviceWith(UUIDString: String) -> CBService? {
-
-		if let services = self.core.services {
-			for aService in services {
-				if (aService.uuid.uuidString == UUIDString) {
-					return aService
-				}
-			}
-		}
-		return nil
-	}
-
-	/// 根据UUID字符串获取对应的特征
-	public func characteristicWith(UUIDString: String) -> CBCharacteristic? {
-
-		if let services = self.core.services {
-			for aService in services {
-				if let characteristics = aService.characteristics {
-					for aCharacteristics in characteristics {
-						if (aCharacteristics.uuid.uuidString == UUIDString) {
-							return aCharacteristics
-						}
-					}
-				}
-			}
-		}
-		return nil
+	/// get service object
+	public func serviceWith(UUIDString: String) -> Service? {
+		return self[UUIDString]
 	}
 }
 
@@ -185,5 +171,10 @@ extension Service {
 			}
 		}
 		return nil
+	}
+
+	/// get characteristic object
+	public func characteristicWith(UUIDString: String) -> Characteristic? {
+		return self[UUIDString]
 	}
 }
