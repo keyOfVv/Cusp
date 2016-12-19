@@ -42,6 +42,9 @@ class ViewController: UIViewController {
 			per.getManufacturerNameString(completion: { (manufacturerName) in
 				print(manufacturerName)
 			})
+			per.getFirmwareRevisionString(completion: { (firmwareRevision) in
+				print(firmwareRevision)
+			})
 		}, failure: { (error) in
 			print(error)
 		}) { (error) in
