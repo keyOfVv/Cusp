@@ -272,15 +272,10 @@ extension Peripheral {
 
 	- returns: return true if every characteristic of specific UUID(s) discovered already, otherwise false
 	*/
-	func areCharacteristicsAvailable(uuids: [UUID]) -> Bool {
-		guard let services = self.services else {
-			return false
-		}
+	func areCharacteristicsAvailable(uuids: [UUID], forService service: Service) -> Bool {
 		for uuid in uuids {
-			for service in services {
-				if let _ = service[uuid.uuidString] {
-					continue
-				}
+			if let _ = service[uuid.uuidString] {
+				continue
 			}
 			return false
 		}
