@@ -73,12 +73,12 @@ extension Peripheral: CBPeripheralDelegate {
 			for req in self.characteristicDiscoveringRequests {
 				if let uuids = req.characteristicUUIDs {
 					// if so, check if all interested characteristics are discovered, otherwise return directly
-					if !self.areCharacteristicsAvailable(uuids: uuids) {
+					if !self.areCharacteristicsAvailable(uuids: uuids, forService: service) {
 						return
 					}
 				}
 			}
-			// 2. all interested characteristics are discovered, OR in case no characteristic UUID specified in req...
+			// 2. all interested characteristics are discovered, OR in case no characteristic UUID specified in char-discove-req...
 			for req in self.characteristicDiscoveringRequests {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
