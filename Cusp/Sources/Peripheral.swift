@@ -148,13 +148,44 @@ extension Peripheral {
 // MARK: - Device Information
 extension Peripheral {
 
-//	public func getManufacturerNameString(completion: (String?) -> Void) {
-//		discoverService(UUIDStrings: ["180A"], success: { (_) in
-//			
-//		}) { (error) in
-//			dog(error)
-//		}
-//	}
+	/**
+	get Manufacturer Name String (GATT-2A29) value;
+
+	- parameter completion: closure called after reading Manufacturer Name String completed, an nil string will be returned if there raised any error;
+	*/
+	public func getManufacturerNameString(completion: @escaping (String?) -> Void) {
+		guard state == PeripheralState.connected else {
+			dog("ERROR: Manufacturer Name String is available only after device is connected")
+			completion(nil); return
+		}
+		discoverService(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
+			guard let service = self[GATTService.DeviceInformation.rawValue] else {
+				dog("service \(GATTService.DeviceInformation.rawValue) not discovered")
+				completion(nil); return
+			}
+			self.discoverCharacteristic(UUIDStrings: [GATTCharacteristic.ManufacturerNameString.rawValue], ofService: service, success: { (resp) in
+				guard let char = service[GATTCharacteristic.ManufacturerNameString.rawValue] else {
+					dog("char \(GATTCharacteristic.ManufacturerNameString.rawValue) of service \(GATTService.DeviceInformation.rawValue) not discovered")
+					completion(nil); return
+				}
+				self.read(char, success: { (resp) in
+					guard let data = resp?.value else {
+						completion(nil); return
+					}
+					completion(String(data: data, encoding: String.Encoding.utf8))
+				}, failure: { (error) in
+					dog(error)
+					completion(nil)
+				})
+			}, failure: { (error) in
+				dog(error)
+				completion(nil)
+			})
+		}) { (error) in
+			dog(error)
+			completion(nil)
+		}
+	}
 }
 
 // MARK: -
