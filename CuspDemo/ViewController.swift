@@ -19,10 +19,14 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		Cusp.enableDebugLog(enabled: true)
 		Cusp.prepare { (available) in
 			Cusp.central.scanForUUIDString(nil, completion: { (ads) in
 				self.per = ads.first?.peripheral
+				print(ads)
+				if ads.count > 0 {
+					Cusp.central.stopScan()
+				}
 			}, abruption: { (error) in
 
 			})
@@ -34,22 +38,14 @@ class ViewController: UIViewController {
 			return
 		}
 		Cusp.central.connect(per, success: { (resp) in
-			per.discoverService(UUIDStrings: nil, success: { (resp) in
-				per.discoverCharacteristic(UUIDStrings: nil, ofService: per["180A"]!, success: { (resp) in
-					per["180A"]!.characteristics?.forEach({ (char) in
-						print(char.uuid.uuidString)
-						print(char)
-					})
-				}, failure: { (error) in
-
-				})
-			}, failure: { (error) in
-
+			print("connected")
+			per.getManufacturerNameString(completion: { (manufacturerName) in
+				print(manufacturerName)
 			})
 		}, failure: { (error) in
-
+			print(error)
 		}) { (error) in
-
+			print(error)
 		}
 	}
 }
