@@ -186,6 +186,45 @@ extension Peripheral {
 			completion(nil)
 		}
 	}
+
+	/**
+	get Firmware Revision String (GATT-2A26) value;
+
+	- parameter completion: closure called after reading Firmware Revision String completed, an nil string will be returned if there raised any error;
+	*/
+	public func getFirmwareRevisionString(completion: @escaping (String?) -> Void) {
+		guard state == PeripheralState.connected else {
+			dog("ERROR: Firmware Revision String is available only after device is connected")
+			completion(nil); return
+		}
+		discoverService(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
+			guard let service = self[GATTService.DeviceInformation.rawValue] else {
+				dog("service \(GATTService.DeviceInformation.rawValue) not discovered")
+				completion(nil); return
+			}
+			self.discoverCharacteristic(UUIDStrings: [GATTCharacteristic.FirmwareRevisionString.rawValue], ofService: service, success: { (resp) in
+				guard let char = service[GATTCharacteristic.FirmwareRevisionString.rawValue] else {
+					dog("char \(GATTCharacteristic.FirmwareRevisionString.rawValue) of service \(GATTService.DeviceInformation.rawValue) not discovered")
+					completion(nil); return
+				}
+				self.read(char, success: { (resp) in
+					guard let data = resp?.value else {
+						completion(nil); return
+					}
+					completion(String(data: data, encoding: String.Encoding.utf8))
+				}, failure: { (error) in
+					dog(error)
+					completion(nil)
+				})
+			}, failure: { (error) in
+				dog(error)
+				completion(nil)
+			})
+		}) { (error) in
+			dog(error)
+			completion(nil)
+		}
+	}
 }
 
 // MARK: -
