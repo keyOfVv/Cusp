@@ -232,7 +232,7 @@ extension Cusp: CBCentralManagerDelegate {
 	}
 }
 
-private extension Cusp {
+extension Cusp {
 
 	/**
 	Retrieve Peripheral object for specific core from discoveredPeripherals.
@@ -260,13 +260,13 @@ private extension Cusp {
 	- parameter RSSI:              RSSI
 	*/
 	func dealWithFoundPeripherals(_ peripheral: Peripheral, advertisementData: [String : Any], RSSI: NSNumber) {
-		self.availables.insert(peripheral)
+		availables.insert(peripheral)
 		dog("added peripheral in \(self.availables) of \(self)")
 		// 2. then forge an advertisement object...
 		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
 		let uuids = advInfo.advertisingUUIDs
 		// 3. finally, put it into Set "available" of scan req
-		for req in self.scanReqs {
+		for req in scanReqs {
 			if let adUuids = req.advertisingUUIDs {	// if specific req has intended advertising uuids...
 				if adUuids.overlapsWith(uuids) {	// and these intended advertising uuids overlaps with those that are advertising...
 					req.available.insert(advInfo)	// then put specific peripheral into Set "available"
@@ -279,7 +279,7 @@ private extension Cusp {
 	}
 
 	func coreCatched(_ core: CBPeripheral) -> Bool {
-		for p in self.availables {
+		for p in availables {
 			if p.core == core {
 				return true
 			}
