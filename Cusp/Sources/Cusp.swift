@@ -53,58 +53,49 @@ public class Cusp: NSObject {
 	}
 	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
-
+	/// intentedly left private
 	fileprivate override init() { super.init() }
-
-	/// main operation concurrent queue, operations (scan, connect, cancel-connect, disconnect) will be submitted to this Q
+	/// main operation concurrent queue, for all BLE-related operations (scan, connect, cancel-connect, disconnect)
     let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
-
-	/// request operation serial queue, operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect) will be submitted to this Q;
+	/// request operation serial queue, for all operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect)
     let reqQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_REQUEST_SERIAL, attributes: [])
-
-	/// session operation serial queue, operations (add/remove) on sessions (with peripheral) will be submitted to this Q;
+	/// session operation serial queue, for all operations (add/remove) on sessions (connected peripherals)
     let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
 
-	/// central avator, read only
+	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
 		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
 	/// BLE state
 	public var state: State {
-		return State(rawValue: self.centralManager.state.rawValue)!
+		return State(rawValue: centralManager.state.rawValue)!
 	}
 
-	// MARK: Requests
+	// MARK: Requests Collection
 
 	/// scan request set
-    internal var scanRequests          = Set<ScanRequest>()
-
+    var scanRequests = Set<ScanRequest>()
 	/// connect requests set
-    internal var connectRequests       = Set<ConnectRequest>()
-
+    var connectRequests = Set<ConnectRequest>()
 	/// cancel-connects set
-    internal var cancelConnectRequests = Set<CancelConnectRequest>()
-
+    var cancelConnectRequests = Set<CancelConnectRequest>()
 	/// disconnect requests set
-    internal var disconnectRequests    = Set<DisconnectRequest>()
+    var disconnectRequests = Set<DisconnectRequest>()
 
-	// MARK: Peripheral Sets
+	// MARK: Peripheral Collection
 
 	/// discovered peripherals ever after scanning
-    internal var availables = Set<Peripheral>()
-
+    var availables = Set<Peripheral>()
 	/// session of connected peripheral
-    internal var sessions              = Set<PeripheralSession>()
-
+    var sessions = Set<PeripheralSession>()
 	/// registered custom classes
-	internal var customClasses		   = [(String, AnyClass)]()
+	var customClasses = [(String, AnyClass)]()
 
 	/// a boolean value indicates whether Cusp is connected with any peripheral
-	open var isConnectedWithAnyPeripheral: Bool {
+	public var isConnectedWithAnyPeripheral: Bool {
 		return !sessions.isEmpty
 	}
-
 	/// a boolean value indicates whether Cusp is scanning;
 	public internal(set) var isScanning: Bool = false
 
