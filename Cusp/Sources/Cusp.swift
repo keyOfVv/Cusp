@@ -39,6 +39,8 @@ private let CUSP_CENTRAL_Q_REQUEST_SERIAL  = "com.keyang.cusp.central_Q_request_
 /// session operation serial queue identifier
 private let CUSP_CENTRAL_Q_SESSION_SERIAL  = "com.keyang.cusp.central_Q_session_serial"
 
+private let CUSP_BACKGROUND_TASK_NAME  = "com.keyang.cusp.backgroundTask"
+
 // MARK: - Definition
 
 /// Bluetooth Low Energy library in swift
@@ -106,6 +108,8 @@ public class Cusp: NSObject {
 	}
 	/// a boolean value indicates whether Cusp is scanning;
 	public internal(set) var isScanning: Bool = false
+
+	var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
 
 	public class func enableDebugLog(enabled: Bool) {
 		self.showsDebugLog = enabled
@@ -264,7 +268,30 @@ extension Cusp {
 	}
 }
 
+// MARK: - Background task
+extension Cusp {
 
+	/**
+	Execute operations while application is in background mode;
+	IMPORTANT: 
+	- This method MUST be called in AppDelegate's -applicationDidEnterBackground(_ application: UIApplication) method, otherwise task won't be executed at all;
+	- `UIBackgroundModes` key MUST contain `bluetooth-central` value in file `Info.plist`;
+	- If perform scanning in background, adverisingUUID array MUST NOT be nil or empty;
+	
+	- parameter withApplication: an UIApplication object;
+	- parameter task: a closure containing codes executed while app is in background mode;
+
+	*/
+	public func executeBackgroundTask(withApplication app: UIApplication, task: (() -> Void)?) {
+		backgroundTaskID = app.beginBackgroundTask(withName: CUSP_BACKGROUND_TASK_NAME) {
+			app.endBackgroundTask(self.backgroundTaskID)
+			self.backgroundTaskID = UIBackgroundTaskInvalid
+		}
+		DispatchQueue.global().async {
+			task?()
+		}
+	}
+}
 
 
 
