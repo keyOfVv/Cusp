@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import CoreBluetooth
 
 // MARK: - CBCentralManagerDelegate
@@ -32,7 +31,7 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter RSSI:              an NSNumber object representing the signal strength of discovered peripheral
 	*/
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-		self.mainQ.async { () -> Void in
+		mainQ.async { () -> Void in
 			// 0. check if any custom peripheral class registered
 			if !self.customClasses.isEmpty {
 				// custom peripheral class exists
@@ -76,7 +75,7 @@ extension Cusp: CBCentralManagerDelegate {
 	*/
 	public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
 		dog("CONNECTED: \(peripheral)")
-		self.mainQ.async { () -> Void in
+		mainQ.async { () -> Void in
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
 			for req in self.connectReqs {
@@ -121,7 +120,7 @@ extension Cusp: CBCentralManagerDelegate {
 	*/
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		dog("FAILED: \(peripheral)")
-		self.mainQ.async { () -> Void in
+		mainQ.async { () -> Void in
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
 			for req in self.connectReqs {
@@ -156,7 +155,7 @@ extension Cusp: CBCentralManagerDelegate {
 	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
 		dog("DISCONNECTED: \(peripheral)")
 		dog("\(error)")
-		self.mainQ.async { () -> Void in
+		mainQ.async { () -> Void in
 			if let errorInfo = error {
 				// abnormal disconnection, find out specific Peripheral and session
 				if let p = self.peripheralFor(peripheral) {
