@@ -5,13 +5,8 @@
 //  Created by keyang on 10/21/15.
 //  Copyright © 2015 com.keyang. All rights reserved.
 //
-/*
- *
- *
- */
 
 import Foundation
-
 import CoreBluetooth
 
 // MARK: - Constants
@@ -25,61 +20,58 @@ private var onceToken = Int()
 	init(core: CBPeripheral)
 }
 
-// MARK: Notifications
+// MARK: - Notifications
 
 /// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
 @available(*, deprecated, message: "use Notification.Name.CuspStateDidChange")
 public let CuspStateDidChangeNotification = "CuspStateDidChangeNotification"
 
-// MARK: -
 extension Notification.Name {
 	public static let CuspStateDidChange: Notification.Name = Notification.Name("CuspStateDidChangeNotification")
 }
 
-// MARK: Constants
+// MARK: - Constants
 
 /// main operation queue identifier
 private let CUSP_CENTRAL_Q_MAIN_CONCURRENT = "com.keyang.cusp.central_Q_main_concurrent"
-
 /// request operation serial queue identifier
 private let CUSP_CENTRAL_Q_REQUEST_SERIAL  = "com.keyang.cusp.central_Q_request_serial"
-
 /// session operation serial queue identifier
 private let CUSP_CENTRAL_Q_SESSION_SERIAL  = "com.keyang.cusp.central_Q_session_serial"
 
+// MARK: - Definition
+
 /// Bluetooth Low Energy library in swift
-open class Cusp: NSObject {
+public class Cusp: NSObject {
 
 	/// Singleton
-	open class var central: Cusp {
+	public class var central: Cusp {
 		struct Static {
 			static let instance: Cusp = Cusp()
 		}
 		return Static.instance
 	}
-
+	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
 
-	fileprivate override init() {
-		super.init()
-	}
+	fileprivate override init() { super.init() }
 
 	/// main operation concurrent queue, operations (scan, connect, cancel-connect, disconnect) will be submitted to this Q
-    internal let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
+    let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
 
 	/// request operation serial queue, operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect) will be submitted to this Q;
-    internal let reqQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_REQUEST_SERIAL, attributes: [])
+    let reqQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_REQUEST_SERIAL, attributes: [])
 
 	/// session operation serial queue, operations (add/remove) on sessions (with peripheral) will be submitted to this Q;
-    internal let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
+    let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
 
 	/// central avator, read only
-	open fileprivate(set) lazy var centralManager: CentralManager = {
+	fileprivate(set) lazy var centralManager: CentralManager = {
 		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
 	}()
 
 	/// BLE state
-	open var state: State {
+	public var state: State {
 		return State(rawValue: self.centralManager.state.rawValue)!
 	}
 
