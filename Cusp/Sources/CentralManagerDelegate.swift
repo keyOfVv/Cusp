@@ -161,7 +161,7 @@ extension Cusp: CBCentralManagerDelegate {
 				// abnormal disconnection, find out specific Peripheral and session
 				if let p = self.peripheralFor(peripheral) {
 					p.subscriptions.removeAll()	// remove all subscriptions
-					if let session = self.sessionFor(p) {
+					if let session = self[p] {
 						DispatchQueue.main.async(execute: { () -> Void in
 							// call abruption closure
 							session.abruption?(CuspError.unknown)
@@ -197,7 +197,7 @@ extension Cusp: CBCentralManagerDelegate {
 						self.disconnectReqs.remove(req)
 					})
 					if let p = self.peripheralFor(peripheral) {
-						if let session = self.sessionFor(p) {
+						if let session = self[p] {
 							self.sesQ.async(execute: { () -> Void in
 								// remove the disconnected session
 								self.sessions.remove(session)

@@ -122,7 +122,6 @@ public extension Cusp {
 				completion?(self.isBLEAvailable())
 			})
 		})
-		return
 	}
 
 	/**
@@ -154,6 +153,7 @@ public extension Cusp {
 	/**
 	clear all
 	*/
+	@available(*, deprecated, message: "this method does nothing currently")
 	public func clear() {
 //		dispatch_async(reqQ) { () -> Void in
 //			self.sessions.removeAll()
@@ -168,14 +168,14 @@ public extension Cusp {
 
 // MARK: - Availability Check
 
-internal extension Cusp {
+extension Cusp {
 
 	/**
 	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
 
 	- returns: A NSError object or nil.
 	*/
-	internal func assertAvailability() -> CuspError? {
+	func assertAvailability() -> CuspError? {
 		switch self.state {
 		case .poweredOff:
 			return CuspError.poweredOff
@@ -204,7 +204,8 @@ extension Cusp {
 
 	- returns: PeripheralSession object or nil if doesn't exist
 	*/
-	internal func sessionFor(_ peripheral: Peripheral?) -> PeripheralSession? {
+	@available(*, deprecated, message: "user subscription instead")
+	func sessionFor(_ peripheral: Peripheral?) -> PeripheralSession? {
 		// return nil if peripheral is nil
 		if peripheral == nil { return nil }
 
@@ -214,6 +215,28 @@ extension Cusp {
 			for session in self.sessions {
 				if session.peripheral == peripheral {
 					tgtSession = session
+					break
+				}
+			}
+		}
+		return tgtSession
+	}
+
+	/**
+	Retrieve session for specific peripheral.
+	Note: there is no connected-peripheral array in Cusp, each connected peripheral will be wrapped in PeripheralSession object and stored in property "sessions".
+	*/
+	subscript(peripheral: Peripheral?) -> PeripheralSession? {
+		// return nil if peripheral is nil
+		guard let p = peripheral else {
+			return nil
+		}
+		// session retrieval operation shall be performed in sesQ to prevent race condition
+		var tgtSession: PeripheralSession?
+		sesQ.sync { 
+			for s in sessions {
+				if s.peripheral == p {
+					tgtSession = s
 					break
 				}
 			}
