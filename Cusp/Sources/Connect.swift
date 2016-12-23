@@ -50,7 +50,6 @@ internal class ConnectRequest: CentralOperationRequest {
 	}
 }
 
-
 // MARK: Connect
 
 public extension Cusp {
@@ -59,11 +58,12 @@ public extension Cusp {
 	connect a peripheral
 
 	- parameter peripheral: a CBPeripheral instance to be connected.
+	- parameter options:	CBConnectPeripheralOptionNotifyOnConnectionKey, CBConnectPeripheralOptionNotifyOnDisconnectionKey, CBConnectPeripheralOptionNotifyOnNotificationKey;
 	- parameter success:    a closure called when connection established.
 	- parameter failure:    a closure called when connecting attempt failed or timed-out.
 	- parameter abruption:  a closure called when connection broken-down.
 	*/
-	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?,options:[String:Any]?) {
+	public func connect(_ peripheral: Peripheral, options:[String:Any]? = nil, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
