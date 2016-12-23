@@ -110,31 +110,19 @@ public class Cusp: NSObject {
 public extension Cusp {
 
 	/**
-	Prepare BLE module, this method shall be called once before any BLE operation.
-	*/
-	@available(*, unavailable, message: "use -prepare(_:) instead")
-	public class func prepare() {
-		if !self.isBLEAvailable() {
-			print("BLE is currently unavailable")
-		}
-	}
-
-	/**
 	check BLE availability, one shall always call this method before any BLE operation
 
 	- parameter completion: a block after completed preparing
 	*/
 	public class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
 		// since checking ble status needs little
-//		dispatch_once(&onceToken) {
-			_ = self.isBLEAvailable()
-			Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
-				DispatchQueue.main.async(execute: { 
-					completion?(self.isBLEAvailable())
-				})
+		_ = self.isBLEAvailable()
+		Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
+			DispatchQueue.main.async(execute: {
+				completion?(self.isBLEAvailable())
 			})
-			return
-//		}
+		})
+		return
 	}
 
 	/**
