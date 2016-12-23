@@ -75,13 +75,13 @@ public class Cusp: NSObject {
 	// MARK: Requests Collection
 
 	/// scan request set
-    var scanRequests = Set<ScanRequest>()
+    var scanReqs = Set<ScanRequest>()
 	/// connect requests set
-    var connectRequests = Set<ConnectRequest>()
+    var connectReqs = Set<ConnectRequest>()
 	/// cancel-connects set
-    var cancelConnectRequests = Set<CancelConnectRequest>()
+    var cancelConnectReqs = Set<CancelConnectRequest>()
 	/// disconnect requests set
-    var disconnectRequests = Set<DisconnectRequest>()
+    var disconnectReqs = Set<DisconnectRequest>()
 
 	// MARK: Peripheral Collection
 

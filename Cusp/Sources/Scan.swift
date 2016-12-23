@@ -175,7 +175,7 @@ public extension Cusp {
 		self.isScanning = false
 		self.centralManager.stopScan()
 		self.reqQ.async { () -> Void in
-			self.scanRequests.removeAll()
+			self.scanReqs.removeAll()
 		}
 //		dog("CUSP STOPPED SCAN")
 	}
@@ -192,7 +192,7 @@ extension Cusp {
 	*/
 	fileprivate func checkIn(_ request: ScanRequest) -> Void {
 		self.reqQ.async { () -> Void in
-			self.scanRequests.insert(request)
+			self.scanReqs.insert(request)
 		}
 
 		let targets = self.unionTarget()
@@ -206,10 +206,10 @@ extension Cusp {
 	*/
 	fileprivate func checkOut(_ request: ScanRequest) -> Void {
 		self.reqQ.async { () -> Void in
-			self.scanRequests.remove(request)
+			self.scanReqs.remove(request)
 		}
 
-		if self.scanRequests.isEmpty {
+		if self.scanReqs.isEmpty {
 			self.centralManager.stopScan()
 		} else {
 			let targets = self.unionTarget()
@@ -224,7 +224,7 @@ extension Cusp {
 	*/
 	fileprivate func unionTarget() -> [UUID]? {
 		var targets = Set<UUID>()
-		for req in self.scanRequests {
+		for req in self.scanReqs {
 			// if any request targets at overall scan...
 			if let uuids = req.advertisingUUIDs {
 				targets.formUnion(uuids)

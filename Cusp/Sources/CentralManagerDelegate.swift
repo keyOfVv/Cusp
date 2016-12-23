@@ -79,7 +79,7 @@ extension Cusp: CBCentralManagerDelegate {
 		self.mainQ.async { () -> Void in
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
-			for req in self.connectRequests {
+			for req in self.connectReqs {
 				if req.peripheral.core == peripheral {
 					tgtReq = req
 					break
@@ -106,7 +106,7 @@ extension Cusp: CBCentralManagerDelegate {
 
 				self.reqQ.async(execute: { () -> Void in
 					// 5. remove req
-					self.connectRequests.remove(req)
+					self.connectReqs.remove(req)
 				})
 			}
 		}
@@ -124,7 +124,7 @@ extension Cusp: CBCentralManagerDelegate {
 		self.mainQ.async { () -> Void in
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
-			for req in self.connectRequests {
+			for req in self.connectReqs {
 				if req.peripheral == peripheral {
 					tgtReq = req
 					break
@@ -140,7 +140,7 @@ extension Cusp: CBCentralManagerDelegate {
 				})
 				self.reqQ.async(execute: { () -> Void in
 					// 3. remove req
-					self.connectRequests.remove(req)
+					self.connectReqs.remove(req)
 				})
 			}
 		}
@@ -181,7 +181,7 @@ extension Cusp: CBCentralManagerDelegate {
 				// disconnect-active
 				// find out specific disconnect req
 				var tgtDisReq: DisconnectRequest?
-				for req in self.disconnectRequests {
+				for req in self.disconnectReqs {
 					if req.peripheral.core == peripheral {
 						tgtDisReq = req
 						break
@@ -194,7 +194,7 @@ extension Cusp: CBCentralManagerDelegate {
 					})
 					self.reqQ.async(execute: { () -> Void in
 						// remove req
-						self.disconnectRequests.remove(req)
+						self.disconnectReqs.remove(req)
 					})
 					if let p = self.peripheralFor(peripheral) {
 						if let session = self.sessionFor(p) {
@@ -210,7 +210,7 @@ extension Cusp: CBCentralManagerDelegate {
 				// cancel-pending
 				// find out specific cancel-connect req
 				var tgtKclReq: CancelConnectRequest?
-				for req in self.cancelConnectRequests {
+				for req in self.cancelConnectReqs {
 					if req.peripheral.core == peripheral {
 						tgtKclReq = req
 						break
@@ -223,7 +223,7 @@ extension Cusp: CBCentralManagerDelegate {
 					})
 					self.reqQ.async(execute: { () -> Void in
 						// remove req
-						self.cancelConnectRequests.remove(req)
+						self.cancelConnectReqs.remove(req)
 					})
 					return
 				}
@@ -266,7 +266,7 @@ private extension Cusp {
 		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
 		let uuids = advInfo.advertisingUUIDs
 		// 3. finally, put it into Set "available" of scan req
-		for req in self.scanRequests {
+		for req in self.scanReqs {
 			if let adUuids = req.advertisingUUIDs {	// if specific req has intended advertising uuids...
 				if adUuids.overlapsWith(uuids) {	// and these intended advertising uuids overlaps with those that are advertising...
 					req.available.insert(advInfo)	// then put specific peripheral into Set "available"

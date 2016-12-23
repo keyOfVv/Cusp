@@ -74,7 +74,7 @@ public extension Cusp {
 		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set
 		self.reqQ.async { () -> Void in
-			self.connectRequests.insert(req)
+			self.connectReqs.insert(req)
 		}
 		// start connecting
 		self.centralManager.connect(peripheral.core, options: nil)
@@ -89,7 +89,7 @@ public extension Cusp {
 				self.cancelConnection(peripheral, completion: nil)
 				// remove req
 				self.reqQ.async(execute: { () -> Void in
-					self.connectRequests.remove(req)
+					self.connectReqs.remove(req)
 				})
 			}
 		}
