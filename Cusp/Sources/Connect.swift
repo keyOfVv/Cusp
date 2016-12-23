@@ -63,7 +63,7 @@ public extension Cusp {
 	- parameter failure:    a closure called when connecting attempt failed or timed-out.
 	- parameter abruption:  a closure called when connection broken-down.
 	*/
-	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
+	public func connect(_ peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?,options:[String:Any]?) {
 
 		// 0. check if ble is available
 		if let error = self.assertAvailability() {
@@ -77,7 +77,7 @@ public extension Cusp {
 			self.connectReqs.insert(req)
 		}
 		// start connecting
-		self.centralManager.connect(peripheral.core, options: nil)
+		self.centralManager.connect(peripheral.core, options: options)
 
 		// deal with timeout
 		self.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
