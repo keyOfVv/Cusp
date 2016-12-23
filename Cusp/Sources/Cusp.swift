@@ -62,9 +62,17 @@ public class Cusp: NSObject {
 	/// session operation serial queue, for all operations (add/remove) on sessions (connected peripherals)
     let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
 
+	static fileprivate(set) var centralRestoreIdentifier: String?
+
 	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
-		return CentralManager(delegate: self, queue: self.mainQ, options: nil)
+		if let id = Cusp.centralRestoreIdentifier {
+			dog("central initialized with restore id=\(id)")
+			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: id])
+		} else {
+			dog("central initialized without restore id")
+			return CentralManager(delegate: self, queue: self.mainQ, options: nil)
+		}
 	}()
 
 	/// BLE state
@@ -110,11 +118,22 @@ public class Cusp: NSObject {
 public extension Cusp {
 
 	/**
-	check BLE availability, one shall always call this method before any BLE operation
+	Prepare Cusp before any BLE operation
 
 	- parameter completion: a block after completed preparing
 	*/
 	public class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
+		prepare(withCentralIdentifier: nil, completion: completion)
+	}
+
+	/**
+	Prepare Cusp before any BLE operation, specify UID for central in case restoring BLE related objects is necessary
+
+	- parameter restoreIdentifier: a UID for restoring central after app back into foreground
+	- parameter completion:		   a block after completed preparing
+	*/
+	public class func prepare(withCentralIdentifier restoreIdentifier: String?, completion: ((_ available: Bool) -> Void)?) {
+		centralRestoreIdentifier = restoreIdentifier
 		// since checking ble status needs little
 		_ = self.isBLEAvailable()
 		Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
