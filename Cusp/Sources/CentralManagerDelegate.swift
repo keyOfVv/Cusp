@@ -229,6 +229,10 @@ extension Cusp: CBCentralManagerDelegate {
 			}
 		}
 	}
+
+	public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
+		dog(dict)
+	}
 }
 
 extension Cusp {

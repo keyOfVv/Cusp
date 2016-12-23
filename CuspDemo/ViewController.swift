@@ -19,8 +19,7 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		Cusp.enableDebugLog(enabled: true)
-		Cusp.prepare { (available) in
+		Cusp.prepare(withCentralIdentifier: "com.keyang.cusp.demo") { (available) in
 			Cusp.central.scanForUUIDString(nil, completion: { (ads) in
 				self.per = ads.first?.peripheral
 				print(ads)

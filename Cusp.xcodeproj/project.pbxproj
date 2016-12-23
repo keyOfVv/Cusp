@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70283F6A1E0D0C1B00EC3615 /* DemoMainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */; };
+		70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */; };
 		702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */; };
 		702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7E01DF935EF00CC52A8 /* ViewController.swift */; };
 		702DE7E41DF935EF00CC52A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E21DF935EF00CC52A8 /* Main.storyboard */; };
@@ -82,6 +84,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMainTableViewController.swift; sourceTree = "<group>"; };
+		70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundScanViewController.swift; sourceTree = "<group>"; };
 		702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuspDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		702DE7E01DF935EF00CC52A8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +166,8 @@
 			children = (
 				702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */,
 				702DE7E01DF935EF00CC52A8 /* ViewController.swift */,
+				70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */,
+				70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */,
 				702DE7E21DF935EF00CC52A8 /* Main.storyboard */,
 				702DE7E51DF935EF00CC52A8 /* Assets.xcassets */,
 				702DE7E71DF935EF00CC52A8 /* LaunchScreen.storyboard */,
@@ -422,7 +428,7 @@
 				TargetAttributes = {
 					702DE7DB1DF935EF00CC52A8 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = JQH3D93TFY;
+						DevelopmentTeam = 6YEF27W7HZ;
 						ProvisioningStyle = Automatic;
 					};
 					702DE7EE1DF935EF00CC52A8 = {
@@ -517,6 +523,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70283F6A1E0D0C1B00EC3615 /* DemoMainTableViewController.swift in Sources */,
+				70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */,
 				702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */,
 				702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */,
 			);
@@ -613,7 +621,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = JQH3D93TFY;
+				DEVELOPMENT_TEAM = 6YEF27W7HZ;
 				INFOPLIST_FILE = CuspDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -628,7 +636,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = JQH3D93TFY;
+				DEVELOPMENT_TEAM = 6YEF27W7HZ;
 				INFOPLIST_FILE = CuspDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
