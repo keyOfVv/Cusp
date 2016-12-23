@@ -45,3 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+func dog(_ anyObject: Any?, function: String = #function, file: String = #file, line: Int = #line) {
+
+	let dateFormat		  = DateFormatter()
+	dateFormat.dateFormat = "HH:mm:ss.SSS"
+
+	let date = NSDate()
+	let time = dateFormat.string(from: date as Date)
+
+	print("[\(time)] <\((file as NSString).lastPathComponent)> \(function) LINE(\(line)): \(anyObject)")
+}
+
+
