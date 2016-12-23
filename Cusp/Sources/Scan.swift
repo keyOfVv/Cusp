@@ -91,7 +91,7 @@ internal class ScanRequest: NSObject {
 	}
 
 	deinit {
-//		dog("\(self.classForCoder) deinited")
+		dog("\(self.classForCoder) deinited")
 	}
 }
 
@@ -127,6 +127,9 @@ public extension Cusp {
 				let infoSet = req.available.sorted(by: { (a, b) -> Bool in
 					return a.peripheral.core.identifier.uuidString <= b.peripheral.core.identifier.uuidString
 				})
+				// scan completed, check request out
+				self.checkOut(req)
+				// callback
 				if self.isScanning {
 					dog(infoSet)
 					req.completion?(infoSet)
@@ -134,8 +137,6 @@ public extension Cusp {
 					req.abruption?(CuspError.scanningCanceled)
 				}
 			})
-			// scan completed, check request out
-			self.checkOut(req)
 		})
 	}
 
@@ -191,12 +192,12 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	fileprivate func checkIn(_ request: ScanRequest) -> Void {
-		self.reqQ.async { () -> Void in
+		reqQ.sync { () -> Void in
 			self.scanReqs.insert(request)
+			let targets = self.unionTarget()
+			self.centralManager.scanForPeripherals(withServices: targets,
+			                                       options: nil)
 		}
-
-		let targets = self.unionTarget()
-		self.centralManager.scanForPeripherals(withServices: targets, options: nil)
 	}
 
 	/**
@@ -205,15 +206,15 @@ extension Cusp {
 	- parameter request: an instance of ScanRequest
 	*/
 	fileprivate func checkOut(_ request: ScanRequest) -> Void {
-		self.reqQ.async { () -> Void in
+		reqQ.sync { () -> Void in
 			self.scanReqs.remove(request)
-		}
-
-		if self.scanReqs.isEmpty {
-			self.centralManager.stopScan()
-		} else {
-			let targets = self.unionTarget()
-			self.centralManager.scanForPeripherals(withServices: targets, options: nil)
+			if scanReqs.isEmpty {
+				self.centralManager.stopScan()
+			} else {
+				let targets = self.unionTarget()
+				self.centralManager.scanForPeripherals(withServices: targets,
+				                                       options: nil)
+			}
 		}
 	}
 
