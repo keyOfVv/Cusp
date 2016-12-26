@@ -333,22 +333,28 @@ func uuidStringsFrom(uuids: [UUID]?) -> [String]? {
 	guard let uuids = uuids else {
 		return nil
 	}
+	guard uuids.count > 0 else {
+		return nil
+	}
 	var uuidStrings = [String]()
 	uuids.forEach { (uuid) in
 		uuidStrings.append(uuid.uuidString)
 	}
-	return uuidStrings.count > 0 ? uuidStrings : nil
+	return uuidStrings
 }
 
 func uuidsFrom(uuidStrings: [String]?) -> [UUID]? {
 	guard let uuidStrings = uuidStrings else {
 		return nil
 	}
+	guard uuidStrings.count > 0 else {
+		return nil
+	}
 	var uuids = [UUID]()
 	uuidStrings.forEach { (uuidString) in
 		uuids.append(UUID(string: uuidString))
 	}
-	return uuids.count > 0 ? uuids : nil
+	return uuids
 }
 
 
