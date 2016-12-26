@@ -158,12 +158,12 @@ extension Peripheral {
 			dog("ERROR: Manufacturer Name String is available only after device is connected")
 			completion(nil); return
 		}
-		discoverService(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
+		discoverServices(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
 			guard let service = self[GATTService.DeviceInformation.rawValue] else {
 				dog("service \(GATTService.DeviceInformation.rawValue) not discovered")
 				completion(nil); return
 			}
-			self.discoverCharacteristic(UUIDStrings: [GATTCharacteristic.ManufacturerNameString.rawValue], ofService: service, success: { (resp) in
+			self.discoverCharacteristics(UUIDStrings: [GATTCharacteristic.ManufacturerNameString.rawValue], ofService: service, success: { (resp) in
 				guard let char = service[GATTCharacteristic.ManufacturerNameString.rawValue] else {
 					dog("char \(GATTCharacteristic.ManufacturerNameString.rawValue) of service \(GATTService.DeviceInformation.rawValue) not discovered")
 					completion(nil); return
@@ -197,12 +197,12 @@ extension Peripheral {
 			dog("ERROR: Firmware Revision String is available only after device is connected")
 			completion(nil); return
 		}
-		discoverService(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
+		discoverServices(UUIDStrings: [GATTService.DeviceInformation.rawValue], success: { (resp) in
 			guard let service = self[GATTService.DeviceInformation.rawValue] else {
 				dog("service \(GATTService.DeviceInformation.rawValue) not discovered")
 				completion(nil); return
 			}
-			self.discoverCharacteristic(UUIDStrings: [GATTCharacteristic.FirmwareRevisionString.rawValue], ofService: service, success: { (resp) in
+			self.discoverCharacteristics(UUIDStrings: [GATTCharacteristic.FirmwareRevisionString.rawValue], ofService: service, success: { (resp) in
 				guard let char = service[GATTCharacteristic.FirmwareRevisionString.rawValue] else {
 					dog("char \(GATTCharacteristic.FirmwareRevisionString.rawValue) of service \(GATTService.DeviceInformation.rawValue) not discovered")
 					completion(nil); return

@@ -130,7 +130,7 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discoverService(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverServices(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -167,13 +167,13 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discoverService(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverServices(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		var uuids: [UUID] = []
 		UUIDStrings?.forEach({ (uuidString) in
 			let uuid = UUID(string: uuidString)
 			uuids.append(uuid)
 		})
-		discoverService(UUIDs: uuids.count > 0 ? uuids : nil, success: success, failure: failure)
+		discoverServices(UUIDs: uuids.count > 0 ? uuids : nil, success: success, failure: failure)
 	}
 
 	/**
@@ -184,7 +184,7 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discoverCharacteristic(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverCharacteristics(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -222,13 +222,13 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discoverCharacteristic(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	public func discoverCharacteristics(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		var uuids: [UUID] = []
 		UUIDStrings?.forEach({ (uuidString) in
 			let uuid = UUID(string: uuidString)
 			uuids.append(uuid)
 		})
-		discoverCharacteristic(UUIDs: uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
+		discoverCharacteristics(UUIDs: uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
 	}
 
 	/**
