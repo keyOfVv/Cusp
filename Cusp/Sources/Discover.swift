@@ -168,12 +168,7 @@ extension Peripheral {
 	- parameter failure:      a closure called when discovering failed.
 	*/
 	public func discoverServices(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
-		var uuids: [UUID] = []
-		UUIDStrings?.forEach({ (uuidString) in
-			let uuid = UUID(string: uuidString)
-			uuids.append(uuid)
-		})
-		discoverServices(UUIDs: uuids.count > 0 ? uuids : nil, success: success, failure: failure)
+		discoverServices(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), success: success, failure: failure)
 	}
 
 	/**
@@ -223,12 +218,7 @@ extension Peripheral {
 	- parameter failure:             a closure called when discovering failed.
 	*/
 	public func discoverCharacteristics(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
-		var uuids: [UUID] = []
-		UUIDStrings?.forEach({ (uuidString) in
-			let uuid = UUID(string: uuidString)
-			uuids.append(uuid)
-		})
-		discoverCharacteristics(UUIDs: uuids.count > 0 ? uuids : nil, ofService: service, success: success, failure: failure)
+		discoverCharacteristics(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), ofService: service, success: success, failure: failure)
 	}
 
 	/**
