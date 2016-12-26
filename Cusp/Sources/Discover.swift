@@ -153,14 +153,14 @@ extension Peripheral {
 			self.core.discoverServices(UUIDs)
 		})
 		// 4. set time out closure
-		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
+		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { [weak self] () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more...
-				self.requestQ.async(execute: { () -> Void in
-					self.serviceDiscoveringRequests.remove(req)
+				self?.requestQ.async(execute: { () -> Void in
+					_ = self?.serviceDiscoveringRequests.remove(req)
 				})
 			}
 		}
@@ -202,14 +202,14 @@ extension Peripheral {
 			self.core.discoverCharacteristics(UUIDs, for: service)
 		})
 		// 4. set time out closure
-		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
+		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { [weak self] () -> Void in
 			if req.timedOut {
 				DispatchQueue.main.async(execute: { () -> Void in
 					failure?(CuspError.timedOut)
 				})
 				// since req timed out, don't need it any more
-				self.requestQ.async(execute: { () -> Void in
-					self.characteristicDiscoveringRequests.remove(req)
+				self?.requestQ.async(execute: { () -> Void in
+					_ = self?.characteristicDiscoveringRequests.remove(req)
 				})
 			}
 		}
