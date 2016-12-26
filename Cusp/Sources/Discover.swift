@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // MARK: ServiceDiscoveringRequest
 
 /// request of discovering services of specific peripheral
@@ -136,8 +135,15 @@ extension Peripheral {
 			failure?(error)
 			return
 		}
+		// 0.5 filter out discovered service(s)
+		let undisServs = getUndiscoveredServicesFrom(uuids: UUIDs)
+		if let uuids = undisServs, uuids.count == 0 {
+			// all desired service(s) are discovered already, call back
+			success?(nil)
+			return
+		}
 		// 1. create request object
-		let req = ServiceDiscoveringRequest(serviceUUIDs: UUIDs, success: success, failure: failure)
+		let req = ServiceDiscoveringRequest(serviceUUIDs: undisServs, success: success, failure: failure)
 		// 2. add request
 		requestQ.async(execute: { () -> Void in
 			self.serviceDiscoveringRequests.insert(req)
@@ -311,7 +317,7 @@ extension Peripheral {
 				undisUUID.append(uuid)
 			}
 		}
-		return undisUUID.count > 0 ? undisUUID : nil
+		return undisUUID
 	}
 
 //	func getUndiscoveredServicesFrom(uuidStrings: [String]?) -> [UUID]? {
