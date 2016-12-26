@@ -304,6 +304,25 @@ extension Peripheral {
 		return true
 	}
 
+	func getUndiscoveredServicesFrom(uuids: [UUID]?) -> [UUID]? {
+		guard let uuids = uuids else {
+			return nil
+		}
+		guard uuids.count > 0 else {
+			return nil
+		}
+		var undisUUID = [UUID]()
+		uuids.forEach { (uuid) in
+			if let _ = self[uuid.uuidString] {
+				// discovered
+				return
+			} else {
+				// undiscovered
+				undisUUID.append(uuid)
+			}
+		}
+		return undisUUID.count > 0 ? undisUUID : nil
+	}
 }
 
 
