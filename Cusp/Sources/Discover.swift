@@ -191,8 +191,15 @@ extension Peripheral {
 			failure?(error)
 			return
 		}
+		// 0.5 filter out discovered characteristic(s)
+		let undisChars = service.getUndiscoveredCharsFrom(uuids: UUIDs)
+		if let uuids = undisChars, uuids.count == 0 {
+			// all desired characteristic(s) are discovered already, call back
+			success?(nil)
+			return
+		}
 		// 1. create request object
-		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: UUIDs, service: service, success: success, failure: failure)
+		let req = CharacteristicDiscoveringRequest(characteristicUUIDs: undisChars, service: service, success: success, failure: failure)
 		// 2. add request
 		requestQ.async(execute: { () -> Void in
 			self.characteristicDiscoveringRequests.insert(req)
@@ -319,10 +326,31 @@ extension Peripheral {
 		}
 		return undisUUID
 	}
+}
 
-//	func getUndiscoveredServicesFrom(uuidStrings: [String]?) -> [UUID]? {
-//
-//	}
+// MARK: -
+extension Service {
+
+	func getUndiscoveredCharsFrom(uuids: [UUID]?) -> [UUID]? {
+		guard let uuids = uuids else {
+			return nil
+		}
+		guard uuids.count > 0 else {
+			return nil
+		}
+		var undisUUID = [UUID]()
+		uuids.forEach { (uuid) in
+			if let _ = self[uuid.uuidString] {
+				// discovered
+				return
+			} else {
+				// undiscovered
+				undisUUID.append(uuid)
+			}
+		}
+		return undisUUID
+	}
+
 }
 
 func uuidStringsFrom(uuids: [UUID]?) -> [String]? {
