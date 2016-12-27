@@ -41,6 +41,8 @@ private let CUSP_CENTRAL_Q_SESSION_SERIAL  = "com.keyang.cusp.central_Q_session_
 
 private let CUSP_BACKGROUND_TASK_NAME  = "com.keyang.cusp.backgroundTask"
 
+private let CUSP_CENTRAL_IDENTIFIER_DEFAULT = "com.keyang.cusp.central.identifier.default"
+
 // MARK: - Definition
 
 /// Bluetooth Low Energy library in swift
@@ -127,7 +129,7 @@ public extension Cusp {
 	- parameter completion: a block after completed preparing
 	*/
 	public class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
-		prepare(withCentralIdentifier: nil, completion: completion)
+		prepare(withCentralIdentifier: CUSP_CENTRAL_IDENTIFIER_DEFAULT, completion: completion)
 	}
 
 	/**
