@@ -132,7 +132,7 @@ extension Peripheral {
 			return nil
 		}
 		for serv in servs {
-			if serv.uuid.uuidString == serviceUUIDString {
+			if serv.uuid.uuidString == serviceUUIDString.uppercased() {
 				return serv
 			}
 		}
@@ -236,7 +236,7 @@ extension Service {
 			return nil
 		}
 		for char in chars {
-			if char.uuid.uuidString == characteristicUUIDString {
+			if char.uuid.uuidString == characteristicUUIDString.uppercased() {
 				return char
 			}
 		}

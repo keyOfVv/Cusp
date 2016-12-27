@@ -348,7 +348,7 @@ func uuidsFrom(uuidStrings: [String]?) -> [UUID]? {
 	}
 	var uuids = [UUID]()
 	uuidStrings.forEach { (uuidString) in
-		uuids.append(UUID(string: uuidString))
+		uuids.append(UUID(string: uuidString.uppercased()))
 	}
 	return uuids
 }
