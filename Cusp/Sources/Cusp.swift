@@ -167,10 +167,11 @@ public extension Cusp {
 	- parameter aClass: custom peripheral class subclassing Peripheral
 	- parameter p:      regex pattern for name
 	*/
+	@available(*, deprecated, message: "")
 	public func registerPeripheralClass<T: CustomPeripheral>(_ aClass: T.Type, forNamePattern p: String) {
 		self.customClasses.append((p, aClass))
 	}
-
+	@available(*, deprecated, message: "")
 	public func registerPeripheralClass_oc(_ aClass: AnyClass, forNamePattern p: String) {
 		self.customClasses.append((p, aClass))
 	}
