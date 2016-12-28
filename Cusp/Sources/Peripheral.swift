@@ -60,6 +60,9 @@ public enum PeripheralState : Int {
 	/// requests of characteristic discovering
 	internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
 
+	/// requests of descriptor discovering
+	var descriptorDiscoveringRequests = Set<DescriptorDiscoveringRequest>()
+
 	/// requests of read characteristic value
 	internal var readRequests                      = Set<ReadRequest>()
 

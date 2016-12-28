@@ -82,7 +82,7 @@ extension Peripheral: CBPeripheralDelegate {
 			for req in self.characteristicDiscoveringRequests {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
-					if let errorInfo = error {
+					if let _ = error {
 						// discovering failed
 						req.failure?(CuspError.unknown)
 					} else {
@@ -95,6 +95,35 @@ extension Peripheral: CBPeripheralDelegate {
 					self.characteristicDiscoveringRequests.remove(req)
 				})
 			}
+		}
+	}
+
+	public func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?) {
+		operationQ.sync {
+			var targetReq: DescriptorDiscoveringRequest?
+			for req in self.descriptorDiscoveringRequests {
+				if req.characteristic == characteristic {
+					targetReq = req
+					break
+				}
+			}
+			guard let req = targetReq else { return }
+			req.timedOut = false
+			DispatchQueue.main.async(execute: { () -> Void in
+				if let _ = error {
+					// discovering failed
+					dog("discover descriptor for char \(characteristic.uuid.uuidString) failed due to \(error)")
+					req.failure?(CuspError.unknown)
+				} else {
+					// discovering succeed, call success closure of each req
+					dog("discover descriptor for char \(characteristic.uuid.uuidString) succeed")
+					req.success?(nil)
+				}
+			})
+			// 4. once the success/failure closure called, remove the req
+			self.requestQ.async(execute: { () -> Void in
+				self.descriptorDiscoveringRequests.remove(req)
+			})
 		}
 	}
 

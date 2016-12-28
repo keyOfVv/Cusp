@@ -11,12 +11,12 @@ import Foundation
 // MARK: ServiceDiscoveringRequest
 
 /// request of discovering services of specific peripheral
-internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
+class ServiceDiscoveringRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// UUID array of service to be discovered
-	internal var serviceUUIDs: [UUID]?
+	var serviceUUIDs: [UUID]?
 
 	// MARK: Initializer
 
@@ -34,7 +34,7 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 
 	- returns: a ServiceDiscoveringRequest instance
 	*/
-	internal convenience init(serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	convenience init(serviceUUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.serviceUUIDs = serviceUUIDs
         self.success      = success
@@ -60,15 +60,15 @@ internal class ServiceDiscoveringRequest: PeripheralOperationRequest {
 // MARK: CharacteristicDiscoveringRequest
 
 /// request of discovering characteristics of specific service
-internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
+class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// UUID array of characteristic to be discovered
-	internal var characteristicUUIDs: [UUID]?
+	var characteristicUUIDs: [UUID]?
 
 	/// a CBService object of which the characteristics to be discovered
-	internal var service: Service!
+	var service: Service!
 
 	// MARK: Initializer
 
@@ -87,7 +87,7 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 
 	- returns: a CharacteristicDiscoveringRequest instance
 	*/
-	internal convenience init(characteristicUUIDs: [UUID]?, service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	convenience init(characteristicUUIDs: [UUID]?, service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.characteristicUUIDs = characteristicUUIDs
         self.service             = service
@@ -95,7 +95,7 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
         self.failure             = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		// if characteristic uuid array is nil, return hash value of service uuid
 		guard let uuids = characteristicUUIDs else {
 			return service.uuid.hashValue
@@ -112,11 +112,24 @@ internal class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 		return string.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? CharacteristicDiscoveringRequest {
 			return hashValue == other.hashValue
 		}
 		return false
+	}
+}
+
+class DescriptorDiscoveringRequest: PeripheralOperationRequest {
+	var characteristic: Characteristic!
+	fileprivate override init() {
+		super.init()
+	}
+	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		self.init()
+		self.characteristic = characteristic
+		self.success        = success
+		self.failure        = failure
 	}
 }
 
@@ -232,6 +245,36 @@ extension Peripheral {
 	*/
 	public func discoverCharacteristics(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		discoverCharacteristics(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), ofService: service, success: success, failure: failure)
+	}
+
+	public func discoverDescriptors(forCharacteristic char: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = Cusp.central.assertAvailability() {
+			failure?(error)
+			return
+		}
+		// 1. create request object
+		let req = DescriptorDiscoveringRequest(characteristic: char, success: success, failure: failure)
+		// 2. add request
+		requestQ.async(execute: { () -> Void in
+			self.descriptorDiscoveringRequests.insert(req)
+		})
+		// 3. start discovering characteristic(s)
+		operationQ.async(execute: { () -> Void in
+			self.core.discoverDescriptors(for: char)
+		})
+		// 4. set time out closure
+		operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { [weak self] () -> Void in
+			if req.timedOut {
+				DispatchQueue.main.async(execute: { () -> Void in
+					failure?(CuspError.timedOut)
+				})
+				// since req timed out, don't need it any more
+				self?.requestQ.async(execute: { () -> Void in
+					_ = self?.descriptorDiscoveringRequests.remove(req)
+				})
+			}
+		}
 	}
 
 	/**
