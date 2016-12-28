@@ -22,7 +22,7 @@ class DemoMainTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -38,6 +38,8 @@ class DemoMainTableViewController: UITableViewController {
 			cell.textLabel?.text = "GATT demo"
 		case 1:
 			cell.textLabel?.text = "Background Scanning"
+		case 2:
+			cell.textLabel?.text = "Descriptor Operations"
 		default:
 			break
 		}
@@ -52,6 +54,9 @@ class DemoMainTableViewController: UITableViewController {
 		case 1:
 			let bgScanVC = BackgroundScanViewController()
 			navigationController?.pushViewController(bgScanVC, animated: true)
+		case 2:
+			let descVC = DescriptorViewController()
+			navigationController?.pushViewController(descVC, animated: true)
 		default:
 			break
 		}
