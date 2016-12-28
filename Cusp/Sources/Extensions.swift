@@ -15,6 +15,7 @@ public typealias CentralManager = CBCentralManager
 //public typealias Peripheral     = CBPeripheral
 public typealias Service        = CBService
 public typealias Characteristic = CBCharacteristic
+public typealias Descriptor = CBDescriptor
 public typealias CharacteristicWriteType = CBCharacteristicWriteType
 
 
@@ -125,6 +126,21 @@ extension CBCharacteristic {
 
 	open override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? CBCharacteristic {
+			return self.hashValue == other.hashValue
+		}
+		return false
+	}
+}
+
+// MARK: - CBDescriptor
+extension CBDescriptor {
+
+	open override var hash: Int {
+		return uuid.hashValue
+	}
+
+	open override func isEqual(_ object: Any?) -> Bool {
+		if let other = object as? CBDescriptor {
 			return self.hashValue == other.hashValue
 		}
 		return false

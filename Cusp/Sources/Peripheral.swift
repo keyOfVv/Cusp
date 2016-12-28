@@ -66,8 +66,14 @@ public enum PeripheralState : Int {
 	/// requests of read characteristic value
 	internal var readRequests                      = Set<ReadRequest>()
 
+	/// requests of read characteristic value
+	var readDescriptorRequests            = Set<ReadDescriptorRequest>()
+
 	/// requests of write characteristic value
 	internal var writeRequests                     = Set<WriteRequest>()
+
+	/// requests of write characteristic value
+	internal var writeDescriptorRequests                     = Set<WriteDescriptorRequest>()
 
 	/// requests of subscribe characteristic value
 	internal var subscribeRequests                 = Set<SubscribeRequest>()

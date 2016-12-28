@@ -52,6 +52,49 @@ internal class ReadRequest: PeripheralOperationRequest {
 	}
 }
 
+/// request of read value from specific characteristic
+internal class ReadDescriptorRequest: PeripheralOperationRequest {
+
+	// MARK: Stored Properties
+
+	/// a CBCharacteristic object of which the value to be read
+	internal var descriptor: Descriptor!
+
+	// MARK: Initializer
+
+	fileprivate override init() {
+		super.init()
+	}
+
+	/**
+	Convenient initializer
+
+	- parameter characteristic: a CBCharacteristic object of which the value to be read
+	- parameter success:        a closure called when value read successfully
+	- parameter failure:        a closure called when value read failed
+
+	- returns: a ReadRequest instance
+	*/
+	convenience init(descriptor: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		self.init()
+		self.descriptor = descriptor
+		self.success        = success
+		self.failure        = failure
+	}
+
+	override internal var hash: Int {
+		let string = descriptor.uuid.uuidString
+		return string.hashValue
+	}
+
+	override internal func isEqual(_ object: Any?) -> Bool {
+		if let other = object as? ReadDescriptorRequest {
+			return self.hashValue == other.hashValue
+		}
+		return false
+	}
+}
+
 // MARK: Communicate
 extension Peripheral {
 
@@ -88,6 +131,37 @@ extension Peripheral {
 				// since req timed out, don't need it any more
 				self.requestQ.async(execute: { () -> Void in
 					self.readRequests.remove(req)
+				})
+			}
+		}
+	}
+
+	public func readDescriptor(_ desc: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = Cusp.central.assertAvailability() {
+			failure?(error)
+			return
+		}
+		// 1. create req object
+		let req = ReadDescriptorRequest(descriptor: desc, success: success, failure: failure)
+		// 2. add read req
+		requestQ.async(execute: { () -> Void in
+			self.readDescriptorRequests.insert(req)
+		})
+		// 3. start reading value
+		operationQ.async(execute: { () -> Void in
+			self.core.readValue(for: desc)
+			dog("begin read value for descriptor \(desc.uuid.uuidString)")
+		})
+		// 4. set time out closure
+		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
+			if req.timedOut {
+				DispatchQueue.main.async(execute: { () -> Void in
+					failure?(CuspError.timedOut)
+				})
+				// since req timed out, don't need it any more
+				self.requestQ.async(execute: { () -> Void in
+					self.readDescriptorRequests.remove(req)
 				})
 			}
 		}

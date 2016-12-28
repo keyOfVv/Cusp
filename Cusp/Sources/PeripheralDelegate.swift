@@ -112,17 +112,75 @@ extension Peripheral: CBPeripheralDelegate {
 			DispatchQueue.main.async(execute: { () -> Void in
 				if let _ = error {
 					// discovering failed
-					dog("discover descriptor for char \(characteristic.uuid.uuidString) failed due to \(error)")
+					dog("discover descriptors for char \(characteristic.uuid.uuidString) failed due to \(error)")
 					req.failure?(CuspError.unknown)
 				} else {
 					// discovering succeed, call success closure of each req
-					dog("discover descriptor for char \(characteristic.uuid.uuidString) succeed")
+					dog("discover descriptors for char \(characteristic.uuid.uuidString) succeed")
 					req.success?(nil)
 				}
 			})
 			// 4. once the success/failure closure called, remove the req
 			self.requestQ.async(execute: { () -> Void in
 				self.descriptorDiscoveringRequests.remove(req)
+			})
+		}
+	}
+
+	public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
+		operationQ.sync {
+			var targetReq: ReadDescriptorRequest?
+			for req in self.readDescriptorRequests {
+				if req.descriptor == descriptor {
+					targetReq = req
+					break
+				}
+			}
+			guard let req = targetReq else { return }
+			req.timedOut = false
+			DispatchQueue.main.async(execute: { () -> Void in
+				if let _ = error {
+					// read failed
+					dog("read descriptor \(descriptor.uuid.uuidString) failed due to \(error)")
+					req.failure?(CuspError.unknown)
+				} else {
+					// read succeed, call success closure of each req
+					dog("read descriptor \(descriptor.uuid.uuidString) succeed")
+					req.success?(nil)
+				}
+			})
+			// 4. once the success/failure closure called, remove the req
+			self.requestQ.async(execute: { () -> Void in
+				self.readDescriptorRequests.remove(req)
+			})
+		}
+	}
+
+	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?) {
+		operationQ.sync {
+			var targetReq: WriteDescriptorRequest?
+			for req in self.writeDescriptorRequests {
+				if req.descriptor == descriptor {
+					targetReq = req
+					break
+				}
+			}
+			guard let req = targetReq else { return }
+			req.timedOut = false
+			DispatchQueue.main.async(execute: { () -> Void in
+				if let _ = error {
+					// read failed
+					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) failed due to \(error)")
+					req.failure?(CuspError.unknown)
+				} else {
+					// read succeed, call success closure of each req
+					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) succeed")
+					req.success?(nil)
+				}
+			})
+			// 4. once the success/failure closure called, remove the req
+			self.requestQ.async(execute: { () -> Void in
+				self.writeDescriptorRequests.remove(req)
 			})
 		}
 	}

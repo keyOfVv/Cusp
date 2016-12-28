@@ -58,6 +58,55 @@ internal class WriteRequest: PeripheralOperationRequest {
 	}
 }
 
+/// request of write value to specific characteristic
+internal class WriteDescriptorRequest: PeripheralOperationRequest {
+
+	// MARK: Stored Properties
+
+	/// a NSData object to be written
+	internal var data: Data?
+
+	/// a CBCharacteristic object on which the data will be written
+	internal var descriptor: Descriptor!
+
+	// MARK: Initializer
+
+	fileprivate override init() {
+		super.init()
+	}
+
+	/**
+	Convenient initializer
+
+	- parameter data:           a NSData object to be written
+	- parameter characteristic: a CBCharacteristic object on which the data will be written
+	- parameter peripheral:     a CBPeripheral object to which the characteristic belongs
+	- parameter success:        a closure called when value written successfully
+	- parameter failure:        a closure called when value written failed
+
+	- returns: a WriteRequest instance
+	*/
+	convenience init(data: Data?, descriptor: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		self.init()
+		self.data           = data
+		self.descriptor		= descriptor
+		self.success        = success
+		self.failure        = failure
+	}
+
+	override internal var hash: Int {
+		let string = descriptor.uuid.uuidString
+		return string.hashValue
+	}
+
+	override internal func isEqual(_ object: Any?) -> Bool {
+		if let other = object as? WriteDescriptorRequest {
+			return self.hashValue == other.hashValue
+		}
+		return false
+	}
+}
+
 // MARK: Communicate
 extension Peripheral {
 
@@ -94,6 +143,33 @@ extension Peripheral {
 				})
 				self.requestQ.async(execute: { () -> Void in
 					self.writeRequests.remove(req)
+				})
+			}
+		}
+	}
+
+	public func write(_ data: Data, forDescriptor desc: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		// 0. check if ble is available
+		if let error = Cusp.central.assertAvailability() {
+			failure?(error)
+			return
+		}
+
+		let req = WriteDescriptorRequest(data: data, descriptor: desc, success: success, failure: failure)
+		self.requestQ.async(execute: { () -> Void in
+			self.writeDescriptorRequests.insert(req)
+		})
+		self.operationQ.async(execute: { () -> Void in
+			self.core.writeValue(data, for: desc)
+			dog("begin write value for descriptor \(desc.uuid.uuidString)")
+		})
+		self.operationQ.asyncAfter(deadline: DispatchTime.now() + Double(req.timeoutPeriod)) { () -> Void in
+			if req.timedOut {
+				DispatchQueue.main.async(execute: { () -> Void in
+					failure?(CuspError.timedOut)
+				})
+				self.requestQ.async(execute: { () -> Void in
+					self.writeDescriptorRequests.remove(req)
 				})
 			}
 		}
