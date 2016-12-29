@@ -174,6 +174,42 @@ extension Peripheral {
 			}
 		}
 	}
+
+	public func write(_ d: Data, toCharacteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		if let service = self[s] {
+			if let char = service[c] {
+				write(d, forCharacteristic: char, success: success, failure: failure)
+			} else {
+				discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+					if let char = service[c] {
+						self.write(d, forCharacteristic: char, success: success, failure: failure)
+					} else {
+						failure?(CuspError.characteristicNotFound)
+					}
+				}, failure: { (err) in
+					failure?(err)
+				})
+			}
+		} else {
+			discoverServices(UUIDStrings: [s], success: { (resp) in
+				if let service = self[s] {
+					self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+						if let char = service[c] {
+							self.write(d, forCharacteristic: char, success: success, failure: failure)
+						} else {
+							failure?(CuspError.characteristicNotFound)
+						}
+					}, failure: { (err) in
+						failure?(err)
+					})
+				} else {
+					failure?(CuspError.serviceNotFound)
+				}
+			}, failure: { (err) in
+				failure?(err)
+			})
+		}
+	}
 }
 
 func dog(_ anyObject: Any?, function: String = #function, file: String = #file, line: Int = #line) {

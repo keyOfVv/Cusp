@@ -100,6 +100,42 @@ extension Peripheral {
 			}
 		}
 	}
+
+	public func subscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+		if let service = self[s] {
+			if let char = service[c] {
+				subscribe(char, success: success, failure: failure, update: update)
+			} else {
+				discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+					if let char = service[c] {
+						self.subscribe(char, success: success, failure: failure, update: update)
+					} else {
+						failure?(CuspError.characteristicNotFound)
+					}
+				}, failure: { (error) in
+					failure?(error)
+				})
+			}
+		} else {
+			discoverServices(UUIDStrings: [s], success: { (resp) in
+				if let service = self[s] {
+					self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+						if let char = service[c] {
+							self.subscribe(char, success: success, failure: failure, update: update)
+						} else {
+							failure?(CuspError.characteristicNotFound)
+						}
+					}, failure: { (error) in
+						failure?(error)
+					})
+				} else {
+					failure?(CuspError.serviceNotFound)
+				}
+			}, failure: { (error) in
+				failure?(error)
+			})
+		}
+	}
 }
 
 
