@@ -7,8 +7,6 @@ Cusp is a light-weight BLE framework build on CoreBluetooth, featured multi-thre
 
 Same as bluetooth communication, there are two main roles in Cusp: Central and Peripheral. Central is in charge of scan, connect and disconnect ble devices, while the latter performs substantial communication tasks including service/characteristic discovering, read/write value, subscribe/unsubscribe value updates, etc. Upon all these operations, Cusp provides methods in a friendly call-back way. So, just focus on your UI/UE and data tranfer, leave the dirty ble work to Cusp.
 
-Cusp is still an infant in cradle, your advices means its growth, and I am looking forward to any contributor, sincerely.
-
 ## Usage
 
 ### Preparation
@@ -19,12 +17,13 @@ import Cusp
 Cusp.prepare { (available) in
 			print(available ? "BLE IS AVAILABLE" : "BLE IS NOT AVAILABLE")
 			if available {
-				Cusp.central.registerPeripheralClass(C2.self, forNamePattern: "MN581N_[A-Z0-9]{5}")
+				// do something
 			}
 		}
 ```
 
 ### Scan
+
 ```swift
 /// scan for all peripherals
 Cusp.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
@@ -52,6 +51,7 @@ Cusp.central.scanForUUIDString(["1803"], completion: { (advertisementInfoArray) 
 ```
 
 ### Connect
+
 ```swift
 Cusp.central.connect(peripheral, success: { (response) -> Void in
 
@@ -67,53 +67,34 @@ Cusp.central.connect(peripheral, success: { (response) -> Void in
 })
 ```
 
-### Discover (service / characteristic)
-```swift
-/// discover service(s)
-peripheral.discover(["FF60"], success: { (response) -> Void in
-	
-	}, failure: { (error) -> Void in
+### Discovering service/characteristic?... NEVER
 
-})
-/// discover characteristic(s)
-peripheral.discover(["FF61", "FF62"], ofService: peripheral["FF60"], success: { (response) -> Void in
-
-}, failure: { (error) -> Void in
-
-})
-
-```
-
-After discovering operations complete, you can get `Service` & `Characteristic` objects using subscription (Swift only):
-
-```swift
-let service = peripheral["FF60"]
-let charA = service["FF61"]
-let charB = service["FF62"]
-...
-```
-
-For Objective-C, using:
-
-```OC
-Service *service = [peripheral serviceWith: @"FF60"];
-Characteristic *charA = [peripheral characteristicWith: @"FF61"];
-Characteristic *charB = [peripheral characteristicWith: @"FF62"];
-...
-```
+After successfully connected with peripheral, we can perform read/write/subscribe/unsubscribe operations directly without discovering related service(s)/characteristic(s) first, all these discovering work are undertook internally. 
 
 ### Read or Write
+ 
 ```swift
-peripheral.write(data, forCharacteristic: characteristic, success: { (response) -> Void in
+peripheral.write(data, toCharacteristic: "FE61", ofService: "FE60", success: { (response) -> Void in
 
 	}, failure: { (error) -> Void in
 
 })
+
+```
+
+```swift
+peripheral.read(characteristic: "FE62", ofService: "FE60", success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+})
+
 ```
 
 ### Subscribe or Unsubscribe
+
 ```swift
-peripheral.subscribe(characteristcNotify, success: { (response) -> Void in
+peripheral.subscribe(characteristic: "FE63", ofService: "FE60", success: { (response) -> Void in
 
 	}, failure: { (error) -> Void in
 
@@ -121,12 +102,19 @@ peripheral.subscribe(characteristcNotify, success: { (response) -> Void in
 	// any value updated via characteristcNotify will call update block...
 })
 ```
+```swift
+peripheral.unsubscribe(characteristic: "FE63", ofService: "FE60", success: { (response) -> Void in
+
+	}, failure: { (error) -> Void in
+
+})
+```
 
 ## Requirements
 
 * iOS 8.0+
-* swift 3.0
-* Xcode 8.0
+* swift 3.0+
+* Xcode 8.0+
 
 ## Installation
 
@@ -150,7 +138,7 @@ Run `carthage update` to build the framework and drag the built Cusp.framework (
 
 ## Author
 
-Ke Yang, ofveravi@gmail.com, [keyOfVv@Twitter](https://twitter.com/keyOfVv)
+Ke Yang, ofveravi@gmail.com, [keyOfVv@Twitter](https://twitter.com/keyOfVv), QQ:71028 (for my Chinese fellows).
 
 ## License
 
