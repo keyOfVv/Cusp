@@ -135,7 +135,7 @@ extension Cusp: CBCentralManagerDelegate {
 				DispatchQueue.main.async(execute: { () -> Void in
 					dog("connect peripheral <\(peripheral.name)> failed due to \(error)")
 					// 2. call failure closure
-					req.failure?(CuspError.unknown)
+					req.failure?(CuspError(err: error))
 				})
 				self.reqQ.async(execute: { () -> Void in
 					// 3. remove req
@@ -162,7 +162,7 @@ extension Cusp: CBCentralManagerDelegate {
 					if let session = self[p] {
 						DispatchQueue.main.async(execute: { () -> Void in
 							// call abruption closure
-							session.abruption?(CuspError.unknown)
+							session.abruption?(CuspError(err: errorInfo))
 							})
 						self.sesQ.async(execute: { () -> Void in
 							// remove the abrupted session

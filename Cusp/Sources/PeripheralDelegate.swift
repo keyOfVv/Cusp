@@ -43,7 +43,7 @@ extension Peripheral: CBPeripheralDelegate {
 					if let errorInfo = error {
 						dog("dicovering services failed due to \(errorInfo)")
 						// discovering failed
-						req.failure?(CuspError.unknown)
+						req.failure?(CuspError(err: errorInfo))
 					} else {
 						// discovering succeed, call success closure of each req
 						req.success?(nil)
@@ -86,7 +86,7 @@ extension Peripheral: CBPeripheralDelegate {
 					if let errorInfo = error {
 						dog("discovering characteristics of service <\(service.uuid.uuidString)> failed due to \(errorInfo)")
 						// discovering failed
-						req.failure?(CuspError.unknown)
+						req.failure?(CuspError(err: errorInfo))
 					} else {
 						// discovering succeed, call success closure of each req
 						req.success?(nil)
@@ -115,7 +115,7 @@ extension Peripheral: CBPeripheralDelegate {
 				if let errorInfo = error {
 					// discovering failed
 					dog("discover descriptors for char \(characteristic.uuid.uuidString) failed due to \(errorInfo)")
-					req.failure?(CuspError.unknown)
+					req.failure?(CuspError(err: errorInfo))
 				} else {
 					// discovering succeed, call success closure of each req
 					dog("discover descriptors for char \(characteristic.uuid.uuidString) succeed")
@@ -144,7 +144,7 @@ extension Peripheral: CBPeripheralDelegate {
 				if let errorInfo = error {
 					// read failed
 					dog("read descriptor \(descriptor.uuid.uuidString) failed due to \(errorInfo)")
-					req.failure?(CuspError.unknown)
+					req.failure?(CuspError(err: errorInfo))
 				} else {
 					// read succeed, call success closure of each req
 					dog("read descriptor \(descriptor.uuid.uuidString) succeed")
@@ -173,7 +173,7 @@ extension Peripheral: CBPeripheralDelegate {
 				if let errorInfo = error {
 					// read failed
 					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) failed due to \(errorInfo)")
-					req.failure?(CuspError.unknown)
+					req.failure?(CuspError(err: errorInfo))
 				} else {
 					// read succeed, call success closure of each req
 					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) succeed")
@@ -232,7 +232,7 @@ extension Peripheral: CBPeripheralDelegate {
 							if let errorInfo = error {
 								dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 								// read value failed
-								req.failure?(CuspError.unknown)
+								req.failure?(CuspError(err: errorInfo))
 							} else {
 								// read value succeed
 								let resp = Response()
@@ -271,7 +271,7 @@ extension Peripheral: CBPeripheralDelegate {
 					if let errorInfo = error {
 						dog("write value for <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 						// write failed
-						req.failure?(CuspError.unknown)
+						req.failure?(CuspError(err: errorInfo))
 					} else {
 						// write succeed
 						req.success?(nil)
@@ -310,7 +310,7 @@ extension Peripheral: CBPeripheralDelegate {
 						if let errorInfo = error {
 							dog("subscribe char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 							// subscribe failed
-							req.failure?(CuspError.unknown)
+							req.failure?(CuspError(err: errorInfo))
 						} else {
 							// subscribe succeed
 							req.success?(nil)
@@ -340,7 +340,7 @@ extension Peripheral: CBPeripheralDelegate {
 						if let errorInfo = error {
 							dog("unsubscribe char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 							// unsubscribe failed
-							req.failure?(CuspError.unknown)
+							req.failure?(CuspError(err: errorInfo))
 						} else {
 							// unsubscribe succeed
 							req.success?(nil)
@@ -376,7 +376,7 @@ extension Peripheral: CBPeripheralDelegate {
 					if let errorInfo = error {
 						dog("read RSSI failed due to \(errorInfo)")
 						// read RSSI failed
-						req.failure?(CuspError.unknown)
+						req.failure?(CuspError(err: errorInfo))
 					} else {
 						// read RSSI succeed
 						let resp = Response()
