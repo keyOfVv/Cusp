@@ -41,6 +41,7 @@ extension Peripheral: CBPeripheralDelegate {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
+						dog("dicovering services failed due to \(errorInfo)")
 						// discovering failed
 						req.failure?(CuspError.unknown)
 					} else {
@@ -82,7 +83,8 @@ extension Peripheral: CBPeripheralDelegate {
 			for req in self.characteristicDiscoveringRequests {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
-					if let _ = error {
+					if let errorInfo = error {
+						dog("discovering characteristics of service <\(service.uuid.uuidString)> failed due to \(errorInfo)")
 						// discovering failed
 						req.failure?(CuspError.unknown)
 					} else {
@@ -110,9 +112,9 @@ extension Peripheral: CBPeripheralDelegate {
 			guard let req = targetReq else { return }
 			req.timedOut = false
 			DispatchQueue.main.async(execute: { () -> Void in
-				if let _ = error {
+				if let errorInfo = error {
 					// discovering failed
-					dog("discover descriptors for char \(characteristic.uuid.uuidString) failed due to \(error)")
+					dog("discover descriptors for char \(characteristic.uuid.uuidString) failed due to \(errorInfo)")
 					req.failure?(CuspError.unknown)
 				} else {
 					// discovering succeed, call success closure of each req
@@ -139,9 +141,9 @@ extension Peripheral: CBPeripheralDelegate {
 			guard let req = targetReq else { return }
 			req.timedOut = false
 			DispatchQueue.main.async(execute: { () -> Void in
-				if let _ = error {
+				if let errorInfo = error {
 					// read failed
-					dog("read descriptor \(descriptor.uuid.uuidString) failed due to \(error)")
+					dog("read descriptor \(descriptor.uuid.uuidString) failed due to \(errorInfo)")
 					req.failure?(CuspError.unknown)
 				} else {
 					// read succeed, call success closure of each req
@@ -168,9 +170,9 @@ extension Peripheral: CBPeripheralDelegate {
 			guard let req = targetReq else { return }
 			req.timedOut = false
 			DispatchQueue.main.async(execute: { () -> Void in
-				if let _ = error {
+				if let errorInfo = error {
 					// read failed
-					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) failed due to \(error)")
+					dog("write descriptor for descriptor \(descriptor.uuid.uuidString) failed due to \(errorInfo)")
 					req.failure?(CuspError.unknown)
 				} else {
 					// read succeed, call success closure of each req
@@ -206,7 +208,10 @@ extension Peripheral: CBPeripheralDelegate {
 					if sub.characteristic == characteristic {
 						// prepare to call update call back
 						DispatchQueue.main.async(execute: { () -> Void in
-							if error == nil {
+							if let errorInfo = error {
+								dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+								dog(errorInfo)
+							} else {
 								let resp = Response()
 								resp.value = characteristic.value	// wrap value
 								sub.update?(resp)
@@ -224,7 +229,8 @@ extension Peripheral: CBPeripheralDelegate {
 						DispatchQueue.main.async(execute: { () -> Void in
 							// disable timeout closure
 							req.timedOut = false
-							if let err = error {
+							if let errorInfo = error {
+								dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 								// read value failed
 								req.failure?(CuspError.unknown)
 							} else {
@@ -251,7 +257,6 @@ extension Peripheral: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a {@link writeValue:forCharacteristic:type:} call, when the <code>CBCharacteristicWriteWithResponse</code> type is used.
 	*/
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-
 		self.operationQ.async(execute: { () -> Void in
 			var tgtReq: WriteRequest?
 			for req in self.writeRequests {
@@ -263,7 +268,8 @@ extension Peripheral: CBPeripheralDelegate {
 			if let req = tgtReq {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
-					if let _ = error {
+					if let errorInfo = error {
+						dog("write value for <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 						// write failed
 						req.failure?(CuspError.unknown)
 					} else {
@@ -302,6 +308,7 @@ extension Peripheral: CBPeripheralDelegate {
 					req.timedOut = false
 					DispatchQueue.main.async(execute: { () -> Void in
 						if let errorInfo = error {
+							dog("subscribe char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 							// subscribe failed
 							req.failure?(CuspError.unknown)
 						} else {
@@ -331,6 +338,7 @@ extension Peripheral: CBPeripheralDelegate {
 					req.timedOut = false
 					DispatchQueue.main.async(execute: { () -> Void in
 						if let errorInfo = error {
+							dog("unsubscribe char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
 							// unsubscribe failed
 							req.failure?(CuspError.unknown)
 						} else {
@@ -366,6 +374,7 @@ extension Peripheral: CBPeripheralDelegate {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
 					if let errorInfo = error {
+						dog("read RSSI failed due to \(errorInfo)")
 						// read RSSI failed
 						req.failure?(CuspError.unknown)
 					} else {

@@ -119,7 +119,6 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter error:      error info
 	*/
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-		dog("FAILED: \(peripheral)")
 		mainQ.async { () -> Void in
 			// find the target connect request ...
 			var tgtReq: ConnectRequest?
@@ -134,6 +133,7 @@ extension Cusp: CBCentralManagerDelegate {
 				// 1. disable timeout call
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
+					dog("connect peripheral <\(peripheral.name)> failed due to \(error)")
 					// 2. call failure closure
 					req.failure?(CuspError.unknown)
 				})
@@ -153,10 +153,9 @@ extension Cusp: CBCentralManagerDelegate {
 	- parameter error:      error info
 	*/
 	public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-		dog("DISCONNECTED: \(peripheral)")
-		dog("\(error)")
 		mainQ.async { () -> Void in
 			if let errorInfo = error {
+				dog("connection to peripheral <\(peripheral.name)> broke down abnoramlly due to \(errorInfo)")
 				// abnormal disconnection, find out specific Peripheral and session
 				if let p = self.peripheralFor(peripheral) {
 					p.subscriptions.removeAll()	// remove all subscriptions
