@@ -263,7 +263,7 @@ extension Peripheral: CBPeripheralDelegate {
 			if let req = tgtReq {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
-					if let errorInfo = error {
+					if let _ = error {
 						// write failed
 						req.failure?(CuspError.unknown)
 					} else {
