@@ -17,4 +17,7 @@ public enum CuspError: Error {
 	case timedOut
 
 	case scanningCanceled
+
+	case serviceNotFound
+	case characteristicNotFound
 }
