@@ -92,6 +92,42 @@ extension Peripheral {
 			}
 		}
 	}
+
+	public func unsubscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		if let service = self[s] {
+			if let char = service[c] {
+				unsubscribe(char, success: success, failure: failure)
+			} else {
+				discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+					if let char = service[c] {
+						self.unsubscribe(char, success: success, failure: failure)
+					} else {
+						failure?(CuspError.characteristicNotFound)
+					}
+				}, failure: { (err) in
+					failure?(err)
+				})
+			}
+		} else {
+			discoverServices(UUIDStrings: [s], success: { (resp) in
+				if let service = self[s] {
+					self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+						if let char = service[c] {
+							self.unsubscribe(char, success: success, failure: failure)
+						} else {
+							failure?(CuspError.characteristicNotFound)
+						}
+					}, failure: { (err) in
+						failure?(err)
+					})
+				} else {
+					failure?(CuspError.serviceNotFound)
+				}
+			}, failure: { (err) in
+				failure?(err)
+			})
+		}
+	}
 }
 
 
