@@ -10,12 +10,12 @@ import Foundation
 
 
 /// request of read value from specific characteristic
-internal class ReadRequest: PeripheralOperationRequest {
+class ReadRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a CBCharacteristic object of which the value to be read
-	internal var characteristic: Characteristic!
+	var characteristic: Characteristic!
 
 	// MARK: Initializer
 
@@ -39,12 +39,12 @@ internal class ReadRequest: PeripheralOperationRequest {
 		self.failure        = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		let string = self.characteristic.uuid.uuidString
 		return string.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? ReadRequest {
 			return self.hashValue == other.hashValue
 		}
@@ -53,12 +53,12 @@ internal class ReadRequest: PeripheralOperationRequest {
 }
 
 /// request of read value from specific characteristic
-internal class ReadDescriptorRequest: PeripheralOperationRequest {
+class ReadDescriptorRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a CBCharacteristic object of which the value to be read
-	internal var descriptor: Descriptor!
+	var descriptor: Descriptor!
 
 	// MARK: Initializer
 
@@ -82,12 +82,12 @@ internal class ReadDescriptorRequest: PeripheralOperationRequest {
 		self.failure        = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		let string = descriptor.uuid.uuidString
 		return string.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? ReadDescriptorRequest {
 			return self.hashValue == other.hashValue
 		}

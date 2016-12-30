@@ -12,15 +12,15 @@ import Foundation
 // MARK: SubscribeRequest
 
 /// request of subscribe value update of specific characteristic
-internal class SubscribeRequest: PeripheralOperationRequest {
+class SubscribeRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a CBCharacteristic object of which the value update to be subscribed
-	internal var characteristic: Characteristic!
+	var characteristic: Characteristic!
 
 	/// a closure called when characteristic's value updated
-	internal var update: ((Response?) -> Void)?
+	var update: ((Response?) -> Void)?
 
 	// MARK: Initializer
 
@@ -39,7 +39,7 @@ internal class SubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a SubscribeRequest instance
 	*/
-	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success
@@ -47,11 +47,11 @@ internal class SubscribeRequest: PeripheralOperationRequest {
         self.update         = update
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return characteristic.uuid.uuidString.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? SubscribeRequest {
 			return self.hashValue == other.hashValue
 		}

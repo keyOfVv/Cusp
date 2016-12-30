@@ -9,15 +9,15 @@
 import Foundation
 
 /// request of cancelling an in-progress connecting attempt
-internal class CancelConnectRequest: NSObject {
+class CancelConnectRequest: NSObject {
 
 	// MARK: Stored Properties
 
 	/// a CBPeripheral instance to which the in-progress connecting attempt is to be cancelled
-	internal var peripheral: Peripheral!
+	var peripheral: Peripheral!
 
 	/// a closure called when connecting attempt cancelled
-	internal var completion: (() -> Void)?
+	var completion: (() -> Void)?
 
 	// MARK: Initializer
 
@@ -31,17 +31,17 @@ internal class CancelConnectRequest: NSObject {
 
 	- returns: a CancelConnectRequest instance
 	*/
-	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
+	convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return self.peripheral.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? CancelConnectRequest else { return false }
 		return self.hashValue == other.hashValue
 	}

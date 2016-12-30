@@ -13,7 +13,7 @@ import CoreBluetooth
 // MARK: RSSIRequest
 
 /// 查询信号强度请求模型
-internal class RSSIRequest: PeripheralOperationRequest {
+class RSSIRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
@@ -39,11 +39,11 @@ internal class RSSIRequest: PeripheralOperationRequest {
 		self.failure = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return self.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? RSSIRequest {
 			return self.hashValue == other.hashValue
 		}

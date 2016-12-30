@@ -60,7 +60,7 @@ open class Advertisement: NSObject {
 		super.init()
 	}
 
-	internal convenience init(peripheral: Peripheral, advertisementData: Dictionary<String, Any>, RSSI: NSNumber) {
+	convenience init(peripheral: Peripheral, advertisementData: Dictionary<String, Any>, RSSI: NSNumber) {
 		self.init()
 		self.peripheral        = peripheral
 		self.advertisementData = advertisementData

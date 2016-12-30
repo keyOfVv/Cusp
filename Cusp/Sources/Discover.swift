@@ -41,7 +41,7 @@ class ServiceDiscoveringRequest: PeripheralOperationRequest {
         self.failure      = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		var joined = ""
 		serviceUUIDs?.sorted(by: { (a, b) -> Bool in
 			return a.uuidString <= b.uuidString
@@ -51,7 +51,7 @@ class ServiceDiscoveringRequest: PeripheralOperationRequest {
 		return joined.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? ServiceDiscoveringRequest else { return false }
 		return hashValue == other.hashValue
 	}

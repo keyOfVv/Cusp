@@ -11,12 +11,12 @@ import Foundation
 // MARK: UnsubscribeRequest
 
 /// request of unsubscribe value update of specific characteristic
-internal class UnsubscribeRequest: PeripheralOperationRequest {
+class UnsubscribeRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a CBCharacteristic object of which the value update to be unsubscribed
-	internal var characteristic: Characteristic!
+	var characteristic: Characteristic!
 
 	// MARK: Initializer
 
@@ -33,18 +33,18 @@ internal class UnsubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a UnsubscribeRequest instance
 	*/
-	internal convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success
         self.failure        = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return characteristic.uuid.uuidString.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? UnsubscribeRequest {
 			return self.hashValue == other.hashValue
 		}

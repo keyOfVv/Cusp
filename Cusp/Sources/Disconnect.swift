@@ -10,15 +10,15 @@ import Foundation
 
 
 /// request of disconnecting a connected peripheral
-internal class DisconnectRequest: NSObject {
+class DisconnectRequest: NSObject {
 
 	// MARK: Stored Properties
 
 	/// a connected CBPeripheral instance to be disconnected
-	internal var peripheral: Peripheral!
+	var peripheral: Peripheral!
 
 	/// a closure called when disconnected
-	internal var completion: (() -> Void)?
+	var completion: (() -> Void)?
 
 	// MARK: Initializer
 
@@ -34,17 +34,17 @@ internal class DisconnectRequest: NSObject {
 
 	- returns: a DisconnectRequest instance
 	*/
-	internal convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
+	convenience init(peripheral: Peripheral, completion: (() -> Void)?) {
 		self.init()
 		self.peripheral = peripheral
 		self.completion = completion
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return self.peripheral.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? DisconnectRequest {
 			return self.hashValue == other.hashValue
 		}

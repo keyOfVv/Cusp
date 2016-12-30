@@ -11,12 +11,12 @@ import Foundation
 // MARK: ConnectRequest
 
 /// device connect request
-internal class ConnectRequest: CentralOperationRequest {
+class ConnectRequest: CentralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// closure called when connection broken-down
-	internal var abruption: ((CuspError?) -> Void)?
+	var abruption: ((CuspError?) -> Void)?
 
 	// MARK: Initializer
 
@@ -32,7 +32,7 @@ internal class ConnectRequest: CentralOperationRequest {
 
 	- returns: a ConnectRequest instance
 	*/
-	internal convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
+	convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 		self.init()
         self.peripheral = peripheral
         self.success    = success
@@ -40,11 +40,11 @@ internal class ConnectRequest: CentralOperationRequest {
         self.abruption  = abruption
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return self.peripheral.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? ConnectRequest else { return false }
 		return self.hash == other.hash
 	}

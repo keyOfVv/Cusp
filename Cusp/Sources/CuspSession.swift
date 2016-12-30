@@ -38,11 +38,11 @@ class PeripheralSession: NSObject {
 		self.peripheral = peripheral
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		return peripheral.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? PeripheralSession {
 			return self.hashValue == other.hashValue
 		}

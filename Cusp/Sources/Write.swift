@@ -10,15 +10,15 @@ import Foundation
 
 
 /// request of write value to specific characteristic
-internal class WriteRequest: PeripheralOperationRequest {
+class WriteRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a NSData object to be written
-	internal var data: Data?
+	var data: Data?
 
 	/// a CBCharacteristic object on which the data will be written
-	internal var characteristic: Characteristic!
+	var characteristic: Characteristic!
 
 	// MARK: Initializer
 
@@ -45,12 +45,12 @@ internal class WriteRequest: PeripheralOperationRequest {
         self.failure        = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		let string = self.characteristic.uuid.uuidString
 		return string.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? WriteRequest {
 			return self.hashValue == other.hashValue
 		}
@@ -59,15 +59,15 @@ internal class WriteRequest: PeripheralOperationRequest {
 }
 
 /// request of write value to specific characteristic
-internal class WriteDescriptorRequest: PeripheralOperationRequest {
+class WriteDescriptorRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
 	/// a NSData object to be written
-	internal var data: Data?
+	var data: Data?
 
 	/// a CBCharacteristic object on which the data will be written
-	internal var descriptor: Descriptor!
+	var descriptor: Descriptor!
 
 	// MARK: Initializer
 
@@ -94,12 +94,12 @@ internal class WriteDescriptorRequest: PeripheralOperationRequest {
 		self.failure        = failure
 	}
 
-	override internal var hash: Int {
+	override var hash: Int {
 		let string = descriptor.uuid.uuidString
 		return string.hashValue
 	}
 
-	override internal func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		if let other = object as? WriteDescriptorRequest {
 			return self.hashValue == other.hashValue
 		}

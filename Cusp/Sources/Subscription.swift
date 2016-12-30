@@ -9,9 +9,9 @@
 import Foundation
 
 
-internal class Subscription: NSObject {
-	internal fileprivate(set) var characteristic: Characteristic!
-	internal fileprivate(set) var update: ((Response?) -> Void)?
+class Subscription: NSObject {
+	fileprivate(set) var characteristic: Characteristic!
+	fileprivate(set) var update: ((Response?) -> Void)?
 
 	fileprivate override init() {
 		super.init()

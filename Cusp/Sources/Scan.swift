@@ -12,24 +12,24 @@ import Foundation
 private let defaultDuration: TimeInterval = 3.0
 
 /// scan request
-internal class ScanRequest: NSObject {
+class ScanRequest: NSObject {
 
 	// MARK: Stored Properties
 
 	/// advertising uuids to be scanned
-	internal var advertisingUUIDs: [UUID]?
+	var advertisingUUIDs: [UUID]?
 
 	/// scan duration in second, 3.0s by default
-	internal var duration: TimeInterval = defaultDuration
+	var duration: TimeInterval = defaultDuration
 
 	/// closure to be called when scan completed
-	internal var completion: (([Advertisement]) -> Void)?
+	var completion: (([Advertisement]) -> Void)?
 
 	/// closure to be called when scan abrupted
-	internal var abruption: ((CuspError) -> Void)?
+	var abruption: ((CuspError) -> Void)?
 
 	/// scanned peripherals with miscellaneous info, all wrapped as Advertisement
-	internal var available = Set<Advertisement>()
+	var available = Set<Advertisement>()
 
 	// MARK: Initializer
 	/// intendedly made private
@@ -45,7 +45,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
+	convenience init(advertisingUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 		self.init()
         self.advertisingUUIDs = advertisingUUIDs
         self.duration         = duration
@@ -63,7 +63,7 @@ internal class ScanRequest: NSObject {
 
 	- returns: a ScanRequest instance
 	*/
-	internal convenience init(advertisingUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
+	convenience init(advertisingUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 		guard let uuidStrings = advertisingUUIDStrings else {
 			self.init(advertisingUUIDs: nil, duration: duration, completion: completion, abruption: abruption)
 			return
@@ -76,7 +76,7 @@ internal class ScanRequest: NSObject {
 		self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
 	}
 
-	internal override var hash: Int {
+	override var hash: Int {
 		guard let UUIDs = self.advertisingUUIDs else { return 0 }
 		var string = ""
 		for UUID in UUIDs {
@@ -85,7 +85,7 @@ internal class ScanRequest: NSObject {
 		return string.hashValue
 	}
 
-	internal override func isEqual(_ object: Any?) -> Bool {
+	override func isEqual(_ object: Any?) -> Bool {
 		guard let other = object as? ScanRequest else { return false }
 		return self.hashValue == other.hashValue
 	}

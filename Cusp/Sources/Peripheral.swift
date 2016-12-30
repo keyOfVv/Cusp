@@ -46,45 +46,45 @@ public enum PeripheralState : Int {
 	// MARK: Stored Properties
 
 	/// operation concurrent queue for all operations including read, write, subscribe, unsubscribe, RSSI, etc.;
-	internal let operationQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
+	let operationQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
 
 	/// request serial queue for all add/remove operation on all kinds of request;
-	internal var requestQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_REQUEST_SERIAL, attributes: [])
+	var requestQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_REQUEST_SERIAL, attributes: [])
 
 	/// subscription serial queue for subscription operation;
-	internal var subscriptionQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL, attributes: [])
+	var subscriptionQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL, attributes: [])
 
 	/// requests of service discovering
-	internal var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
+	var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()
 
 	/// requests of characteristic discovering
-	internal var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
+	var characteristicDiscoveringRequests = Set<CharacteristicDiscoveringRequest>()
 
 	/// requests of descriptor discovering
 	var descriptorDiscoveringRequests = Set<DescriptorDiscoveringRequest>()
 
 	/// requests of read characteristic value
-	internal var readRequests                      = Set<ReadRequest>()
+	var readRequests                      = Set<ReadRequest>()
 
 	/// requests of read characteristic value
 	var readDescriptorRequests            = Set<ReadDescriptorRequest>()
 
 	/// requests of write characteristic value
-	internal var writeRequests                     = Set<WriteRequest>()
+	var writeRequests                     = Set<WriteRequest>()
 
 	/// requests of write characteristic value
-	internal var writeDescriptorRequests                     = Set<WriteDescriptorRequest>()
+	var writeDescriptorRequests                     = Set<WriteDescriptorRequest>()
 
 	/// requests of subscribe characteristic value
-	internal var subscribeRequests                 = Set<SubscribeRequest>()
+	var subscribeRequests                 = Set<SubscribeRequest>()
 
 	/// requests of unsubscribe characteristic value
-	internal var unsubscribeRequests               = Set<UnsubscribeRequest>()
+	var unsubscribeRequests               = Set<UnsubscribeRequest>()
 
 	/// requests of RSSI reading
-	internal var RSSIRequests                      = Set<RSSIRequest>()
+	var RSSIRequests                      = Set<RSSIRequest>()
 
-	internal var subscriptions = Set<Subscription>()
+	var subscriptions = Set<Subscription>()
 
 	// MARK: Computed Properties
 
