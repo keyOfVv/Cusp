@@ -36,6 +36,11 @@ open class Advertisement: NSObject {
 		return advertisementData["kCBAdvDataManufacturerData"] as? Data
 	}
 
+	/// local name in advertisement data
+	open var localName: String? {
+		return advertisementData["kCBAdvDataLocalName"] as? String
+	}
+
 	/// a UUIDString array contains advertising UUIDStrig of peripheral
 	open var advertisingUUIDStrings: [String] {
 		var UUIDStrings = [String]()
