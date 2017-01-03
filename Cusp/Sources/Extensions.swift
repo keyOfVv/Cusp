@@ -147,3 +147,29 @@ extension CBDescriptor {
 	}
 }
 
+// MARK: - String
+extension String {
+
+	var isValidUUID: Bool {
+		do {
+			// check with short pattern
+			let shortP = "^[A-F0-9]{4}$"
+			let shortRegex = try NSRegularExpression(pattern: shortP, options: NSRegularExpression.Options.caseInsensitive)
+			let shortMatchNum = shortRegex.matches(in: self, options: NSRegularExpression.MatchingOptions.reportProgress, range: NSMakeRange(0, self.characters.count))
+			if shortMatchNum.count == 1 {
+				return true
+			}
+			// check with full pattern
+			let fullP = "^[A-F0-9\\-]{36}$"
+			let fullRegex = try NSRegularExpression(pattern: fullP, options: NSRegularExpression.Options.caseInsensitive)
+			let fullMatchNum = fullRegex.matches(in: self, options: NSRegularExpression.MatchingOptions.reportProgress, range: NSMakeRange(0, self.characters.count))
+			if fullMatchNum.count == 1 {
+				return true
+			}
+		} catch {
+
+		}
+		return false
+	}
+}
+
