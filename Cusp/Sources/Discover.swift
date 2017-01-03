@@ -142,7 +142,7 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discoverServices(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func discoverServices(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -186,7 +186,7 @@ extension Peripheral {
 	- parameter success:      a closure called when discovering succeed.
 	- parameter failure:      a closure called when discovering failed.
 	*/
-	public func discoverServices(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func discoverServices(UUIDStrings: [String]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		discoverServices(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), success: success, failure: failure)
 	}
 
@@ -198,7 +198,7 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discoverCharacteristics(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func discoverCharacteristics(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -243,7 +243,7 @@ extension Peripheral {
 	- parameter success:             a closure called when discovering succeed.
 	- parameter failure:             a closure called when discovering failed.
 	*/
-	public func discoverCharacteristics(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func discoverCharacteristics(UUIDStrings: [String]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		discoverCharacteristics(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), ofService: service, success: success, failure: failure)
 	}
 
