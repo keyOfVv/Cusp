@@ -176,6 +176,14 @@ extension Peripheral {
 	}
 
 	public func write(_ d: Data, toCharacteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		if !s.isValidUUID {
+			failure?(CuspError.invalidServiceUUID)
+			return
+		}
+		if !c.isValidUUID {
+			failure?(CuspError.invalidCharacteristicUUID)
+			return
+		}
 		if let service = self[s] {
 			if let char = service[c] {
 				write(d, forCharacteristic: char, success: success, failure: failure)

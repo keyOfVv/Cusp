@@ -102,6 +102,14 @@ extension Peripheral {
 	}
 
 	public func subscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+		if !s.isValidUUID {
+			failure?(CuspError.invalidServiceUUID)
+			return
+		}
+		if !c.isValidUUID {
+			failure?(CuspError.invalidCharacteristicUUID)
+			return
+		}
 		if let service = self[s] {
 			if let char = service[c] {
 				subscribe(char, success: success, failure: failure, update: update)

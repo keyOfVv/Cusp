@@ -94,6 +94,14 @@ extension Peripheral {
 	}
 
 	public func unsubscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		if !s.isValidUUID {
+			failure?(CuspError.invalidServiceUUID)
+			return
+		}
+		if !c.isValidUUID {
+			failure?(CuspError.invalidCharacteristicUUID)
+			return
+		}
 		if let service = self[s] {
 			if let char = service[c] {
 				unsubscribe(char, success: success, failure: failure)

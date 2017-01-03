@@ -25,6 +25,9 @@ public enum CuspError: Error {
 	case invalidValueLength		// CBATTErrorDomain Code=13, The value's length is invalid.
 	case connectionTimedOut		// CBErrorDomain Code=6, The connection has timed out unexpectedly.
 
+	case invalidServiceUUID
+	case invalidCharacteristicUUID
+
 	init(err: Error?) {
 		guard let err = err else {
 			self = CuspError.unknown
