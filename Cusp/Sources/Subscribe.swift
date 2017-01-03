@@ -71,8 +71,7 @@ extension Peripheral {
 	- parameter failure:        a closure called when subscription failed.
 	- parameter update:         a closure called when characteristic's value updated, after successfully subscribed, the update closure will be wrapped in Subscription object.
 	*/
-	@available(*, deprecated, message: "use -subscribe(characteristic:ofService:success:failure:update:) instead")
-	public func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+	func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)

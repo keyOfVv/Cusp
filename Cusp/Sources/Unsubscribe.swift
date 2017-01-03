@@ -63,8 +63,7 @@ extension Peripheral {
 	- parameter success:        a closure called when unsubscription succeed. 取消订阅成功时执行的闭包.
 	- parameter failure:        a closure called when unsubscription failed. 取消订阅失败时执行的闭包.
 	*/
-	@available(*, deprecated, message: "use -unsubscribe(characteristic:ofService:success:failure:) instead")
-	public func unsubscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func unsubscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)

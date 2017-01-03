@@ -120,8 +120,7 @@ extension Peripheral {
 	- parameter success:        a closure called when value written successfully. 写值成功时执行的闭包.
 	- parameter failure:        a closure called when value written failed. 写值失败时执行的闭包.
 	*/
-	@available(*, deprecated, message: "use -write(_:toCharacteristic:ofService:success:failure:) instead")
-	public func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
