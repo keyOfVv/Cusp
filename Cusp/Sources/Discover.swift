@@ -247,7 +247,7 @@ extension Peripheral {
 		discoverCharacteristics(UUIDs: uuidsFrom(uuidStrings: UUIDStrings), ofService: service, success: success, failure: failure)
 	}
 
-	public func discoverDescriptors(forCharacteristic char: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+	func discoverDescriptors(forCharacteristic char: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = Cusp.central.assertAvailability() {
 			failure?(error)
@@ -274,6 +274,26 @@ extension Peripheral {
 					_ = self?.descriptorDiscoveringRequests.remove(req)
 				})
 			}
+		}
+	}
+
+	public func discoverDescriptors(forCharacteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
+		discoverServices(UUIDStrings: [s], success: { (resp) in
+			if let service = self[s] {
+				self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+					if let char = service[c] {
+						self.discoverDescriptors(forCharacteristic: char, success: success, failure: failure)
+					} else {
+						failure?(CuspError.characteristicNotFound)
+					}
+				}, failure: { (err) in
+					failure?(err)
+				})
+			} else {
+				failure?(CuspError.serviceNotFound)
+			}
+		}) { (err) in
+			failure?(err)
 		}
 	}
 
