@@ -65,7 +65,7 @@ extension Peripheral {
 	*/
 	func unsubscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = Cusp.central.assertAvailability() {
+		if let error = CuspCentral.central.assertAvailability() {
 			failure?(error)
 			return
 		}

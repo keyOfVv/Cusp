@@ -49,7 +49,7 @@ class CancelConnectRequest: NSObject {
 
 // MARK: cancel connect
 
-public extension Cusp {
+extension CuspCentral {
 
 	/**
 	Cancel an in-progress connecting attempt

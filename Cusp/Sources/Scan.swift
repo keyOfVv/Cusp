@@ -97,7 +97,7 @@ class ScanRequest: NSObject {
 
 // MARK: - scan methods
 
-public extension Cusp {
+extension CuspCentral {
 
 	/**
 	Scan for BLE peripherals of specific advertising service UUIDs. If pass nil, all peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
@@ -184,7 +184,7 @@ public extension Cusp {
 
 // MARK: - Privates
 
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Check in a ScanRequest object. If no scanning is underway, start it immediately; otherwise, union the target UUID and apply a new scan.

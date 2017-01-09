@@ -46,12 +46,12 @@ private let CUSP_CENTRAL_IDENTIFIER_DEFAULT = "com.keyang.cusp.central.identifie
 // MARK: - Definition
 
 /// Bluetooth Low Energy library in swift
-public class Cusp: NSObject {
+public class CuspCentral: NSObject {
 
 	/// Singleton
-	public class var central: Cusp {
+	public class var central: CuspCentral {
 		struct Static {
-			static let instance: Cusp = Cusp()
+			static let instance: CuspCentral = CuspCentral()
 		}
 		return Static.instance
 	}
@@ -70,7 +70,7 @@ public class Cusp: NSObject {
 
 	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
-		if let id = Cusp.centralRestoreIdentifier {
+		if let id = centralRestoreIdentifier {
 			dog("central initialized with restore id=\(id)")
 			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: id])
 		} else {
@@ -117,7 +117,7 @@ public class Cusp: NSObject {
 // MARK: - Interface
 
 // MARK: - Preparation
-public extension Cusp {
+public extension CuspCentral {
 
 	/**
 	Prepare Cusp before any BLE operation
@@ -138,7 +138,7 @@ public extension Cusp {
 		centralRestoreIdentifier = restoreIdentifier
 		// since checking ble status needs little
 		_ = self.isBLEAvailable()
-		Cusp.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
+		CuspCentral.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
 			DispatchQueue.main.async(execute: {
 				completion?(self.isBLEAvailable())
 			})
@@ -151,7 +151,7 @@ public extension Cusp {
 	- returns: boolean value
 	*/
 	public class func isBLEAvailable() -> Bool {
-		if let _ = Cusp.central.assertAvailability() {
+		if let _ = CuspCentral.central.assertAvailability() {
 			return false
 		}
 		return true
@@ -190,7 +190,7 @@ public extension Cusp {
 
 // MARK: - Availability Check
 
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Check if ble is available. A NSError object will be returned if ble is unavailable, or else return nil.
@@ -216,7 +216,7 @@ extension Cusp {
 }
 
 // MARK: -
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Retrieve session for specific peripheral.
@@ -268,7 +268,7 @@ extension Cusp {
 }
 
 // MARK: - Background task
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Execute operations while application is in background mode;
@@ -293,7 +293,7 @@ extension Cusp {
 }
 
 public func enableDebugLog(enabled: Bool) {
-	Cusp.showsDebugLog = enabled
+	CuspCentral.showsDebugLog = enabled
 }
 
 

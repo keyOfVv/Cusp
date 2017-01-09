@@ -54,7 +54,7 @@ class DisconnectRequest: NSObject {
 
 
 // MARK: Diconnect
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Disconnect a peripheral currently in connection

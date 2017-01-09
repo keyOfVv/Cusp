@@ -22,8 +22,8 @@ class DescriptorViewController: UIViewController {
 		title = "Descriptor Test"
 
 		enableDebugLog(enabled: false)
-		Cusp.prepare(withCentralIdentifier: "com.keyang.cusp.descriptorOperationDemo") { [weak self] (available) in
-			Cusp.central.scanForUUIDString(nil, completion: { (ads) in
+		CuspCentral.prepare(withCentralIdentifier: "com.keyang.cusp.descriptorOperationDemo") { [weak self] (available) in
+			CuspCentral.central.scanForUUIDString(nil, completion: { (ads) in
 				for d in ads {
 					if d.peripheral.name == "keyang" {
 						self?.peripheral = d.peripheral

@@ -11,7 +11,7 @@ import CoreBluetooth
 
 // MARK: - CBCentralManagerDelegate
 
-extension Cusp: CBCentralManagerDelegate {
+extension CuspCentral: CBCentralManagerDelegate {
 
 	/**
 	REQUIRED: called each time the BLE-state of Central changes
@@ -234,7 +234,7 @@ extension Cusp: CBCentralManagerDelegate {
 	}
 }
 
-extension Cusp {
+extension CuspCentral {
 
 	/**
 	Retrieve Peripheral object for specific core from discoveredPeripherals.

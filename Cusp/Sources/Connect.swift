@@ -52,7 +52,7 @@ class ConnectRequest: CentralOperationRequest {
 
 // MARK: Connect
 
-public extension Cusp {
+extension CuspCentral {
 
 	/**
 	connect a peripheral

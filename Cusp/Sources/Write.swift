@@ -122,7 +122,7 @@ extension Peripheral {
 	*/
 	func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = Cusp.central.assertAvailability() {
+		if let error = CuspCentral.central.assertAvailability() {
 			failure?(error)
 			return
 		}
@@ -150,7 +150,7 @@ extension Peripheral {
 
 	public func write(_ data: Data, forDescriptor desc: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = Cusp.central.assertAvailability() {
+		if let error = CuspCentral.central.assertAvailability() {
 			failure?(error)
 			return
 		}
@@ -221,7 +221,7 @@ extension Peripheral {
 }
 
 func dog(_ anyObject: Any?, function: String = #function, file: String = #file, line: Int = #line) {
-	if !Cusp.showsDebugLog {
+	if !CuspCentral.showsDebugLog {
 		return
 	}
 
