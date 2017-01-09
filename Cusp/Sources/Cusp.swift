@@ -80,8 +80,8 @@ public class CuspCentral: NSObject {
 	}()
 
 	/// BLE state
-	public var state: State {
-		return State(rawValue: centralManager.state.rawValue)!
+	public var state: CuspBLEState {
+		return CuspBLEState(rawValue: centralManager.state.rawValue)!
 	}
 
 	// MARK: Requests Collection

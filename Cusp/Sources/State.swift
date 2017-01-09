@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public enum State : Int {
+@objc public enum CuspBLEState : Int {
 
 	case unknown
 	case resetting
