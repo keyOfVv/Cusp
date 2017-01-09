@@ -58,7 +58,12 @@ public class CuspCentral: NSObject {
 	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
 	/// intentedly left private
-	fileprivate override init() { super.init() }
+	fileprivate override init() {
+		super.init()
+		CuspCentral.prepare { (available) in
+			dog("Cusp Central initialized, BLE is now \(available ? "available" : "unavailable")")
+		}
+	}
 	/// main operation concurrent queue, for all BLE-related operations (scan, connect, cancel-connect, disconnect)
     let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
 	/// request operation serial queue, for all operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect)
@@ -74,8 +79,8 @@ public class CuspCentral: NSObject {
 			dog("central initialized with restore id=\(id)")
 			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: id])
 		} else {
-			dog("central initialized without restore id")
-			return CentralManager(delegate: self, queue: self.mainQ, options: nil)
+			dog("central initialized with default restore id")
+			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: CUSP_CENTRAL_IDENTIFIER_DEFAULT])
 		}
 	}()
 
@@ -117,13 +122,14 @@ public class CuspCentral: NSObject {
 // MARK: - Interface
 
 // MARK: - Preparation
-public extension CuspCentral {
+extension CuspCentral {
 
 	/**
 	Prepare Cusp before any BLE operation
 
 	- parameter completion: a block after completed preparing
 	*/
+	@available(*, deprecated, message: "no more preparation")
 	public class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
 		prepare(withCentralIdentifier: CUSP_CENTRAL_IDENTIFIER_DEFAULT, completion: completion)
 	}
@@ -134,6 +140,7 @@ public extension CuspCentral {
 	- parameter restoreIdentifier: a UID for restoring central after app back into foreground
 	- parameter completion:		   a block after completed preparing
 	*/
+	@available(*, deprecated, message: "no more preparation")
 	public class func prepare(withCentralIdentifier restoreIdentifier: String?, completion: ((_ available: Bool) -> Void)?) {
 		centralRestoreIdentifier = restoreIdentifier
 		// since checking ble status needs little

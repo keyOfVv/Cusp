@@ -40,13 +40,13 @@ open class Response: NSObject {
 
 // MARK: - 开放接口
 
-public extension Response {
+extension Response {
 
 }
 
 // MARK: - 私有方法
 
-private extension Response {
+extension Response {
 
 }
 
