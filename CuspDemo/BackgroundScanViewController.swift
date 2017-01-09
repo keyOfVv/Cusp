@@ -7,14 +7,15 @@
 //
 
 import UIKit
-import Cusp
+@testable import Cusp
 
 class BackgroundScanViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		title = "Background Scanning"
-		Cusp.enableDebugLog(enabled: false)
+
+		enableDebugLog(enabled: false)
 		Cusp.prepare(withCentralIdentifier: "com.keyang.cusp.backgroundScanDemo") { [weak self] (available) in
 			self?.repeatScanForever(duration: 3.0)
 		}

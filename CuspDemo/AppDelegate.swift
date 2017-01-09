@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var bgTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		Cusp.enableDebugLog(enabled: true)
+		enableDebugLog(enabled: true)
 		print(launchOptions)
 		return true
 	}

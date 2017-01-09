@@ -112,10 +112,6 @@ public class Cusp: NSObject {
 	public internal(set) var isScanning: Bool = false
 
 	var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-
-	public class func enableDebugLog(enabled: Bool) {
-		self.showsDebugLog = enabled
-	}
 }
 
 // MARK: - Interface
@@ -296,7 +292,9 @@ extension Cusp {
 	}
 }
 
-
+public func enableDebugLog(enabled: Bool) {
+	Cusp.showsDebugLog = enabled
+}
 
 
 

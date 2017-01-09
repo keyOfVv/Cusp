@@ -21,7 +21,7 @@ class DescriptorViewController: UIViewController {
         super.viewDidLoad()
 		title = "Descriptor Test"
 
-		Cusp.enableDebugLog(enabled: false)
+		enableDebugLog(enabled: false)
 		Cusp.prepare(withCentralIdentifier: "com.keyang.cusp.descriptorOperationDemo") { [weak self] (available) in
 			Cusp.central.scanForUUIDString(nil, completion: { (ads) in
 				for d in ads {
