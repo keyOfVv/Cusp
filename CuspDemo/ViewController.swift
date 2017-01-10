@@ -19,24 +19,22 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		CuspCentral.prepare(withCentralIdentifier: "com.keyang.cusp.demo") { (available) in
-			CuspCentral.central.scanForUUIDString(nil, completion: { (ads) in
-				self.per = ads.first?.peripheral
-				print(ads)
-				if ads.count > 0 {
-					CuspCentral.central.stopScan()
-				}
-			}, abruption: { (error) in
+		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (ads) in
+			self.per = ads.first?.peripheral
+			print(ads)
+			if ads.count > 0 {
+				CuspCentral.defaultCentral.stopScan()
+			}
+		}, abruption: { (error) in
 
-			})
-		}
+		})
 	}
 
 	func test() {
 		guard let per = self.per else {
 			return
 		}
-		CuspCentral.central.connect(per, success: { (resp) in
+		CuspCentral.defaultCentral.connect(per, success: { (resp) in
 			print("connected")
 			per.getManufacturerNameString(completion: { (manufacturerName) in
 				print(manufacturerName)

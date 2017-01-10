@@ -16,15 +16,12 @@ class BackgroundScanViewController: UIViewController {
 		title = "Background Scanning"
 
 		enableDebugLog(enabled: false)
-		CuspCentral.prepare(withCentralIdentifier: "com.keyang.cusp.backgroundScanDemo") { [weak self] (available) in
-			self?.repeatScanForever(duration: 3.0)
-		}
+		self.repeatScanForever(duration: 3.0)
     }
 
 	func repeatScanForever(duration: TimeInterval) {
-		CuspCentral.central.scanForUUIDString(nil, duration: duration, completion: { [weak self] (ads) in
+		CuspCentral.defaultCentral.scanForUUIDString(nil, duration: duration, completion: { (ads) in
 			dog("\(ads.count) peripherals found")
-//			self?.repeatScanForever(duration: 3.0)
 		}, abruption: { (error) in
 
 		})
@@ -32,6 +29,6 @@ class BackgroundScanViewController: UIViewController {
 
 	deinit {
 		dog("BackgroundScanViewController deinited")
-		CuspCentral.central.stopScan()
+		CuspCentral.defaultCentral.stopScan()
 	}
 }

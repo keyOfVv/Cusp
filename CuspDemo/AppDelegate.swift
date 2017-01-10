@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {
-		CuspCentral.central.executeBackgroundTask(withApplication: application) {
+		CuspCentral.defaultCentral.executeBackgroundTask(withApplication: application) {
 			self.repeatScanForever()
 		}
 	}
@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func repeatScanForever() {
-		CuspCentral.central.scanForUUIDString(["1803"], completion: { (ads) in
+		CuspCentral.defaultCentral.scanForUUIDString(["1803"], completion: { (ads) in
 			dog("\(ads.count) peripherals found while in background")
 			self.repeatScanForever()
 		}, abruption: { (error) in

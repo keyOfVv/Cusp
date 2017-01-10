@@ -144,7 +144,7 @@ extension Peripheral {
 	*/
 	func discoverServices(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.central.assertAvailability() {
+		if let error = CuspCentral.defaultCentral.assertAvailability() {
 			failure?(error)
 			return
 		}
@@ -200,7 +200,7 @@ extension Peripheral {
 	*/
 	func discoverCharacteristics(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.central.assertAvailability() {
+		if let error = CuspCentral.defaultCentral.assertAvailability() {
 			failure?(error)
 			return
 		}
@@ -249,7 +249,7 @@ extension Peripheral {
 
 	func discoverDescriptors(forCharacteristic char: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.central.assertAvailability() {
+		if let error = CuspCentral.defaultCentral.assertAvailability() {
 			failure?(error)
 			return
 		}

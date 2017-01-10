@@ -163,7 +163,7 @@ extension CuspCentral {
 	- returns: boolean value
 	*/
 	public class func isBLEAvailable() -> Bool {
-		if let _ = CuspCentral.central.assertAvailability() {
+		if let _ = CuspCentral.defaultCentral.assertAvailability() {
 			return false
 		}
 		return true
