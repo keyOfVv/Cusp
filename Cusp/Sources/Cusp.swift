@@ -49,7 +49,12 @@ private let CUSP_CENTRAL_IDENTIFIER_DEFAULT = "com.keyang.cusp.central.identifie
 public class CuspCentral: NSObject {
 
 	/// Singleton
+	@available(*, deprecated, message: "use defaultCentral instead")
 	public class var central: CuspCentral {
+		return CuspCentral.defaultCentral
+	}
+	/// default central
+	public class var defaultCentral: CuspCentral {
 		struct Static {
 			static let instance: CuspCentral = CuspCentral()
 		}
