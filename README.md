@@ -15,7 +15,7 @@ Same as bluetooth communication, there are two main roles in Cusp: Central and P
 import Cusp
 
 /// scan for all peripherals
-CuspCentral.central.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
+CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisementInfoArray) -> Void in
 
 	for advertisementInfo in advertisementInfoArray {
 		print(advertisementInfo.peripheral.name)
@@ -32,7 +32,7 @@ CuspCentral.central.scanForUUIDString(nil, completion: { (advertisementInfoArray
 import Cusp
 
 /// scan for peripheral of specific advertising UUID
-CuspCentral.central.scanForUUIDString(["1803"], completion: { (advertisementInfoArray) -> Void in
+CuspCentral.defaultCentral.scanForUUIDString(["1803"], completion: { (advertisementInfoArray) -> Void in
 	
 	// deal with advertisements ...
 	
@@ -45,7 +45,7 @@ CuspCentral.central.scanForUUIDString(["1803"], completion: { (advertisementInfo
 
 ```swift
 import Cusp
-CuspCentral.central.connect(peripheral, success: { (response) -> Void in
+CuspCentral.defaultCentral.connect(peripheral, success: { (response) -> Void in
 
 	// successfully connected ...
 	
