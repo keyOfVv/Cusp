@@ -8,47 +8,23 @@
 
 import UIKit
 
-
-
-// MARK: - 私有常量
-
-// MARK: - 代理协议
-
-// MARK: - [<#类型#>]<#描述#>
-
 open class Response: NSObject {
 
-	// MARK: 储值属性
+	// MARK: Restore properties
 
 	open var value: Data?
 
 	open var RSSI: NSNumber?
 
-	// MARK: 计算属性
+	// MARK: Computed properties
 
-	// MARK: 构造方法
+	// MARK: Initializer
 
-	// MARK: 其他
+	// MARK: Others
 
-	// MARK: 销毁
+	// MARK: Deinitializer
 
 	deinit {
 
 	}
-
 }
-
-// MARK: - 开放接口
-
-extension Response {
-
-}
-
-// MARK: - 私有方法
-
-extension Response {
-
-}
-
-// MARK: - 代理方法
-
