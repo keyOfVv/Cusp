@@ -142,12 +142,11 @@ extension CuspCentral {
 
 	/**
 	Scan for BLE peripherals of specific advertising service UUID Strings. If pass nil, all kinds of peripheral will be scanned. A timed-out scan will call completion closure, or else the abruption one.
-	根据UUID字符串数组扫描指定从设备, 如不指定UUID, 则扫描任意从设备. 扫描成功会执行completion闭包, 反之则执行abruption闭包;
 
-	- parameter advertisingServiceUUIDs: a specific UUID string array or nil. 指定的广播服务UUID字符串数组或nil
-	- parameter duration:                scan duration in second, 3.0s by default. 扫描时长, 默认3.0秒
-	- parameter completion:              a closure called when scan timed out. 扫描完成后的回调, 返回从设备数组
-	- parameter abruption:               a closure called when scan is abrupted. 扫描中断的回调, 返回错误原因
+	- parameter advertisingServiceUUIDs: a specific UUID string array or nil.
+	- parameter duration:                scan duration in second, 3.0s by default.
+	- parameter completion:              a closure called when scan timed out.
+	- parameter abruption:               a closure called when scan is abrupted.
 	*/
 	public func scanForUUIDString(_ advertisingServiceUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 
