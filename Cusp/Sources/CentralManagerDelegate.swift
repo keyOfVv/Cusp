@@ -19,7 +19,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 	- parameter central: a CBCentralManager instance
 	*/
 	public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-		Foundation.NotificationCenter.default.post(name: Notification.Name.CuspStateDidChange, object: nil) // post BLE state change notification
+		Foundation.NotificationCenter.default.post(name: Notification.Name.CuspStateDidChange, object: self) // post BLE state change notification
 	}
 
 	/**
