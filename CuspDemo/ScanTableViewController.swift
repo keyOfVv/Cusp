@@ -19,6 +19,7 @@ class ScanTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		title = "Scan"
 		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisements) in
 			self.advertisements = advertisements
 		}) { (error) in
