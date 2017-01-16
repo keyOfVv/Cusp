@@ -33,26 +33,26 @@ extension CuspCentral: CBCentralManagerDelegate {
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 		mainQ.async { () -> Void in
 			// 0. check if any custom peripheral class registered
-			if !self.customClasses.isEmpty {
-				// custom peripheral class exists
-				// 1. once discovered, wrap CBPeripheral into custom class...
-				for (regex, aClass) in self.customClasses {
-					if peripheral.matches(regex) {
-						if let classRef = aClass.self as? Peripheral.Type {
-							// 1. check if core catched
-							if let p = self.peripheralFor(peripheral) {
-								peripheral.delegate = p
-								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-							} else {
-								// 2. uncatched, then catch it!
-								let p = classRef.init(core: peripheral)
-								peripheral.delegate = p
-								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-							}
-						}
-					}
-				}
-			} else {
+//			if !self.customClasses.isEmpty {
+//				// custom peripheral class exists
+//				// 1. once discovered, wrap CBPeripheral into custom class...
+//				for (regex, aClass) in self.customClasses {
+//					if peripheral.matches(regex) {
+//						if let classRef = aClass.self as? Peripheral.Type {
+//							// 1. check if core catched
+//							if let p = self.peripheralFor(peripheral) {
+//								peripheral.delegate = p
+//								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
+//							} else {
+//								// 2. uncatched, then catch it!
+//								let p = classRef.init(core: peripheral)
+//								peripheral.delegate = p
+//								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
+//							}
+//						}
+//					}
+//				}
+//			} else {
 				// no custom peripheral class
 				// 1. check if core catched
 				if let p = self.peripheralFor(peripheral) {
@@ -63,7 +63,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 					peripheral.delegate = p
 					self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
 				}
-			}
+//			}
 		}
 	}
 

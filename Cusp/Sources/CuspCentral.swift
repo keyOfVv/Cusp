@@ -107,6 +107,7 @@ public class CuspCentral: NSObject {
 	/// session of connected peripheral
 	var sessions = Set<PeripheralSession>()
 	/// registered custom classes
+	@available(*, deprecated, message: "")
 	var customClasses = [(String, AnyClass)]()
 
 	/// a boolean value indicates whether Cusp is connected with any peripheral
