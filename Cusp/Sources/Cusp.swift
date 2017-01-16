@@ -9,11 +9,6 @@
 import Foundation
 import CoreBluetooth
 
-// MARK: - Constants
-
-/// once token for -prepare()
-private var onceToken = Int()
-
 // MARK: - Protocol
 @objc public protocol CustomPeripheral: NSObjectProtocol {
 	var core: CBPeripheral { get }
@@ -134,8 +129,7 @@ extension CuspCentral {
 
 	- parameter completion: a block after completed preparing
 	*/
-	@available(*, deprecated, message: "no more preparation")
-	public class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
+	class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
 		prepare(withCentralIdentifier: CUSP_CENTRAL_IDENTIFIER_DEFAULT, completion: completion)
 	}
 
@@ -145,12 +139,11 @@ extension CuspCentral {
 	- parameter restoreIdentifier: a UID for restoring central after app back into foreground
 	- parameter completion:		   a block after completed preparing
 	*/
-	@available(*, deprecated, message: "no more preparation")
-	public class func prepare(withCentralIdentifier restoreIdentifier: String?, completion: ((_ available: Bool) -> Void)?) {
+	class func prepare(withCentralIdentifier restoreIdentifier: String?, completion: ((_ available: Bool) -> Void)?) {
 		centralRestoreIdentifier = restoreIdentifier
 		// since checking ble status needs little
 		_ = self.isBLEAvailable()
-		CuspCentral.central.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
+		CuspCentral.defaultCentral.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
 			DispatchQueue.main.async(execute: {
 				completion?(self.isBLEAvailable())
 			})
