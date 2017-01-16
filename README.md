@@ -3,11 +3,23 @@
 
 ## Introduction
 
-Cusp is a light-weight BLE framework build on CoreBluetooth, featured multi-thread-operation thanks to powerful GCD.
+Cusp is a light-weight BLE framework build on CoreBluetooth, featured multi-thread-operation thanks to powerful GCD, designed to make BLE programming easier and happier.
 
-Same as bluetooth communication, there are two main roles in Cusp: Central and Peripheral. Central is in charge of scan, connect and disconnect ble devices, while the latter performs substantial communication tasks including service/characteristic discovering, read/write value, subscribe/unsubscribe value updates, etc. Upon all these operations, Cusp provides methods in a friendly call-back way. So, just focus on your UI/UE and data tranfer, leave the dirty ble work to Cusp.
+If your app plays as central in BLE communication, use `CuspCentral` class.
 
 ## Usage
+
+### Prepare
+
+To get the true state of device's BLE module, CuspCentral shall be prepared BEFORE any operations.
+
+```Swift
+import Cusp
+
+CuspCentral.defaultCentral.prepare { (available) in
+	print("BLE is \(available ? "" : "NOT ")ready")
+}
+```
 
 ### Scan
 
