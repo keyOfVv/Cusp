@@ -181,7 +181,7 @@ extension CuspCentral {
 	clear all
 	*/
 	@available(*, deprecated, message: "this method does nothing currently")
-	public func clear() {
+	func clear() {
 //		dispatch_async(reqQ) { () -> Void in
 //			self.sessions.removeAll()
 //			self.availables.removeAll()
