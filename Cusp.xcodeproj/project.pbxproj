@@ -20,6 +20,7 @@
 		707EED371E03ED8800083BEF /* Cusp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		707EED3C1E03FF9D00083BEF /* GATT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EED3B1E03FF9D00083BEF /* GATT.swift */; };
 		708A12DD1E2C708E0064126E /* CuspCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708A12DC1E2C708E0064126E /* CuspCentral.swift */; };
+		708A12DF1E2C76980064126E /* ScanTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708A12DE1E2C76980064126E /* ScanTableViewController.swift */; };
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,6 +102,7 @@
 		7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptorViewController.swift; sourceTree = "<group>"; };
 		707EED3B1E03FF9D00083BEF /* GATT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GATT.swift; sourceTree = "<group>"; };
 		708A12DC1E2C708E0064126E /* CuspCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CuspCentral.swift; sourceTree = "<group>"; };
+		708A12DE1E2C76980064126E /* ScanTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewController.swift; sourceTree = "<group>"; };
 		70AD570E1D8A8E59003042F4 /* Cusp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cusp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD57111D8A8E59003042F4 /* Cusp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cusp.h; sourceTree = "<group>"; };
 		70AD57121D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */,
 				702DE7E01DF935EF00CC52A8 /* ViewController.swift */,
 				70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */,
+				708A12DE1E2C76980064126E /* ScanTableViewController.swift */,
 				70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */,
 				7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */,
 				702DE7E21DF935EF00CC52A8 /* Main.storyboard */,
@@ -531,6 +534,7 @@
 			files = (
 				70283F6A1E0D0C1B00EC3615 /* DemoMainTableViewController.swift in Sources */,
 				7041B0D91E1396D5008B35B8 /* DescriptorViewController.swift in Sources */,
+				708A12DF1E2C76980064126E /* ScanTableViewController.swift in Sources */,
 				70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */,
 				702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */,
 				702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */,

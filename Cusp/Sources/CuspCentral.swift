@@ -10,6 +10,7 @@ import Foundation
 import CoreBluetooth
 
 // MARK: - Protocol
+@available(*, deprecated, message: "")
 @objc public protocol CustomPeripheral: NSObjectProtocol {
 	var core: CBPeripheral { get }
 	init(core: CBPeripheral)
@@ -51,18 +52,17 @@ public class CuspCentral: NSObject {
 	/// default central
 	public class var defaultCentral: CuspCentral {
 		struct Static {
-			static let instance: CuspCentral = CuspCentral()
+			static let instance: CuspCentral = CuspCentral(withRestoreIdentifier: nil)
 		}
 		return Static.instance
 	}
 	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
 	/// intentedly left private
-	fileprivate override init() {
+	fileprivate init(withRestoreIdentifier id: String?) {
+		dog("central initialized with restore id=\(id ?? CUSP_CENTRAL_IDENTIFIER_DEFAULT)")
+		centralRestoreIdentifier = id ?? CUSP_CENTRAL_IDENTIFIER_DEFAULT
 		super.init()
-		CuspCentral.prepare { (available) in
-			dog("Cusp Central initialized, BLE is now \(available ? "available" : "unavailable")")
-		}
 	}
 	/// main operation concurrent queue, for all BLE-related operations (scan, connect, cancel-connect, disconnect)
 	let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
@@ -71,17 +71,11 @@ public class CuspCentral: NSObject {
 	/// session operation serial queue, for all operations (add/remove) on sessions (connected peripherals)
 	let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
 
-	static fileprivate(set) var centralRestoreIdentifier: String?
+	fileprivate(set) var centralRestoreIdentifier: String
 
 	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
-		if let id = centralRestoreIdentifier {
-			dog("central initialized with restore id=\(id)")
-			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: id])
-		} else {
-			dog("central initialized with default restore id")
-			return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: CUSP_CENTRAL_IDENTIFIER_DEFAULT])
-		}
+		return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: self.centralRestoreIdentifier])
 	}()
 
 	/// BLE state
@@ -130,25 +124,13 @@ extension CuspCentral {
 
 	- parameter completion: a block after completed preparing
 	*/
-	class func prepare(_ completion: ((_ available: Bool) -> Void)?) {
-		prepare(withCentralIdentifier: CUSP_CENTRAL_IDENTIFIER_DEFAULT, completion: completion)
-	}
-
-	/**
-	Prepare Cusp before any BLE operation, specify UID for central in case restoring BLE related objects is necessary
-
-	- parameter restoreIdentifier: a UID for restoring central after app back into foreground
-	- parameter completion:		   a block after completed preparing
-	*/
-	class func prepare(withCentralIdentifier restoreIdentifier: String?, completion: ((_ available: Bool) -> Void)?) {
-		centralRestoreIdentifier = restoreIdentifier
-		// since checking ble status needs little
+	public func prepare(_ completion: ((_ available: Bool) -> Void)?) {
 		_ = self.isBLEAvailable()
-		CuspCentral.defaultCentral.mainQ.asyncAfter(deadline: DispatchTime.now() + Double(0.1), execute: {
-			DispatchQueue.main.async(execute: {
+		self.mainQ.asyncAfter(deadline: DispatchTime.now() + 0.1) { 
+			DispatchQueue.main.async {
 				completion?(self.isBLEAvailable())
-			})
-		})
+			}
+		}
 	}
 
 	/**
@@ -156,8 +138,8 @@ extension CuspCentral {
 
 	- returns: boolean value
 	*/
-	public class func isBLEAvailable() -> Bool {
-		if let _ = CuspCentral.defaultCentral.assertAvailability() {
+	public func isBLEAvailable() -> Bool {
+		if let _ = self.assertAvailability() {
 			return false
 		}
 		return true

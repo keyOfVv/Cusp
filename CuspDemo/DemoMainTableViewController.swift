@@ -8,6 +8,12 @@
 
 import UIKit
 
+/**
+* 1. Scan
+* 2. Connect
+* 3. GATT
+*/
+
 class DemoMainTableViewController: UITableViewController {
 
     override func viewDidLoad() {
@@ -35,7 +41,7 @@ class DemoMainTableViewController: UITableViewController {
 
 		switch indexPath.row {
 		case 0:
-			cell.textLabel?.text = "GATT demo"
+			cell.textLabel?.text = "Scan"
 		case 1:
 			cell.textLabel?.text = "Background Scanning"
 		case 2:
@@ -49,8 +55,8 @@ class DemoMainTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		switch indexPath.row {
 		case 0:
-			let gattVC = ViewController()
-			navigationController?.pushViewController(gattVC, animated: true)
+			let scanDemoVC = ScanTableViewController(style: UITableViewStyle.plain)
+			navigationController?.pushViewController(scanDemoVC, animated: true)
 		case 1:
 			let bgScanVC = BackgroundScanViewController()
 			navigationController?.pushViewController(bgScanVC, animated: true)
