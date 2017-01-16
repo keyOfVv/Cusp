@@ -20,12 +20,22 @@ class ScanTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		title = "Scan"
+		setRescanButton()
+		scan()
+    }
+
+	func setRescanButton() {
+		let barBtnItem = UIBarButtonItem(title: "rescan", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ScanTableViewController.scan))
+		self.navigationItem.rightBarButtonItem = barBtnItem
+	}
+
+	func scan() {
 		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisements) in
 			self.advertisements = advertisements
 		}) { (error) in
 			// error raised while scanning
 		}
-    }
+	}
 
     // MARK: - Table view data source
 
