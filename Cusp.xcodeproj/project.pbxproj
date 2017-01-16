@@ -19,6 +19,7 @@
 		707EED361E03ED8800083BEF /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		707EED371E03ED8800083BEF /* Cusp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		707EED3C1E03FF9D00083BEF /* GATT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EED3B1E03FF9D00083BEF /* GATT.swift */; };
+		708A12DD1E2C708E0064126E /* CuspCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708A12DC1E2C708E0064126E /* CuspCentral.swift */; };
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -99,6 +100,7 @@
 		702DE7F51DF935F000CC52A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptorViewController.swift; sourceTree = "<group>"; };
 		707EED3B1E03FF9D00083BEF /* GATT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GATT.swift; sourceTree = "<group>"; };
+		708A12DC1E2C708E0064126E /* CuspCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CuspCentral.swift; sourceTree = "<group>"; };
 		70AD570E1D8A8E59003042F4 /* Cusp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cusp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD57111D8A8E59003042F4 /* Cusp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cusp.h; sourceTree = "<group>"; };
 		70AD57121D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 			children = (
 				70AD57321D8A8F41003042F4 /* Error.swift */,
 				70AD572E1D8A8F41003042F4 /* Cusp.swift */,
+				708A12DC1E2C708E0064126E /* CuspCentral.swift */,
 				70AD57341D8A8F41003042F4 /* Peripheral.swift */,
 				70AD57371D8A8F41003042F4 /* Request.swift */,
 				70AD57381D8A8F41003042F4 /* Response.swift */,
@@ -554,6 +557,7 @@
 				70AD57421D8A8F41003042F4 /* CentralManagerDelegate.swift in Sources */,
 				70AD57451D8A8F41003042F4 /* CuspSession.swift in Sources */,
 				70AD57511D8A8F41003042F4 /* State.swift in Sources */,
+				708A12DD1E2C708E0064126E /* CuspCentral.swift in Sources */,
 				70AD57551D8A8F41003042F4 /* Write.swift in Sources */,
 				70AD574E1D8A8F41003042F4 /* Response.swift in Sources */,
 				70AD57461D8A8F41003042F4 /* Disconnect.swift in Sources */,
