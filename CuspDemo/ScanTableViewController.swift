@@ -11,7 +11,7 @@ import Cusp
 
 class ScanTableViewController: UITableViewController {
 
-	var peripherals: [Peripheral]? {
+	var advertisements: [Advertisement]? {
 		didSet {
 			self.tableView.reloadData()
 		}
@@ -20,11 +20,7 @@ class ScanTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisements) in
-			var ps = [Peripheral]()
-			advertisements.forEach({ (ad) in
-				ps.append(ad.peripheral)
-			})
-			self.peripherals = ps
+			self.advertisements = advertisements
 		}) { (error) in
 			// error raised while scanning
 		}
@@ -37,7 +33,7 @@ class ScanTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.peripherals?.count ?? 0
+        return self.advertisements?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -48,7 +44,15 @@ class ScanTableViewController: UITableViewController {
 			cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "reuseIdentifier")
 		}
 
-		cell.textLabel?.text = peripherals?[indexPath.row].name
+		let deviceName = advertisements?[indexPath.row].peripheral.name ?? "<unnamed>"
+		var rssiStr = ""
+		if let rssi = advertisements?[indexPath.row].RSSI {
+			rssiStr = "\(rssi)"
+		} else {
+			rssiStr = "n/a"
+		}
+		cell.textLabel?.text = "\(rssiStr) \(deviceName)"
+
 		return cell
     }
 
