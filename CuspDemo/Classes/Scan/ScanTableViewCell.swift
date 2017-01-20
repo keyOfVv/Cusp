@@ -18,7 +18,7 @@ class ScanTableViewCell: UITableViewCell {
 
 	var advertisement: Advertisement? {
 		didSet {
-			deviceNameLabel.text = advertisement?.localName ?? "<unnamed>"
+			deviceNameLabel.text = advertisement?.peripheral.name ?? "<unnamed>"
 			if let rssi = advertisement?.RSSI {
 				RSSILabel.text = "RSSI: \(rssi)"
 			} else {
