@@ -9,6 +9,8 @@
 import UIKit
 import Cusp
 
+private let ScanTableViewCellReuseID = "ScanTableViewCell"
+
 class ScanTableViewController: UITableViewController {
 
 	var advertisements: [Advertisement]? {
@@ -20,6 +22,7 @@ class ScanTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		title = "Scan"
+		tableView.register(UINib(nibName: "ScanTableViewCell", bundle: nil), forCellReuseIdentifier: ScanTableViewCellReuseID)
 		setRescanButton()
 		scan()
     }
@@ -48,23 +51,13 @@ class ScanTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		var cell: UITableViewCell
-		if let reuseCell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier") {
-			cell = reuseCell
-		} else {
-			cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "reuseIdentifier")
-		}
-
-		let deviceName = advertisements?[indexPath.row].peripheral.name ?? "<unnamed>"
-		var rssiStr = ""
-		if let rssi = advertisements?[indexPath.row].RSSI {
-			rssiStr = "\(rssi)"
-		} else {
-			rssiStr = "n/a"
-		}
-		cell.textLabel?.text = "\(rssiStr) \(deviceName)"
-
+		let cell = tableView.dequeueReusableCell(withIdentifier: ScanTableViewCellReuseID, for: indexPath) as! ScanTableViewCell
+		cell.advertisement = advertisements?[indexPath.row]
 		return cell
     }
+
+	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return 100
+	}
 
 }

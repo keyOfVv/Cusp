@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		70283F6A1E0D0C1B00EC3615 /* DemoMainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */; };
 		70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */; };
 		702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */; };
 		702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7E01DF935EF00CC52A8 /* ViewController.swift */; };
@@ -15,13 +14,16 @@
 		702DE7E61DF935EF00CC52A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E51DF935EF00CC52A8 /* Assets.xcassets */; };
 		702DE7E91DF935EF00CC52A8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 702DE7E71DF935EF00CC52A8 /* LaunchScreen.storyboard */; };
 		702DE7F41DF935F000CC52A8 /* CuspDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */; };
+		703E64291E321FCF00D98366 /* DemoMainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703E64261E321FCF00D98366 /* DemoMainTableViewController.swift */; };
+		703E642A1E321FCF00D98366 /* ScanTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703E64281E321FCF00D98366 /* ScanTableViewController.swift */; };
+		703E642D1E32201B00D98366 /* ScanTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703E642B1E32201B00D98366 /* ScanTableViewCell.swift */; };
+		703E642E1E32201B00D98366 /* ScanTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 703E642C1E32201B00D98366 /* ScanTableViewCell.xib */; };
 		7041B0D91E1396D5008B35B8 /* DescriptorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */; };
 		706208311E2CBB80008B3981 /* CuspPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 706208301E2CBB80008B3981 /* CuspPeripheral.swift */; };
 		707EED361E03ED8800083BEF /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		707EED371E03ED8800083BEF /* Cusp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		707EED3C1E03FF9D00083BEF /* GATT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EED3B1E03FF9D00083BEF /* GATT.swift */; };
 		708A12DD1E2C708E0064126E /* CuspCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708A12DC1E2C708E0064126E /* CuspCentral.swift */; };
-		708A12DF1E2C76980064126E /* ScanTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708A12DE1E2C76980064126E /* ScanTableViewController.swift */; };
 		70AD57181D8A8E59003042F4 /* Cusp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70AD570E1D8A8E59003042F4 /* Cusp.framework */; };
 		70AD571D1D8A8E59003042F4 /* CuspTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AD571C1D8A8E59003042F4 /* CuspTests.swift */; };
 		70AD571F1D8A8E59003042F4 /* Cusp.h in Headers */ = {isa = PBXBuildFile; fileRef = 70AD57111D8A8E59003042F4 /* Cusp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -88,7 +90,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMainTableViewController.swift; sourceTree = "<group>"; };
 		70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundScanViewController.swift; sourceTree = "<group>"; };
 		702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuspDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -100,11 +101,14 @@
 		702DE7EF1DF935EF00CC52A8 /* CuspDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CuspDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7F31DF935EF00CC52A8 /* CuspDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CuspDemoTests.swift; sourceTree = "<group>"; };
 		702DE7F51DF935F000CC52A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		703E64261E321FCF00D98366 /* DemoMainTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMainTableViewController.swift; sourceTree = "<group>"; };
+		703E64281E321FCF00D98366 /* ScanTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewController.swift; sourceTree = "<group>"; };
+		703E642B1E32201B00D98366 /* ScanTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewCell.swift; sourceTree = "<group>"; };
+		703E642C1E32201B00D98366 /* ScanTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScanTableViewCell.xib; sourceTree = "<group>"; };
 		7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptorViewController.swift; sourceTree = "<group>"; };
 		706208301E2CBB80008B3981 /* CuspPeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CuspPeripheral.swift; sourceTree = "<group>"; };
 		707EED3B1E03FF9D00083BEF /* GATT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GATT.swift; sourceTree = "<group>"; };
 		708A12DC1E2C708E0064126E /* CuspCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CuspCentral.swift; sourceTree = "<group>"; };
-		708A12DE1E2C76980064126E /* ScanTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanTableViewController.swift; sourceTree = "<group>"; };
 		70AD570E1D8A8E59003042F4 /* Cusp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Cusp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70AD57111D8A8E59003042F4 /* Cusp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cusp.h; sourceTree = "<group>"; };
 		70AD57121D8A8E59003042F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -172,10 +176,9 @@
 		702DE7DD1DF935EF00CC52A8 /* CuspDemo */ = {
 			isa = PBXGroup;
 			children = (
+				703E64241E321FCF00D98366 /* Classes */,
 				702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */,
 				702DE7E01DF935EF00CC52A8 /* ViewController.swift */,
-				70283F691E0D0C1B00EC3615 /* DemoMainTableViewController.swift */,
-				708A12DE1E2C76980064126E /* ScanTableViewController.swift */,
 				70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */,
 				7041B0D81E1396D5008B35B8 /* DescriptorViewController.swift */,
 				702DE7E21DF935EF00CC52A8 /* Main.storyboard */,
@@ -193,6 +196,33 @@
 				702DE7F51DF935F000CC52A8 /* Info.plist */,
 			);
 			path = CuspDemoTests;
+			sourceTree = "<group>";
+		};
+		703E64241E321FCF00D98366 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				703E64251E321FCF00D98366 /* Main */,
+				703E64271E321FCF00D98366 /* Scan */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		703E64251E321FCF00D98366 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				703E64261E321FCF00D98366 /* DemoMainTableViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		703E64271E321FCF00D98366 /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				703E64281E321FCF00D98366 /* ScanTableViewController.swift */,
+				703E642B1E32201B00D98366 /* ScanTableViewCell.swift */,
+				703E642C1E32201B00D98366 /* ScanTableViewCell.xib */,
+			);
+			path = Scan;
 			sourceTree = "<group>";
 		};
 		706978C71DFB0F65003A845E /* delegate */ = {
@@ -487,6 +517,7 @@
 			files = (
 				702DE7E91DF935EF00CC52A8 /* LaunchScreen.storyboard in Resources */,
 				702DE7E61DF935EF00CC52A8 /* Assets.xcassets in Resources */,
+				703E642E1E32201B00D98366 /* ScanTableViewCell.xib in Resources */,
 				702DE7E41DF935EF00CC52A8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -535,11 +566,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70283F6A1E0D0C1B00EC3615 /* DemoMainTableViewController.swift in Sources */,
 				7041B0D91E1396D5008B35B8 /* DescriptorViewController.swift in Sources */,
-				708A12DF1E2C76980064126E /* ScanTableViewController.swift in Sources */,
 				70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */,
+				703E642A1E321FCF00D98366 /* ScanTableViewController.swift in Sources */,
+				703E64291E321FCF00D98366 /* DemoMainTableViewController.swift in Sources */,
 				702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */,
+				703E642D1E32201B00D98366 /* ScanTableViewCell.swift in Sources */,
 				702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
