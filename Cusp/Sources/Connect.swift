@@ -32,12 +32,15 @@ class ConnectRequest: CentralOperationRequest {
 
 	- returns: a ConnectRequest instance
 	*/
-	convenience init(peripheral: Peripheral, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
+	convenience init(peripheral: Peripheral, timedOutAfter duration: Double? = nil, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 		self.init()
         self.peripheral = peripheral
         self.success    = success
         self.failure    = failure
         self.abruption  = abruption
+		if let interval = duration {
+			self.timeoutPeriod = interval
+		}
 	}
 
 	override var hash: Int {
@@ -58,19 +61,20 @@ extension CuspCentral {
 	connect a peripheral
 
 	- parameter peripheral: a CBPeripheral instance to be connected.
+	- parameter timedOutAfter: a period of time in second that connecting operation is deemed as timed out after that amount of time elapsed, left nil will fallback to default value (10s)
 	- parameter options:	CBConnectPeripheralOptionNotifyOnConnectionKey, CBConnectPeripheralOptionNotifyOnDisconnectionKey, CBConnectPeripheralOptionNotifyOnNotificationKey;
 	- parameter success:    a closure called when connection established.
 	- parameter failure:    a closure called when connecting attempt failed or timed-out.
 	- parameter abruption:  a closure called when connection broken-down.
 	*/
-	public func connect(_ peripheral: Peripheral, options:[String:Any]? = nil, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
+	public func connect(_ peripheral: Peripheral, timedOutAfter duration: Double? = nil, options:[String:Any]? = nil, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = assertAvailability() {
 			failure?(error)
 			return
 		}
 		// create a connect request ...
-		let req = ConnectRequest(peripheral: peripheral, success: success, failure: failure, abruption: abruption)
+		let req = ConnectRequest(peripheral: peripheral, timedOutAfter: duration, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set
 		reqQ.async { () -> Void in
 			self.connectReqs.insert(req)
