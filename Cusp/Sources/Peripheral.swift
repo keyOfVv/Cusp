@@ -46,13 +46,13 @@ public enum PeripheralState : Int {
 	// MARK: Stored Properties
 
 	/// operation concurrent queue for all operations including read, write, subscribe, unsubscribe, RSSI, etc.;
-	let operationQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
+	let operationQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_OPERATION_CONCURRENT, qos: DispatchQoS.userInteractive, attributes: DispatchQueue.Attributes.concurrent)
 
 	/// request serial queue for all add/remove operation on all kinds of request;
-	var requestQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_REQUEST_SERIAL, attributes: [])
+	var requestQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_REQUEST_SERIAL, qos: DispatchQoS.userInteractive, attributes: [])
 
 	/// subscription serial queue for subscription operation;
-	var subscriptionQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL, attributes: [])
+	var subscriptionQ: DispatchQueue = DispatchQueue(label: CUSP_PERIPHERAL_Q_SUBSCRIPTION_SERIAL, qos: DispatchQoS.userInteractive, attributes: [])
 
 	/// requests of service discovering
 	var serviceDiscoveringRequests        = Set<ServiceDiscoveringRequest>()

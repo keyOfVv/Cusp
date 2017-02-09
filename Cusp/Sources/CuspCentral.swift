@@ -65,11 +65,11 @@ public class CuspCentral: NSObject {
 		super.init()
 	}
 	/// main operation concurrent queue, for all BLE-related operations (scan, connect, cancel-connect, disconnect)
-	let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, attributes: DispatchQueue.Attributes.concurrent)
+	let mainQ: DispatchQueue = DispatchQueue(label: CUSP_CENTRAL_Q_MAIN_CONCURRENT, qos: DispatchQoS.userInteractive, attributes: DispatchQueue.Attributes.concurrent)
 	/// request operation serial queue, for all operations (add/remove) on reqs (scan, connect, cancel-connect, disconnect)
-	let reqQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_REQUEST_SERIAL, attributes: [])
+	let reqQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_REQUEST_SERIAL, qos: DispatchQoS.userInteractive, attributes: [])
 	/// session operation serial queue, for all operations (add/remove) on sessions (connected peripherals)
-	let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, attributes: [])
+	let sesQ: DispatchQueue  = DispatchQueue(label: CUSP_CENTRAL_Q_SESSION_SERIAL, qos: DispatchQoS.userInteractive, attributes: [])
 
 	fileprivate(set) var centralRestoreIdentifier: String
 

@@ -19,6 +19,7 @@ class DemoMainTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		title = "Cusp Demos"
+		NotificationCenter.default.addObserver(self, selector: #selector(self.didReceiveNotification(notification:)), name: NSNotification.Name.CuspStateDidChange, object: nil)
     }
 
     // MARK: - Table view data source
@@ -66,5 +67,13 @@ class DemoMainTableViewController: UITableViewController {
 		default:
 			break
 		}
+	}
+}
+
+// MARK: -
+extension DemoMainTableViewController {
+
+	func didReceiveNotification(notification: Notification) {
+		dog(notification)
 	}
 }
