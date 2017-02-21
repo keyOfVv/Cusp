@@ -9,6 +9,12 @@ If your app plays as central in BLE communication, use `CuspCentral` class.
 
 ## Usage
 
+### Project Settings
+
+Since Cusp is capable of perform BLE operations in background, please make sure the `Info.plist` of your project contains `bluetooth-central` in `UIBackgroundModes` key.
+
+![](./images/info_plist_background_mode.jpeg "App communicates using CoreBluetooth")
+
 ### Prepare
 
 To get the true state of device's BLE module, CuspCentral shall be prepared BEFORE any operations.
