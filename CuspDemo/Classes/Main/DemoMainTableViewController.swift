@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Cusp
 
 /**
 * 1. Scan
@@ -20,6 +21,12 @@ class DemoMainTableViewController: UITableViewController {
         super.viewDidLoad()
 		title = "Cusp Demos"
 		NotificationCenter.default.addObserver(self, selector: #selector(self.didReceiveNotification(notification:)), name: NSNotification.Name.CuspStateDidChange, object: nil)
+
+		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisements) in
+			//				self.advertisements = advertisements
+		}) { (error) in
+			// error raised while scanning
+		}
     }
 
     // MARK: - Table view data source
