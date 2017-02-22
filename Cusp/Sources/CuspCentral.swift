@@ -222,12 +222,7 @@ extension CuspCentral {
 		// session retrieval operation shall be performed in sesQ to prevent race condition
 		var tgtSession: PeripheralSession?
 		self.sesQ.sync { () -> Void in
-			for session in self.sessions {
-				if session.peripheral == peripheral {
-					tgtSession = session
-					break
-				}
-			}
+			tgtSession = sessions.first { $0.peripheral == peripheral }
 		}
 		return tgtSession
 	}
@@ -244,12 +239,7 @@ extension CuspCentral {
 		// session retrieval operation shall be performed in sesQ to prevent race condition
 		var tgtSession: PeripheralSession?
 		sesQ.sync {
-			for s in sessions {
-				if s.peripheral == p {
-					tgtSession = s
-					break
-				}
-			}
+			tgtSession = sessions.first { $0.peripheral == p }
 		}
 		return tgtSession
 	}

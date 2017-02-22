@@ -32,38 +32,14 @@ extension CuspCentral: CBCentralManagerDelegate {
 	*/
 	public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
 		mainQ.async { () -> Void in
-			// 0. check if any custom peripheral class registered
-//			if !self.customClasses.isEmpty {
-//				// custom peripheral class exists
-//				// 1. once discovered, wrap CBPeripheral into custom class...
-//				for (regex, aClass) in self.customClasses {
-//					if peripheral.matches(regex) {
-//						if let classRef = aClass.self as? Peripheral.Type {
-//							// 1. check if core catched
-//							if let p = self.peripheralFor(peripheral) {
-//								peripheral.delegate = p
-//								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-//							} else {
-//								// 2. uncatched, then catch it!
-//								let p = classRef.init(core: peripheral)
-//								peripheral.delegate = p
-//								self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-//							}
-//						}
-//					}
-//				}
-//			} else {
-				// no custom peripheral class
-				// 1. check if core catched
-				if let p = self.peripheralFor(peripheral) {
-					peripheral.delegate = p
-					self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-				} else {
-					let p = Peripheral.init(core: peripheral)
-					peripheral.delegate = p
-					self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
-				}
-//			}
+			if let p = self.peripheralFor(peripheral) {
+				peripheral.delegate = p
+				self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
+			} else {
+				let p = Peripheral.init(core: peripheral)
+				peripheral.delegate = p
+				self.dealWithFoundPeripherals(p, advertisementData: advertisementData, RSSI: RSSI)
+			}
 		}
 	}
 
@@ -76,16 +52,8 @@ extension CuspCentral: CBCentralManagerDelegate {
 	public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
 		dog("CONNECTED: \(peripheral)")
 		mainQ.async { () -> Void in
-			// find the target connect request ...
-			var tgtReq: ConnectRequest?
-			for req in self.connectReqs {
-				if req.peripheral.core == peripheral {
-					tgtReq = req
-					break
-				}
-			}
-			// req target found
-			if let req = tgtReq {
+			// find matched connect request
+			if let req = (self.connectReqs.first { $0.peripheral.core == peripheral }) {
 				// 1.disable timeout call
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
@@ -120,16 +88,8 @@ extension CuspCentral: CBCentralManagerDelegate {
 	*/
 	public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
 		mainQ.async { () -> Void in
-			// find the target connect request ...
-			var tgtReq: ConnectRequest?
-			for req in self.connectReqs {
-				if req.peripheral == peripheral {
-					tgtReq = req
-					break
-				}
-			}
-			// req target found, call its failure closure, then remove it
-			if let req = tgtReq {
+			// find matched connect request, call its failure closure, then remove it
+			if let req = (self.connectReqs.first{ $0.peripheral.core == peripheral }) {
 				// 1. disable timeout call
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
@@ -178,14 +138,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 
 				// disconnect-active
 				// find out specific disconnect req
-				var tgtDisReq: DisconnectRequest?
-				for req in self.disconnectReqs {
-					if req.peripheral.core == peripheral {
-						tgtDisReq = req
-						break
-					}
-				}
-				if let req = tgtDisReq {
+				if let req = (self.disconnectReqs.first { $0.peripheral.core == peripheral }) {
 					DispatchQueue.main.async(execute: { () -> Void in
 						// call completion closure
 						req.completion?()
@@ -207,14 +160,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 
 				// cancel-pending
 				// find out specific cancel-connect req
-				var tgtKclReq: CancelConnectRequest?
-				for req in self.cancelConnectReqs {
-					if req.peripheral.core == peripheral {
-						tgtKclReq = req
-						break
-					}
-				}
-				if let req = tgtKclReq {
+				if let req = (self.cancelConnectReqs.first { $0.peripheral.core == peripheral }) {
 					DispatchQueue.main.async(execute: { () -> Void in
 						// call completion closure
 						req.completion?()
@@ -246,12 +192,7 @@ extension CuspCentral {
 	*/
 	func peripheralFor(_ core: CBPeripheral) -> Peripheral? {
 		dog("seach for peripheral in \(self.availables) of \(self)")
-		for p in availables {
-			if p.core == core {
-				return p
-			}
-		}
-		return nil
+		return availables.first { $0.core == core }
 	}
 
 	/**
@@ -281,12 +222,7 @@ extension CuspCentral {
 	}
 
 	func coreCatched(_ core: CBPeripheral) -> Bool {
-		for p in availables {
-			if p.core == core {
-				return true
-			}
-		}
-		return false
+		return availables.first { $0.core == core } != nil
 	}
 }
 

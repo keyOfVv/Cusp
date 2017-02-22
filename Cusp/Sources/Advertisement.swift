@@ -43,14 +43,7 @@ open class Advertisement: NSObject {
 
 	/// a UUIDString array contains advertising UUIDStrig of peripheral
 	open var advertisingUUIDStrings: [String] {
-		var UUIDStrings = [String]()
-		if let UUIDs = self.advertisingUUIDs {
-			for uuid in UUIDs {
-				let UUIDString = uuid.uuidString
-				UUIDStrings.append(UUIDString)
-			}
-		}
-		return UUIDStrings
+		return advertisingUUIDs?.map { $0.uuidString } ?? []
 	}
 
 	/// signal strength 信号强度

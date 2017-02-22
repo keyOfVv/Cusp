@@ -105,11 +105,7 @@ class CharacteristicDiscoveringRequest: PeripheralOperationRequest {
 			return a.uuidString <= b.uuidString
 		}
 		// assemble uuid strings
-		var string = service.uuid.uuidString
-		for uuid in array {
-			string += uuid.uuidString
-		}
-		return string.hashValue
+		return array.reduce(service.uuid.uuidString) { $0 + $1.uuidString }.hashValue
 	}
 
 	override func isEqual(_ object: Any?) -> Bool {

@@ -137,15 +137,7 @@ extension Peripheral {
 
 	/// get service object via subscription
 	public subscript(serviceUUIDString: String) -> Service? {
-		guard let servs = services else {
-			return nil
-		}
-		for serv in servs {
-			if serv.uuid.uuidString == serviceUUIDString.uppercased() {
-				return serv
-			}
-		}
-		return nil
+		return services?.first { $0.uuid.uuidString.uppercased() == serviceUUIDString.uppercased() }
 	}
 
 	/// get service object
@@ -241,15 +233,7 @@ extension Service {
 
 	/// get characteristic object via subscript
 	public subscript(characteristicUUIDString: String) -> Characteristic? {
-		guard let chars = characteristics else {
-			return nil
-		}
-		for char in chars {
-			if char.uuid.uuidString == characteristicUUIDString.uppercased() {
-				return char
-			}
-		}
-		return nil
+		return characteristics?.first { $0.uuid.uuidString.uppercased() == characteristicUUIDString.uppercased() }
 	}
 
 	/// get characteristic object

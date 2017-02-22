@@ -69,20 +69,12 @@ class ScanRequest: NSObject {
 			return
 		}
 		// convert uuid string array into UUID array
-		var uuids = [UUID]()
-		for uuidString in uuidStrings {
-			uuids.append(UUID(string: uuidString))
-		}
+		let uuids = uuidStrings.map { UUID(string: $0) }
 		self.init(advertisingUUIDs: uuids, duration: duration, completion: completion, abruption: abruption)
 	}
 
 	override var hash: Int {
-		guard let UUIDs = self.advertisingUUIDs else { return 0 }
-		var string = ""
-		for UUID in UUIDs {
-			string += UUID.uuidString
-		}
-		return string.hashValue
+		return advertisingUUIDs?.reduce("") { $0 + $1.uuidString }.hashValue ?? 0
 	}
 
 	override func isEqual(_ object: Any?) -> Bool {
@@ -157,11 +149,7 @@ extension CuspCentral {
 		}
 
 		if let uuidStrings = advertisingServiceUUIDStrings {
-			var uuids = [UUID]()
-			for uuidString in uuidStrings {
-				let uuid = UUID(string: uuidString)
-				uuids.append(uuid)
-			}
+			let uuids = uuidStrings.map { UUID(string: $0) }
 			self.scanForUUID(uuids, duration: duration, completion: completion, abruption: abruption)
 		} else {
 			self.scanForUUID(nil, duration: duration, completion: completion, abruption: abruption)
