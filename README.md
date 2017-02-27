@@ -109,6 +109,15 @@ peripheral.unsubscribe(characteristic: "FE63", ofService: "FE60", success: { (re
 })
 ```
 
+### Read RSSI after connection
+
+```swift
+peripheral.readRSSI(success: { (resp) in
+	print(resp?.RSSI)
+	}, failure: { _ in
+})
+```
+
 ## Requirements
 
 * iOS 8.0+
