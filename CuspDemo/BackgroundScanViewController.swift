@@ -20,7 +20,7 @@ class BackgroundScanViewController: UIViewController {
     }
 
 	func repeatScanForever(duration: TimeInterval) {
-		CuspCentral.defaultCentral.scanForUUIDString(nil, duration: duration, completion: { (ads) in
+		CuspCentral.default.scanForUUIDString(nil, duration: duration, completion: { (ads) in
 			dog("\(ads.count) peripherals found")
 		}, abruption: { (error) in
 
@@ -29,6 +29,6 @@ class BackgroundScanViewController: UIViewController {
 
 	deinit {
 		dog("BackgroundScanViewController deinited")
-		CuspCentral.defaultCentral.stopScan()
+		CuspCentral.default.stopScan()
 	}
 }

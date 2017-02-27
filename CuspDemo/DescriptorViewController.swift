@@ -22,7 +22,7 @@ class DescriptorViewController: UIViewController {
 		title = "Descriptor Test"
 
 		enableDebugLog(enabled: false)
-		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (ads) in
+		CuspCentral.default.scanForUUIDString(nil, completion: { (ads) in
 			self.peripheral = (ads.first { $0.peripheral.name == "keyang" })?.peripheral
 		}) { (error) in
 

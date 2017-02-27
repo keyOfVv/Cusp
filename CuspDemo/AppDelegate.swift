@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		Cusp.enableDebugLog(enabled: true)
-		CuspCentral.defaultCentral.prepare { (available) in
+		CuspCentral.default.prepare { (available) in
 			dog("BLE is \(available ? "" : "NOT ")ready")
 		}
 		return true
@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func repeatScanForever() {
-		CuspCentral.defaultCentral.scanForUUIDString(["1803"], completion: { (ads) in
+		CuspCentral.default.scanForUUIDString(["1803"], completion: { (ads) in
 			dog("\(ads.count) peripherals found while in background")
 			self.repeatScanForever()
 		}, abruption: { (error) in

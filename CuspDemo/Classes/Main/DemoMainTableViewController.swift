@@ -22,7 +22,7 @@ class DemoMainTableViewController: UITableViewController {
 		title = "Cusp Demos"
 		NotificationCenter.default.addObserver(self, selector: #selector(self.didReceiveNotification(notification:)), name: NSNotification.Name.CuspStateDidChange, object: nil)
 
-		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (advertisements) in
+		CuspCentral.default.scanForUUIDString(nil, completion: { (advertisements) in
 			//				self.advertisements = advertisements
 		}) { (error) in
 			// error raised while scanning

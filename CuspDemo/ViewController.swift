@@ -19,11 +19,11 @@ class ViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		CuspCentral.defaultCentral.scanForUUIDString(nil, completion: { (ads) in
+		CuspCentral.default.scanForUUIDString(nil, completion: { (ads) in
 			self.per = ads.first?.peripheral
 			print(ads)
 			if ads.count > 0 {
-				CuspCentral.defaultCentral.stopScan()
+				CuspCentral.default.stopScan()
 			}
 		}, abruption: { (error) in
 
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
 		guard let per = self.per else {
 			return
 		}
-		CuspCentral.defaultCentral.connect(per, success: { (resp) in
+		CuspCentral.default.connect(per, success: { (resp) in
 			print("connected")
 			per.getManufacturerNameString(completion: { (manufacturerName) in
 				print(manufacturerName)
