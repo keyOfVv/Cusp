@@ -79,7 +79,9 @@ public class CuspCentral: NSObject {
 
 	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
-		return CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: self.centralRestoreIdentifier])
+		let centralManager = CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: self.centralRestoreIdentifier])
+		_ = centralManager.state.rawValue
+		return centralManager
 	}()
 
 	/// BLE state
@@ -128,6 +130,7 @@ extension CuspCentral {
 
 	- parameter completion: a block after completed preparing
 	*/
+	@available(*, deprecated, message: "this method will be removed in near future")
 	public func prepare(_ completion: ((_ available: Bool) -> Void)?) {
 		_ = self.isBLEAvailable()
 		self.mainQ.asyncAfter(deadline: DispatchTime.now() + 0.1) { 

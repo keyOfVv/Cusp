@@ -15,17 +15,6 @@ Since Cusp is capable of perform BLE operations in background, please make sure 
 
 ![](./images/info_plist_background_mode.jpeg "App communicates using CoreBluetooth")
 
-### Prepare
-
-To get the true state of device's BLE module, CuspCentral shall be prepared BEFORE any operations.
-
-```Swift
-import Cusp
-
-CuspCentral.defaultCentral.prepare { (available) in
-	print("BLE is \(available ? "" : "NOT ")ready")
-}
-```
 
 ### Scan
 

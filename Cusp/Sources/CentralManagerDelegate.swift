@@ -191,7 +191,6 @@ extension CuspCentral {
 	- returns: Peripheral object or nil if not found
 	*/
 	func peripheralFor(_ core: CBPeripheral) -> Peripheral? {
-		dog("seach for peripheral in \(self.availables) of \(self)")
 		return availables.first { $0.core == core }
 	}
 
@@ -204,7 +203,6 @@ extension CuspCentral {
 	*/
 	func dealWithFoundPeripherals(_ peripheral: Peripheral, advertisementData: [String : Any], RSSI: NSNumber) {
 		availables.insert(peripheral)
-		dog("added peripheral in \(self.availables) of \(self)")
 		// 2. then forge an advertisement object...
 		let advInfo = Advertisement(peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI)
 		let uuids = advInfo.advertisingUUIDs

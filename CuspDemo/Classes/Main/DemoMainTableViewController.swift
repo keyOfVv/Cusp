@@ -51,7 +51,7 @@ class DemoMainTableViewController: UITableViewController {
 		case 0:
 			cell.textLabel?.text = "Scan"
 		case 1:
-			cell.textLabel?.text = "Background Scanning"
+			cell.textLabel?.text = "Scan->Connect->Subscribe->Unsubscribe->Disconnect"
 		case 2:
 			cell.textLabel?.text = "Descriptor Operations"
 		default:
@@ -66,8 +66,8 @@ class DemoMainTableViewController: UITableViewController {
 			let scanDemoVC = ScanTableViewController(style: UITableViewStyle.plain)
 			navigationController?.pushViewController(scanDemoVC, animated: true)
 		case 1:
-			let bgScanVC = BackgroundScanViewController()
-			navigationController?.pushViewController(bgScanVC, animated: true)
+			let connTBVC = ConnectTableViewController()
+			navigationController?.pushViewController(connTBVC, animated: true)
 		case 2:
 			let descVC = DescriptorViewController()
 			navigationController?.pushViewController(descVC, animated: true)

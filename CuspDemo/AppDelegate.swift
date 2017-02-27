@@ -18,9 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		Cusp.enableDebugLog(enabled: true)
-		CuspCentral.default.prepare { (available) in
-			dog("BLE is \(available ? "" : "NOT ")ready")
-		}
 		return true
 	}
 
@@ -30,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationDidEnterBackground(_ application: UIApplication) {
-//		CuspCentral.defaultCentral.executeBackgroundTask(withApplication: application) {
+//		CuspCentral.default.executeBackgroundTask(withApplication: application) {
 //			self.repeatScanForever()
 //		}
 	}

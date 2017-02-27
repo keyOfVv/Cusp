@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		701970DE1E63D428008EF257 /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701970DD1E63D428008EF257 /* ConnectTableViewController.swift */; };
 		70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */; };
 		702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */; };
 		702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7E01DF935EF00CC52A8 /* ViewController.swift */; };
@@ -90,6 +91,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		701970DD1E63D428008EF257 /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
 		70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundScanViewController.swift; sourceTree = "<group>"; };
 		702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuspDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +175,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		701970DC1E63D3CB008EF257 /* Connect */ = {
+			isa = PBXGroup;
+			children = (
+				701970DD1E63D428008EF257 /* ConnectTableViewController.swift */,
+			);
+			path = Connect;
+			sourceTree = "<group>";
+		};
 		702DE7DD1DF935EF00CC52A8 /* CuspDemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +211,7 @@
 		703E64241E321FCF00D98366 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				701970DC1E63D3CB008EF257 /* Connect */,
 				703E64251E321FCF00D98366 /* Main */,
 				703E64271E321FCF00D98366 /* Scan */,
 			);
@@ -566,6 +577,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				701970DE1E63D428008EF257 /* ConnectTableViewController.swift in Sources */,
 				7041B0D91E1396D5008B35B8 /* DescriptorViewController.swift in Sources */,
 				70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */,
 				703E642A1E321FCF00D98366 /* ScanTableViewController.swift in Sources */,

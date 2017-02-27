@@ -9,7 +9,7 @@
 import UIKit
 import Cusp
 
-private let ScanTableViewCellReuseID = "ScanTableViewCell"
+let ScanTableViewCellReuseID = "ScanTableViewCell"
 
 class ScanTableViewController: UITableViewController {
 
@@ -33,17 +33,10 @@ class ScanTableViewController: UITableViewController {
 	}
 
 	func scan() {
-		CuspCentral.default.scanForUUIDString(["1803"], completion: { (advertisements) in
+		CuspCentral.default.scanForUUIDString(nil, completion: { (advertisements) in
 			self.advertisements = advertisements
 		}) { (error) in
 			// error raised while scanning
-		}
-		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1.0) { 
-			CuspCentral.default.scanForUUIDString(nil, completion: { (advertisements) in
-//				self.advertisements = advertisements
-			}) { (error) in
-				// error raised while scanning
-			}
 		}
 	}
 
