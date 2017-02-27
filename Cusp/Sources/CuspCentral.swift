@@ -50,11 +50,15 @@ public class CuspCentral: NSObject {
 		return CuspCentral.defaultCentral
 	}
 	/// default central
-	public class var defaultCentral: CuspCentral {
+	public class var `default`: CuspCentral {
 		struct Static {
 			static let instance: CuspCentral = CuspCentral(withRestoreIdentifier: nil)
 		}
 		return Static.instance
+	}
+	@available(*, deprecated, message: "use `default` instead")
+	public class var defaultCentral: CuspCentral {
+		return `default`
 	}
 	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
