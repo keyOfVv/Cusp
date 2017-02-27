@@ -41,7 +41,7 @@ class PeripheralOperationRequest: NSObject {
 
 	// MARK: Stored Properties
 
-	//	var peripheral: Peripheral!
+//	var peripheral: Peripheral!
 
 	/// 连接成功的回调
 	var success: ((Response?) -> Void)?

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		701970DE1E63D428008EF257 /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701970DD1E63D428008EF257 /* ConnectTableViewController.swift */; };
+		701970E11E63E109008EF257 /* ConnectTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701970E01E63E109008EF257 /* ConnectTableViewController.swift */; };
+		701970E41E63E15D008EF257 /* SCRTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701970E31E63E15D008EF257 /* SCRTableViewController.swift */; };
 		70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */; };
 		702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */; };
 		702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702DE7E01DF935EF00CC52A8 /* ViewController.swift */; };
@@ -91,7 +92,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		701970DD1E63D428008EF257 /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
+		701970E01E63E109008EF257 /* ConnectTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectTableViewController.swift; sourceTree = "<group>"; };
+		701970E31E63E15D008EF257 /* SCRTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCRTableViewController.swift; sourceTree = "<group>"; };
 		70283F6B1E0D0F2400EC3615 /* BackgroundScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundScanViewController.swift; sourceTree = "<group>"; };
 		702DE7DC1DF935EF00CC52A8 /* CuspDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CuspDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		702DE7DE1DF935EF00CC52A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -175,12 +177,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		701970DC1E63D3CB008EF257 /* Connect */ = {
+		701970DF1E63E109008EF257 /* Scan+Connect+Subscribe */ = {
 			isa = PBXGroup;
 			children = (
-				701970DD1E63D428008EF257 /* ConnectTableViewController.swift */,
+				701970E01E63E109008EF257 /* ConnectTableViewController.swift */,
 			);
-			path = Connect;
+			path = "Scan+Connect+Subscribe";
+			sourceTree = "<group>";
+		};
+		701970E21E63E129008EF257 /* Scan+Connect+ReadRSSI */ = {
+			isa = PBXGroup;
+			children = (
+				701970E31E63E15D008EF257 /* SCRTableViewController.swift */,
+			);
+			path = "Scan+Connect+ReadRSSI";
 			sourceTree = "<group>";
 		};
 		702DE7DD1DF935EF00CC52A8 /* CuspDemo */ = {
@@ -211,7 +221,8 @@
 		703E64241E321FCF00D98366 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				701970DC1E63D3CB008EF257 /* Connect */,
+				701970E21E63E129008EF257 /* Scan+Connect+ReadRSSI */,
+				701970DF1E63E109008EF257 /* Scan+Connect+Subscribe */,
 				703E64251E321FCF00D98366 /* Main */,
 				703E64271E321FCF00D98366 /* Scan */,
 			);
@@ -577,7 +588,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				701970DE1E63D428008EF257 /* ConnectTableViewController.swift in Sources */,
+				701970E11E63E109008EF257 /* ConnectTableViewController.swift in Sources */,
 				7041B0D91E1396D5008B35B8 /* DescriptorViewController.swift in Sources */,
 				70283F6C1E0D0F2400EC3615 /* BackgroundScanViewController.swift in Sources */,
 				703E642A1E321FCF00D98366 /* ScanTableViewController.swift in Sources */,
@@ -585,6 +596,7 @@
 				702DE7E11DF935EF00CC52A8 /* ViewController.swift in Sources */,
 				703E642D1E32201B00D98366 /* ScanTableViewCell.swift in Sources */,
 				702DE7DF1DF935EF00CC52A8 /* AppDelegate.swift in Sources */,
+				701970E41E63E15D008EF257 /* SCRTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

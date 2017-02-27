@@ -17,6 +17,8 @@ class RSSIRequest: PeripheralOperationRequest {
 
 	// MARK: Stored Properties
 
+	var identifier: NSUUID = NSUUID()
+
 	// MARK: Initializer
 
 	override init() {
@@ -40,7 +42,7 @@ class RSSIRequest: PeripheralOperationRequest {
 	}
 
 	override var hash: Int {
-		return self.hashValue
+		return identifier.hashValue
 	}
 
 	override func isEqual(_ object: Any?) -> Bool {

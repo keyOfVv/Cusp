@@ -22,22 +22,18 @@ class DemoMainTableViewController: UITableViewController {
 		title = "Cusp Demos"
 		NotificationCenter.default.addObserver(self, selector: #selector(self.didReceiveNotification(notification:)), name: NSNotification.Name.CuspStateDidChange, object: nil)
 
-		CuspCentral.default.scanForUUIDString(nil, completion: { (advertisements) in
-			//				self.advertisements = advertisements
-		}) { (error) in
-			// error raised while scanning
-		}
+//		CuspCentral.default.scanForUUIDString(nil, completion: { (advertisements) in
+//
+//		}) { (error) in
+//			// error raised while scanning
+//		}
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
+    override func numberOfSections(in tableView: UITableView) -> Int { return 1 }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return 3 }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		var cell: UITableViewCell
@@ -53,7 +49,7 @@ class DemoMainTableViewController: UITableViewController {
 		case 1:
 			cell.textLabel?.text = "Scan->Connect->Subscribe->Unsubscribe->Disconnect"
 		case 2:
-			cell.textLabel?.text = "Descriptor Operations"
+			cell.textLabel?.text = "Scan->Connect->ReadRSSI"
 		default:
 			break
 		}
@@ -69,8 +65,8 @@ class DemoMainTableViewController: UITableViewController {
 			let connTBVC = ConnectTableViewController()
 			navigationController?.pushViewController(connTBVC, animated: true)
 		case 2:
-			let descVC = DescriptorViewController()
-			navigationController?.pushViewController(descVC, animated: true)
+			let scrTBVC = SCRTableViewController()
+			navigationController?.pushViewController(scrTBVC, animated: true)
 		default:
 			break
 		}
