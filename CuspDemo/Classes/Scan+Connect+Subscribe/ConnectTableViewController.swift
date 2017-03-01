@@ -11,6 +11,8 @@ import Cusp
 
 class ConnectTableViewController: UITableViewController {
 
+	var count = 0
+
 	var ad: Advertisement? {
 		didSet {
 			tableView.reloadData()
@@ -43,6 +45,7 @@ class ConnectTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { return 100 }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		recount()
 		tableView.deselectRow(at: indexPath, animated: true)
 		guard let peripheral = self.ad?.peripheral else { return }
 		switch peripheral.state {
@@ -53,7 +56,7 @@ class ConnectTableViewController: UITableViewController {
 				                     success: { (_) in
 										dog("subscribed")
 				}, failure: nil, update: { (resp) in
-					dog(resp?.value)
+					self.count += 1
 				})
 			}, failure: nil, abruption: nil)
 		case .connected:
@@ -69,6 +72,14 @@ class ConnectTableViewController: UITableViewController {
 			dog("unknown state")
 		case .connecting:
 			dog("connecting")
+		}
+	}
+
+	func recount() {
+		DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10.0) {
+			print(self.count)
+			self.count = 0
+			self.recount()
 		}
 	}
 }

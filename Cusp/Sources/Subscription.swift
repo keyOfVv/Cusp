@@ -11,13 +11,13 @@ import Foundation
 
 class Subscription: NSObject {
 	fileprivate(set) var characteristic: Characteristic!
-	fileprivate(set) var update: ((Response?) -> Void)?
+	fileprivate(set) var update: ((Data?) -> Void)?
 
 	fileprivate override init() {
 		super.init()
 	}
 
-	convenience init(characteristic: Characteristic, update: ((Response?) -> Void)?) {
+	convenience init(characteristic: Characteristic, update: ((Data?) -> Void)?) {
 		self.init()
 		self.characteristic = characteristic
 		self.update = update

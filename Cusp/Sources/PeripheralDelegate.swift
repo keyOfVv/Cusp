@@ -185,46 +185,42 @@ extension Peripheral: CBPeripheralDelegate {
 		// this method is invoked after readValueForCharacteristic call or subscription...
 		// so it's necessary to find out whether value is read or subscirbed...
 		// if subscribed, then ignore read req
-		operationQ.async { () -> Void in
-			if characteristic.isNotifying {
-				// subscription update
-				// find out specific subscription
-				guard let sub = (self.subscriptions.first { $0.characteristic == characteristic }) else {
-					fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
-				}
-				// prepare to call update call back
-				if let errorInfo = error {
-					dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
-					dog(errorInfo)
-				} else {
-					let resp = Response()
-					resp.value = characteristic.value	// wrap value
-					DispatchQueue.main.async(execute: { () -> Void in
-						sub.update?(resp)
-					})
-				}
+		if characteristic.isNotifying {
+			// subscription update
+			// find out specific subscription
+			guard let sub = (self.subscriptions.first { $0.characteristic === characteristic }) else {
+				fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
+			}
+			// prepare to call update call back
+			if let errorInfo = error {
+				dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+				dog(errorInfo)
 			} else {
-				// may invoked by value reading req
-				// find out specific req
-				guard let req = (self.readRequests.first { $0.characteristic == characteristic }) else {
-					fatalError("Peripheral received value update via read operation(s) is not referenced by subscriptions set")
-				}
-				// prepare to call back
 				DispatchQueue.main.async(execute: { () -> Void in
-					// disable timeout closure
-					req.timedOut = false
-					if let errorInfo = error {
-						dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
-						// read value failed
-						req.failure?(CuspError(err: errorInfo))
-					} else {
-						// read value succeed
-						let resp = Response()
-						resp.value = characteristic.value	// wrap value
-						req.success?(resp)
-					}
+					sub.update?(characteristic.value)
 				})
 			}
+		} else {
+			// may invoked by value reading req
+			// find out specific req
+			guard let req = (self.readRequests.first { $0.characteristic == characteristic }) else {
+				fatalError("Peripheral received value update via read operation(s) is not referenced by subscriptions set")
+			}
+			// prepare to call back
+			DispatchQueue.main.async(execute: { () -> Void in
+				// disable timeout closure
+				req.timedOut = false
+				if let errorInfo = error {
+					dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+					// read value failed
+					req.failure?(CuspError(err: errorInfo))
+				} else {
+					// read value succeed
+					let resp = Response()
+					resp.value = characteristic.value	// wrap value
+					req.success?(resp)
+				}
+			})
 		}
 	}
 

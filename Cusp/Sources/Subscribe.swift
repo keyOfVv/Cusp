@@ -20,7 +20,7 @@ class SubscribeRequest: PeripheralOperationRequest {
 	var characteristic: Characteristic!
 
 	/// a closure called when characteristic's value updated
-	var update: ((Response?) -> Void)?
+	var update: ((Data?) -> Void)?
 
 	// MARK: Initializer
 
@@ -39,7 +39,7 @@ class SubscribeRequest: PeripheralOperationRequest {
 
 	- returns: a SubscribeRequest instance
 	*/
-	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+	convenience init(characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Data?) -> Void)?) {
 		self.init()
         self.characteristic = characteristic
         self.success        = success
@@ -71,7 +71,7 @@ extension Peripheral {
 	- parameter failure:        a closure called when subscription failed.
 	- parameter update:         a closure called when characteristic's value updated, after successfully subscribed, the update closure will be wrapped in Subscription object.
 	*/
-	func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+	func subscribe(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Data?) -> Void)?) {
 		// 0. check if ble is available
 		if let error = CuspCentral.default.assertAvailability() {
 			failure?(error)
@@ -101,7 +101,7 @@ extension Peripheral {
 		}
 	}
 
-	public func subscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
+	public func subscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Data?) -> Void)?) {
 		guard s.isValidUUID else { failure?(.invalidServiceUUID); return }
 		guard c.isValidUUID else { failure?(.invalidCharacteristicUUID); return }
 		discoverServices(UUIDStrings: [s], success: { (_) in
