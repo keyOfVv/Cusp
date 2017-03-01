@@ -193,16 +193,16 @@ extension Peripheral: CBPeripheralDelegate {
 					fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
 				}
 				// prepare to call update call back
-				DispatchQueue.main.async(execute: { () -> Void in
-					if let errorInfo = error {
-						dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
-						dog(errorInfo)
-					} else {
-						let resp = Response()
-						resp.value = characteristic.value	// wrap value
+				if let errorInfo = error {
+					dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+					dog(errorInfo)
+				} else {
+					let resp = Response()
+					resp.value = characteristic.value	// wrap value
+					DispatchQueue.main.async(execute: { () -> Void in
 						sub.update?(resp)
-					}
-				})
+					})
+				}
 			} else {
 				// may invoked by value reading req
 				// find out specific req

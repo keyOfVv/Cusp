@@ -102,47 +102,48 @@ extension Peripheral {
 	}
 
 	public func subscribe(characteristic c: String, ofService s: String, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, update: ((Response?) -> Void)?) {
-		if !s.isValidUUID {
-			failure?(CuspError.invalidServiceUUID)
-			return
-		}
-		if !c.isValidUUID {
-			failure?(CuspError.invalidCharacteristicUUID)
-			return
-		}
-		if let service = self[s] {
-			if let char = service[c] {
-				subscribe(char, success: success, failure: failure, update: update)
-			} else {
-				discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
-					if let char = service[c] {
-						self.subscribe(char, success: success, failure: failure, update: update)
-					} else {
-						failure?(CuspError.characteristicNotFound)
-					}
-				}, failure: { (error) in
-					failure?(error)
-				})
-			}
-		} else {
-			discoverServices(UUIDStrings: [s], success: { (resp) in
-				if let service = self[s] {
-					self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
-						if let char = service[c] {
-							self.subscribe(char, success: success, failure: failure, update: update)
-						} else {
-							failure?(CuspError.characteristicNotFound)
-						}
-					}, failure: { (error) in
-						failure?(error)
-					})
-				} else {
-					failure?(CuspError.serviceNotFound)
-				}
-			}, failure: { (error) in
-				failure?(error)
-			})
-		}
+		guard s.isValidUUID else { failure?(.invalidServiceUUID); return }
+		guard c.isValidUUID else { failure?(.invalidCharacteristicUUID); return }
+		discoverServices(UUIDStrings: [s], success: { (_) in
+			guard let service = self[s] else { fatalError("Service not found after successfully discovering") }
+			self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (_) in
+				guard let char = service[c] else { fatalError("Characteristic not found after successfully discovering") }
+				self.subscribe(char, success: success, failure: failure, update: update)
+			}, failure: { failure?($0) })
+		}) { failure?($0) }
+//		if let service = self[s] {
+//			if let char = service[c] {
+//				subscribe(char, success: success, failure: failure, update: update)
+//			} else {
+//				discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+//					if let char = service[c] {
+//						self.subscribe(char, success: success, failure: failure, update: update)
+//					} else {
+//						failure?(CuspError.characteristicNotFound)
+//					}
+//				}, failure: { (error) in
+//					failure?(error)
+//				})
+//			}
+//		} else {
+//			discoverServices(UUIDStrings: [s], success: { (resp) in
+//				if let service = self[s] {
+//					self.discoverCharacteristics(UUIDStrings: [c], ofService: service, success: { (resp) in
+//						if let char = service[c] {
+//							self.subscribe(char, success: success, failure: failure, update: update)
+//						} else {
+//							failure?(CuspError.characteristicNotFound)
+//						}
+//					}, failure: { (error) in
+//						failure?(error)
+//					})
+//				} else {
+//					failure?(CuspError.serviceNotFound)
+//				}
+//			}, failure: { (error) in
+//				failure?(error)
+//			})
+//		}
 	}
 }
 
