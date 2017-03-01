@@ -25,7 +25,7 @@ extension Peripheral: CBPeripheralDelegate {
 	*
 	*/
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-		self.operationQ.async { () -> Void in
+		operationQ.async { () -> Void in
 			// multiple reqs of discovering service within a short duration will be responsed simultaneously
 			// 1. check if service UUID specified in req...
 			for req in self.serviceDiscoveringRequests {
@@ -68,7 +68,7 @@ extension Peripheral: CBPeripheralDelegate {
 	*						they can be retrieved via <i>service</i>'s <code>characteristics</code> property.
 	*/
 	public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-		self.operationQ.async { () -> Void in
+		operationQ.async { () -> Void in
 			// multiple reqs of discovering characteristic within a short duration will be responsed simultaneously
 			// 1. check if characteristic UUID specified in req...
 			for req in self.characteristicDiscoveringRequests {
@@ -185,42 +185,44 @@ extension Peripheral: CBPeripheralDelegate {
 		// this method is invoked after readValueForCharacteristic call or subscription...
 		// so it's necessary to find out whether value is read or subscirbed...
 		// if subscribed, then ignore read req
-		if characteristic.isNotifying {
-			// subscription update
-			// find out specific subscription
-			guard let sub = (self.subscriptions.first { $0.characteristic === characteristic }) else {
-				fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
-			}
-			// prepare to call update call back
-			if let errorInfo = error {
-				dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
-				dog(errorInfo)
+		operationQ.async {
+			if characteristic.isNotifying {
+				// subscription update
+				// find out specific subscription
+				guard let sub = (self.subscriptions.first { $0.characteristic === characteristic }) else {
+					fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
+				}
+				// prepare to call update call back
+				if let errorInfo = error {
+					dog("updating value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+					dog(errorInfo)
+				} else {
+					DispatchQueue.main.async(execute: { () -> Void in
+						sub.update?(characteristic.value)
+					})
+				}
 			} else {
+				// may invoked by value reading req
+				// find out specific req
+				guard let req = (self.readRequests.first { $0.characteristic == characteristic }) else {
+					fatalError("Peripheral received value update via read operation(s) is not referenced by subscriptions set")
+				}
+				// prepare to call back
 				DispatchQueue.main.async(execute: { () -> Void in
-					sub.update?(characteristic.value)
+					// disable timeout closure
+					req.timedOut = false
+					if let errorInfo = error {
+						dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
+						// read value failed
+						req.failure?(CuspError(err: errorInfo))
+					} else {
+						// read value succeed
+						let resp = Response()
+						resp.value = characteristic.value	// wrap value
+						req.success?(resp)
+					}
 				})
 			}
-		} else {
-			// may invoked by value reading req
-			// find out specific req
-			guard let req = (self.readRequests.first { $0.characteristic == characteristic }) else {
-				fatalError("Peripheral received value update via read operation(s) is not referenced by subscriptions set")
-			}
-			// prepare to call back
-			DispatchQueue.main.async(execute: { () -> Void in
-				// disable timeout closure
-				req.timedOut = false
-				if let errorInfo = error {
-					dog("read value for char <\(characteristic.uuid.uuidString)> failed due to \(errorInfo)")
-					// read value failed
-					req.failure?(CuspError(err: errorInfo))
-				} else {
-					// read value succeed
-					let resp = Response()
-					resp.value = characteristic.value	// wrap value
-					req.success?(resp)
-				}
-			})
 		}
 	}
 
@@ -234,7 +236,7 @@ extension Peripheral: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a {@link writeValue:forCharacteristic:type:} call, when the <code>CBCharacteristicWriteWithResponse</code> type is used.
 	*/
 	public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-		self.operationQ.async(execute: { () -> Void in
+		operationQ.async(execute: { () -> Void in
 			guard let req = (self.writeRequests.first { $0.characteristic == characteristic }) else {
 				fatalError("Peripheral received didWriteValueForCharacteristic callback has no matched writeRequest")
 			}
@@ -265,7 +267,7 @@ extension Peripheral: CBPeripheralDelegate {
 	*  @discussion				This method returns the result of a @link setNotifyValue:forCharacteristic: @/link call.
 	*/
 	public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-		self.operationQ.sync {
+		operationQ.sync {
 			switch characteristic.isNotifying {
 			case true:
 				guard let req = (self.subscribeRequests.first { $0.characteristic == characteristic }) else {
@@ -322,7 +324,7 @@ extension Peripheral: CBPeripheralDelegate {
 
 	// TODO: 8.0+ only
 	public func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-		self.operationQ.async(execute: { () -> Void in
+		operationQ.async(execute: { () -> Void in
 			for req in self.RSSIRequests {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
