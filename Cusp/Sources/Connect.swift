@@ -69,10 +69,10 @@ extension CuspCentral {
 	*/
 	public func connect(_ peripheral: Peripheral, timedOutAfter duration: Double? = nil, options:[String:Any]? = nil, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?, abruption: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = assertAvailability() {
-			failure?(error)
-			return
-		}
+//		if let error = assertAvailability() {
+//			failure?(error)
+//			return
+//		}
 		// create a connect request ...
 		let req = ConnectRequest(peripheral: peripheral, timedOutAfter: duration, success: success, failure: failure, abruption: abruption)
 		// insert it into connectRequests set

@@ -101,10 +101,10 @@ extension CuspCentral {
 	*/
 	public func scanForUUID(_ advertisingServiceUUIDs: [UUID]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 		// 0. check if ble is available, if error is non-nil, call abruption closure
-		if let error = self.assertAvailability() {
-			abruption?(error)
-			return
-		}
+//		if let error = self.assertAvailability() {
+//			abruption?(error)
+//			return
+//		}
 
 		// 1. passed BLE availability check
 		self.isScanning = true
@@ -143,10 +143,10 @@ extension CuspCentral {
 	public func scanForUUIDString(_ advertisingServiceUUIDStrings: [String]?, duration: TimeInterval = defaultDuration, completion: (([Advertisement]) -> Void)?, abruption: ((CuspError) -> Void)?) {
 
 		// 0. check if ble is available
-		if let error = self.assertAvailability() {
-			abruption?(error)
-			return
-		}
+//		if let error = self.assertAvailability() {
+//			abruption?(error)
+//			return
+//		}
 
 		if let uuidStrings = advertisingServiceUUIDStrings {
 			let uuids = uuidStrings.map { UUID(string: $0) }

@@ -122,10 +122,10 @@ extension Peripheral {
 	*/
 	func write(_ data: Data, forCharacteristic characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.default.assertAvailability() {
-			failure?(error)
-			return
-		}
+//		if let error = CuspCentral.default.assertAvailability() {
+//			failure?(error)
+//			return
+//		}
 
 		let req = WriteRequest(data: data, characteristic: characteristic, success: success, failure: failure)
 		self.requestQ.async(execute: { () -> Void in
@@ -150,10 +150,10 @@ extension Peripheral {
 
 	public func write(_ data: Data, forDescriptor desc: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.default.assertAvailability() {
-			failure?(error)
-			return
-		}
+//		if let error = CuspCentral.default.assertAvailability() {
+//			failure?(error)
+//			return
+//		}
 
 		let req = WriteDescriptorRequest(data: data, descriptor: desc, success: success, failure: failure)
 		self.requestQ.async(execute: { () -> Void in

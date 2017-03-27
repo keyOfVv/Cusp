@@ -108,10 +108,10 @@ extension Peripheral {
 	*/
 	func read(_ characteristic: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.default.assertAvailability() {
-			failure?(error)
-			return
-		}
+//		if let error = CuspCentral.default.assertAvailability() {
+//			failure?(error)
+//			return
+//		}
 		// 1. create req object
 		let req = ReadRequest(characteristic: characteristic, success: success, failure: failure)
 		// 2. add read req
@@ -138,10 +138,10 @@ extension Peripheral {
 
 	public func readDescriptor(_ desc: Descriptor, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-		if let error = CuspCentral.default.assertAvailability() {
-			failure?(error)
-			return
-		}
+//		if let error = CuspCentral.default.assertAvailability() {
+//			failure?(error)
+//			return
+//		}
 		// 1. create req object
 		let req = ReadDescriptorRequest(descriptor: desc, success: success, failure: failure)
 		// 2. add read req
