@@ -9,13 +9,6 @@
 import Foundation
 import CoreBluetooth
 
-// MARK: - Protocol
-@available(*, deprecated, message: "")
-@objc public protocol CustomPeripheral: NSObjectProtocol {
-	var core: CBPeripheral { get }
-	init(core: CBPeripheral)
-}
-
 // MARK: - Notifications
 
 /// Cusp state change notification, posted in call of method "-centralManagerDidUpdateState(_:)"
@@ -44,11 +37,6 @@ private let CUSP_CENTRAL_IDENTIFIER_DEFAULT = "com.keyang.cusp.central.identifie
 /// Bluetooth Low Energy library in swift
 public class CuspCentral: NSObject {
 
-	/// Singleton
-	@available(*, deprecated, message: "use defaultCentral instead")
-	public class var central: CuspCentral {
-		return CuspCentral.defaultCentral
-	}
 	/// default central
 	public class var `default`: CuspCentral {
 		struct Static {
@@ -56,10 +44,7 @@ public class CuspCentral: NSObject {
 		}
 		return Static.instance
 	}
-	@available(*, deprecated, message: "use `default` instead")
-	public class var defaultCentral: CuspCentral {
-		return `default`
-	}
+
 	/// output debug log to console, disable this in release configuration
 	static var showsDebugLog: Bool = false
 	/// intentedly left private
@@ -80,7 +65,11 @@ public class CuspCentral: NSObject {
 	/// true CB central, read only
 	fileprivate(set) lazy var centralManager: CentralManager = {
 		let centralManager = CentralManager(delegate: self, queue: self.mainQ, options: [CBCentralManagerOptionRestoreIdentifierKey: self.centralRestoreIdentifier])
-		_ = centralManager.state.rawValue
+		dog("preparing CBCentralManager")
+		let semaphore = DispatchSemaphore(value: 0)
+		self.mainQ.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: { semaphore.signal() })
+		semaphore.wait()
+		dog("CBCentralManager is ready")
 		return centralManager
 	}()
 
@@ -106,9 +95,6 @@ public class CuspCentral: NSObject {
 	var availables = Set<Peripheral>()
 	/// session of connected peripheral
 	var sessions = Set<PeripheralSession>()
-	/// registered custom classes
-	@available(*, deprecated, message: "")
-	var customClasses = [(String, AnyClass)]()
 
 	/// a boolean value indicates whether Cusp is connected with any peripheral
 	public var isConnectedWithAnyPeripheral: Bool {
@@ -120,31 +106,15 @@ public class CuspCentral: NSObject {
 	var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
 }
 
-// MARK: - Interface
-
-// MARK: - Preparation
+// MARK: -
 extension CuspCentral {
-
-	/**
-	Prepare Cusp before any BLE operation
-
-	- parameter completion: a block after completed preparing
-	*/
-	@available(*, deprecated, message: "this method will be removed in near future")
-	public func prepare(_ completion: ((_ available: Bool) -> Void)?) {
-		_ = self.isBLEAvailable()
-		self.mainQ.asyncAfter(deadline: DispatchTime.now() + 0.1) { 
-			DispatchQueue.main.async {
-				completion?(self.isBLEAvailable())
-			}
-		}
-	}
 
 	/**
 	check if BLE is available
 
 	- returns: boolean value
 	*/
+	@available(*, deprecated, message: "this method will be removed in near future")
 	public func isBLEAvailable() -> Bool {
 		if let _ = self.assertAvailability() {
 			return false
@@ -152,35 +122,6 @@ extension CuspCentral {
 		return true
 	}
 
-	/**
-	register peripheral of a custom class, which shall be a subclass of Peripheral; any peripheral object of which the name matches specific pattern will be initialized in custom class.
-
-	- parameter aClass: custom peripheral class subclassing Peripheral
-	- parameter p:      regex pattern for name
-	*/
-	@available(*, deprecated, message: "")
-	public func registerPeripheralClass<T: CustomPeripheral>(_ aClass: T.Type, forNamePattern p: String) {
-		self.customClasses.append((p, aClass))
-	}
-	@available(*, deprecated, message: "")
-	public func registerPeripheralClass_oc(_ aClass: AnyClass, forNamePattern p: String) {
-		self.customClasses.append((p, aClass))
-	}
-
-	/**
-	clear all
-	*/
-	@available(*, deprecated, message: "this method does nothing currently")
-	func clear() {
-		//		dispatch_async(reqQ) { () -> Void in
-		//			self.sessions.removeAll()
-		//			self.availables.removeAll()
-		//			self.scanRequests.removeAll()
-		//			self.connectRequests.removeAll()
-		//			self.disconnectRequests.removeAll()
-		//			self.cancelConnectRequests.removeAll()
-		//		}
-	}
 }
 
 // MARK: - Availability Check
@@ -194,18 +135,12 @@ extension CuspCentral {
 	*/
 	func assertAvailability() -> CuspError? {
 		switch self.state {
-		case .poweredOff:
-			return CuspError.poweredOff
-		case .resetting:
-			return CuspError.resetting
-		case .unauthorized:
-			return CuspError.unauthorized
-		case .unsupported:
-			return CuspError.unsupported
-		case .unknown:
-			return CuspError.unknown
-		default:
-			return nil
+		case .poweredOff:	return .poweredOff
+		case .resetting:	return .resetting
+		case .unauthorized: return .unauthorized
+		case .unsupported:	return .unsupported
+		case .unknown:		return .unknown
+		default:			return nil
 		}
 	}
 }

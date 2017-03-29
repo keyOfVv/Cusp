@@ -65,10 +65,10 @@ extension Peripheral {
 	/// - parameter timedOut: 获取超时的回调;
 	public func readRSSI(success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-//		if let error = CuspCentral.default.assertAvailability() {
-//			failure?(error)
-//			return
-//		}
+		if let error = CuspCentral.default.assertAvailability() {
+			failure?(error)
+			return
+		}
 		// 1. create req
 		let req = RSSIRequest(success: success, failure: failure)
 		// 2. add req

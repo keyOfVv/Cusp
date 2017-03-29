@@ -140,10 +140,10 @@ extension Peripheral {
 	*/
 	func discoverServices(UUIDs: [UUID]?, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-//		if let error = CuspCentral.default.assertAvailability() {
-//			failure?(error)
-//			return
-//		}
+		if let error = CuspCentral.default.assertAvailability() {
+			failure?(error)
+			return
+		}
 		// 0.5 filter out discovered service(s)
 		let undisServs = getUndiscoveredServicesFrom(uuids: UUIDs)
 		if let uuids = undisServs, uuids.count == 0 {
@@ -196,10 +196,10 @@ extension Peripheral {
 	*/
 	func discoverCharacteristics(UUIDs: [UUID]?, ofService service: Service, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-//		if let error = CuspCentral.default.assertAvailability() {
-//			failure?(error)
-//			return
-//		}
+		if let error = CuspCentral.default.assertAvailability() {
+			failure?(error)
+			return
+		}
 		// 0.5 filter out discovered characteristic(s)
 		let undisChars = service.getUndiscoveredCharsFrom(uuids: UUIDs)
 		if let uuids = undisChars, uuids.count == 0 {
@@ -245,10 +245,10 @@ extension Peripheral {
 
 	func discoverDescriptors(forCharacteristic char: Characteristic, success: ((Response?) -> Void)?, failure: ((CuspError?) -> Void)?) {
 		// 0. check if ble is available
-//		if let error = CuspCentral.default.assertAvailability() {
-//			failure?(error)
-//			return
-//		}
+		if let error = CuspCentral.default.assertAvailability() {
+			failure?(error)
+			return
+		}
 		// 1. create request object
 		let req = DescriptorDiscoveringRequest(characteristic: char, success: success, failure: failure)
 		// 2. add request
