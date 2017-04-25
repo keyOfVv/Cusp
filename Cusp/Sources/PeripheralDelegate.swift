@@ -185,6 +185,7 @@ extension Peripheral: CBPeripheralDelegate {
 		// this method is invoked after readValueForCharacteristic call or subscription...
 		// so it's necessary to find out whether value is read or subscirbed...
 		// if subscribed, then ignore read req
+		dog("Characteristic \(characteristic) did update value.")
 		operationQ.async {
 			if characteristic.isNotifying {
 				// subscription update
