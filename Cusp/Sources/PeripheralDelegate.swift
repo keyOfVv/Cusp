@@ -190,7 +190,8 @@ extension Peripheral: CBPeripheralDelegate {
 				// subscription update
 				// find out specific subscription
 				guard let sub = (self.subscriptions.first { $0.characteristic === characteristic }) else {
-					fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
+//					fatalError("Peripheral received value update via notification(s) is not referenced by subscriptions set")
+					return
 				}
 				// prepare to call update call back
 				if let errorInfo = error {
