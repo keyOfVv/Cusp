@@ -58,6 +58,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 				req.timedOut = false
 				DispatchQueue.main.async(execute: { () -> Void in
 					// 2.call success closure
+					dog("Perform success callback: \(peripheral)")
 					req.success?(nil)
 				})
 
@@ -67,6 +68,7 @@ extension CuspCentral: CBCentralManagerDelegate {
 						// 4.wrap peripheral into a session
 						let session = PeripheralSession(peripheral: p)
 						session.abruption = req.abruption
+						dog("Created session for: \(peripheral)")
 						self.sessions.insert(session)
 					}
 				})
